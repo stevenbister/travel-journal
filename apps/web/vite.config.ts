@@ -1,6 +1,7 @@
 import { cloudflare } from '@cloudflare/vite-plugin';
 import { sharedConfig } from '@repo/vitest-config';
 import tailwindcss from '@tailwindcss/vite';
+import { tanstackRouter } from '@tanstack/router-plugin/vite';
 import react from '@vitejs/plugin-react';
 import { playwright } from '@vitest/browser-playwright';
 import { defineConfig } from 'vite';
@@ -11,7 +12,15 @@ const config = defineConfig({
     server: {
         port: 5174,
     },
-    plugins: [react(), tailwindcss(), cloudflare()],
+    plugins: [
+        tanstackRouter({
+            target: 'react',
+            autoCodeSplitting: true,
+        }),
+        react(),
+        tailwindcss(),
+        cloudflare(),
+    ],
 });
 
 const tstConfig = testConfig({
