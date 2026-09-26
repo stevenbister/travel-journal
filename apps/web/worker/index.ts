@@ -1,12 +1,13 @@
 export default {
-    fetch(request, env) {
+    async fetch(request: Request, env: Env): Promise<Response> {
         const url = new URL(request.url);
 
+        // Proxy API requests to the backend service
         if (url.pathname.startsWith('/api/')) {
-            return Response.json({
-                name: 'Cloudflare',
-            });
+            return env.API.fetch(request);
         }
-        return new Response(null, { status: 404 });
+
+        // Fall through to static assets (handled automatically by the "assets" config + SPA fallback
+        return new Response('Not found', { status: 404 });
     },
-} satisfies ExportedHandler<Env>;
+};
