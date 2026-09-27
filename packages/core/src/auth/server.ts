@@ -5,7 +5,7 @@ import {
 } from 'better-auth';
 import type { DB } from 'better-auth/adapters/drizzle';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { bearer, openAPI } from 'better-auth/plugins';
+import { openAPI } from 'better-auth/plugins';
 import { admin } from 'better-auth/plugins/admin';
 
 type Options = Omit<BetterAuthOptions, 'plugins'>;
@@ -15,7 +15,6 @@ export const plugins: BetterAuthPlugin[] = [
     openAPI({
         disableDefaultReference: true,
     }),
-    bearer(),
 ];
 
 export const defaultOptions: Options = {
