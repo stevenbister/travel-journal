@@ -5,8 +5,13 @@ import { defineConfig } from 'vite';
 
 // https://vite.dev/config/
 export default defineConfig({
-    server: {
-        port: 5174,
-    },
     plugins: [react(), tailwindcss(), cloudflare()],
+    server: {
+        proxy: {
+            '/api': {
+                target: 'http://127.0.0.1:8787',
+                changeOrigin: false,
+            },
+        },
+    },
 });

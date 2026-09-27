@@ -46,7 +46,7 @@ export const createApp = () => {
      * Make sure to register the auth route before any catch-all route that could handle the request first.
      */
     app.all('/auth/*', async (c) => {
-        const betterAuth = configureBetterAuth();
+        const betterAuth = configureBetterAuth(c);
 
         return betterAuth.handler(c.req.raw);
     });

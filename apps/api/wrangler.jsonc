@@ -4,8 +4,17 @@
     "main": "src/index.ts",
     "compatibility_date": "2026-08-21",
     "compatibility_flags": ["nodejs_als"],
-    "workers_dev": true,
+    "workers_dev": false,
     "preview_urls": true,
+    "observability": {
+        "enabled": true,
+    },
+    "routes": [
+        {
+            "pattern": "where-in-the-world.stevenbister.com/api/*",
+            "zone_id": "f7a683ffc045f37255a10a77fb5465cb",
+        },
+    ],
     "d1_databases": [
         {
             "binding": "DB",
@@ -14,33 +23,10 @@
             "migrations_dir": "src/db/migrations",
         },
     ],
-    // "d1_databases": [
-    //   {
-    //     "binding": "MY_DB",
-    //     "database_name": "my-database",
-    //     "database_id": ""
-    //   }
-    // ],
-    // "vars": {
-    //   "MY_VAR": "my-variable"
-    // },
-    // "kv_namespaces": [
-    //   {
-    //     "binding": "MY_KV_NAMESPACE",
-    //     "id": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
-    //   }
-    // ],
-    // "r2_buckets": [
-    //   {
-    //     "binding": "MY_BUCKET",
-    //     "bucket_name": "my-bucket"
-    //   }
-    // ],
-    // "ai": {
-    //   "binding": "AI"
-    // },
-    // "observability": {
-    //   "enabled": true,
-    //   "head_sampling_rate": 1
-    // }
+    "vars": {
+        "BETTER_AUTH_ALLOWED_HOSTS": [
+            "where-in-the-world.stevenbister.com",
+            "*-where-in-the-world-api.stevebister.workers.dev",
+        ],
+    },
 }
