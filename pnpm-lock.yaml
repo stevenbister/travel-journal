@@ -121,6 +121,9 @@ importers:
       '@cloudflare/vitest-plugin':
         specifier: ^1.2.5
         version: 1.2.5(@types/node@24.13.6)(@vitest/runner@4.1.11)(@vitest/snapshot@4.1.11)(vitest@4.1.0)
+      '@repo/core':
+        specifier: workspace:*
+        version: link:../../packages/core
       '@repo/eslint-config':
         specifier: workspace:*
         version: link:../../packages/eslint-config
