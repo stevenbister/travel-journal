@@ -9,6 +9,7 @@ export const configureBetterAuth = () => {
         basePath: '/api/v1/auth',
         baseURL: {
             allowedHosts: [
+                'localhost',
                 'localhost:5174',
                 '127.0.0.1:8787',
                 'stevebister.workers.dev',
