@@ -28,12 +28,12 @@ export const text = <T extends z.ZodLiteral | z.ZodString>(
     };
 };
 
-export const forbidden = () => {
+export const unauthorized = () => {
     return {
         content: {
             'text/json': {
                 schema: z.object({
-                    error: z.literal('Forbidden'),
+                    error: z.literal('Unauthorized'),
                 }),
             },
         },

@@ -6,9 +6,9 @@ import {
     updateTripSchema,
 } from '../../db/schema/trips';
 import {
-    forbidden,
     json,
     notFound,
+    unauthorized,
     unprocessableEntity,
 } from '../../lib/response-schema';
 import { requireAuth } from '../../middleware/require-auth';
@@ -44,7 +44,7 @@ export const getTrips = createRoute({
             z.array(selectTripSchema),
             'A list of trips created by the authenticated user.'
         ),
-        401: forbidden(),
+        401: unauthorized(),
     },
 });
 
@@ -61,7 +61,7 @@ export const getTripById = createRoute({
     responses: {
         200: json(selectTripSchema, 'The trip with the specified ID.'),
         404: notFound(),
-        401: forbidden(),
+        401: unauthorized(),
     },
 });
 
@@ -83,7 +83,7 @@ export const createTrip = createRoute({
     },
     responses: {
         200: json(selectTripSchema, 'The newly created trip.'),
-        401: forbidden(),
+        401: unauthorized(),
         422: unprocessableEntity(),
     },
 });
@@ -107,7 +107,7 @@ export const updateTrip = createRoute({
     },
     responses: {
         200: json(selectTripSchema.partial(), 'The updated trip.'),
-        401: forbidden(),
+        401: unauthorized(),
         404: notFound(),
         422: unprocessableEntity(),
     },
@@ -125,7 +125,7 @@ export const deleteTrip = createRoute({
     },
     responses: {
         200: json(selectTripSchema, 'The deleted trip.'),
-        401: forbidden(),
+        401: unauthorized(),
         404: notFound(),
     },
 });
