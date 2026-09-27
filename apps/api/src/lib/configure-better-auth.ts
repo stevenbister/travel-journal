@@ -13,7 +13,7 @@ export const configureBetterAuth = (c: Context<AppBindings>) => {
         baseURL: {
             allowedHosts: [
                 'localhost',
-                'localhost:5174',
+                'localhost:5173',
                 '127.0.0.1:8787',
                 ...c.env.BETTER_AUTH_ALLOWED_HOSTS,
             ],
