@@ -1,6 +1,6 @@
 {
     "$schema": "https://turborepo.dev/schema.json",
-    "ui": "tui",
+    "ui": "steam",
     "globalEnv": [
         "NODE_ENV",
         "CLOUDFLARE_ACCOUNT_ID",
