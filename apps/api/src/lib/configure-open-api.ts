@@ -1,6 +1,7 @@
 import type { OpenAPIHono } from '@hono/zod-openapi';
 import { Scalar } from '@scalar/hono-api-reference';
 
+import { requireAuth } from '../middleware/require-auth';
 import type { AppBindings } from '../types';
 
 export const configureOpenAPI = (app: OpenAPIHono<AppBindings>) => {
@@ -15,6 +16,7 @@ export const configureOpenAPI = (app: OpenAPIHono<AppBindings>) => {
 
     app.get(
         '/docs',
+        requireAuth,
         Scalar(async () => {
             return {
                 sources: [
