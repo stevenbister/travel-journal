@@ -49,7 +49,7 @@ jobs:
       - name: Create API .env for tests
         run: |
           {
-            echo "BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://localhost:8787}"
+            echo "BETTER_AUTH_URL=${BETTER_AUTH_URL:-localhost:5174}"
             echo "BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-test-secret-at-least-32-chars-long-1234}"
           } > apps/api/.env
         env:
