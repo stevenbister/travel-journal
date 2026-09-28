@@ -5,19 +5,27 @@ import {
 } from 'better-auth';
 import type { DB } from 'better-auth/adapters/drizzle';
 import { drizzleAdapter } from 'better-auth/adapters/drizzle';
-import { openAPI } from 'better-auth/plugins';
+import { oAuthProxy, openAPI } from 'better-auth/plugins';
 import { admin } from 'better-auth/plugins/admin';
 
-type Options = Omit<BetterAuthOptions, 'plugins'>;
+type Options = Omit<BetterAuthOptions, 'plugins'> & {
+    OAuthProxySecret: string;
+};
 
-export const plugins: BetterAuthPlugin[] = [
+export const plugins: (secret: string) => BetterAuthPlugin[] = (
+    secret: string
+) => [
     admin(),
     openAPI({
         disableDefaultReference: true,
     }),
+    oAuthProxy({
+        productionURL: 'https://travel-journal.stevenbister.com/api',
+        secret,
+    }),
 ];
 
-export const defaultOptions: Options = {
+export const defaultOptions: Omit<BetterAuthOptions, 'plugins'> = {
     session: {
         cookieCache: {
             enabled: true,
@@ -46,14 +54,16 @@ export const auth = (
     if (!db) throw new Error('DB is required');
     if (!options.baseURL) throw new Error('Base URL is required');
     if (!options.secret) throw new Error('Secret is required');
+    if (!options.OAuthProxySecret)
+        throw new Error('OAuth Proxy Secret is required');
 
     return betterAuth({
         database: drizzleAdapter(db, {
             provider: 'sqlite',
             schema,
         }),
+        plugins: plugins(options.OAuthProxySecret),
         ...defaultOptions,
         ...options,
-        plugins,
     });
 };
