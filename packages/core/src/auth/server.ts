@@ -33,7 +33,7 @@ export const defaultOptions: Omit<BetterAuthOptions, 'plugins'> = {
         },
     },
     emailAndPassword: {
-        enabled: true,
+        enabled: false,
     },
     rateLimit: {
         storage: 'database',
