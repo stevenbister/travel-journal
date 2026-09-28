@@ -4,7 +4,7 @@
  */
 {
     "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "where-in-the-world",
+    "name": "travel-journal",
     "main": "worker/index.ts",
     "compatibility_date": "2026-09-23",
     "assets": {
@@ -20,7 +20,7 @@
     "services": [
         {
             "binding": "API",
-            "service": "where-in-the-world-api",
+            "service": "travel-journal-api",
         },
     ],
 }

@@ -1,8 +1,8 @@
 import { hashPassword } from 'better-auth/crypto';
 import { execSync } from 'node:child_process';
 import { mkdtempSync, rmSync, writeFileSync } from 'node:fs';
-import { join } from 'node:path';
 import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { parseArgs } from 'node:util';
 
 /**
@@ -143,7 +143,9 @@ WHERE email = '${escapeSql(email)}'
             AND user_id = user.id
             AND account_id = user.id
     );`;
-    const temporaryDirectory = mkdtempSync(join(tmpdir(), 'where-in-the-world-admin-'));
+    const temporaryDirectory = mkdtempSync(
+        join(tmpdir(), 'travel-journal-admin-')
+    );
     const sqlFile = join(temporaryDirectory, 'seed-admin.sql');
 
     try {
@@ -153,7 +155,7 @@ WHERE email = '${escapeSql(email)}'
             {
                 stdio: 'inherit',
                 env: { ...process.env },
-            },
+            }
         );
     } finally {
         rmSync(temporaryDirectory, { force: true, recursive: true });

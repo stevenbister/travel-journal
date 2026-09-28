@@ -1,6 +1,6 @@
 {
     "$schema": "node_modules/wrangler/config-schema.json",
-    "name": "where-in-the-world-api",
+    "name": "travel-journal-api",
     "main": "src/index.ts",
     "compatibility_date": "2026-08-21",
     "compatibility_flags": ["nodejs_als"],
@@ -11,22 +11,22 @@
     },
     "routes": [
         {
-            "pattern": "where-in-the-world.stevenbister.com/api/*",
+            "pattern": "travel-journal.stevenbister.com/api/*",
             "zone_id": "f7a683ffc045f37255a10a77fb5465cb",
         },
     ],
     "d1_databases": [
         {
             "binding": "DB",
-            "database_name": "where-in-the-world",
-            "database_id": "7fc19fec-d6e9-4ec2-a87b-d5c69d39e13c",
+            "database_name": "travel-journal",
+            "database_id": "6578e729-b943-414d-a4b9-9c1b764d7744",
             "migrations_dir": "src/db/migrations",
         },
     ],
     "vars": {
         "BETTER_AUTH_ALLOWED_HOSTS": [
-            "where-in-the-world.stevenbister.com",
-            "*-where-in-the-world-api.stevebister.workers.dev",
+            "travel-journal.stevenbister.com",
+            "*-travel-journal-api.stevebister.workers.dev",
         ],
     },
 }
