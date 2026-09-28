@@ -1,5 +1,5 @@
 {
-    "name": "where-in-the-world",
+    "name": "travel-journal",
     "private": true,
     "scripts": {
         "build": "turbo run build",
