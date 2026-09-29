@@ -17,6 +17,12 @@ export default defineConfig({
         cloudflare(),
         VitePWA({
             registerType: 'autoUpdate',
+            workbox: {
+                navigateFallback: '/index.html',
+                // Exclude API routes from being handled by the service worker's navigate fallback
+                // Ensures the our auth flow works correctly
+                navigateFallbackDenylist: [/^\/api\//],
+            },
             manifest: {
                 name: 'Travel Journal',
                 short_name: 'Travel Journal',
