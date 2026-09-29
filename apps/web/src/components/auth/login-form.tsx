@@ -23,7 +23,7 @@ export const LoginForm = () => {
     };
 
     return (
-        <div className="flex flex-col gap-6 justify-between min-h-svh p-6 md:p-10 max-w-md">
+        <div className="flex flex-col gap-6 justify-between min-h-svh p-8 md:p-10 w-full max-w-md">
             <div className="flex flex-col flex-1 items-center justify-center gap-4 text-center">
                 <div className="flex items-center justify-center rounded-2xl p-3 bg-primary text-background">
                     <MapTrifoldIcon
@@ -40,7 +40,7 @@ export const LoginForm = () => {
                 </div>
             </div>
 
-            <div className="flex flex-col flex-1 justify-center gap-6">
+            <div className="flex flex-col flex-1 justify-end gap-6">
                 <Button variant="outline" size="lg" onClick={handleClick}>
                     <svg viewBox="0 0 24 24">
                         <path
@@ -67,9 +67,13 @@ export const LoginForm = () => {
                     <InfoIcon />
                     <AlertDescription>
                         Travel Log is invite-only. Sign in with the Google
-                        account you and your partner share this journal with.
+                        account that has been invited.
                     </AlertDescription>
                 </Alert>
+
+                <p className="text-muted-foreground text-sm text-center">
+                    Travel Journal v0.1.0
+                </p>
             </div>
         </div>
     );

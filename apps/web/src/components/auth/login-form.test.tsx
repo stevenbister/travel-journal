@@ -35,7 +35,11 @@ describe('LoginForm', () => {
             .element(page.getByRole('button', { name: 'Continue with Google' }))
             .toBeInTheDocument();
         await expect
-            .element(page.getByText('Travel Log is invite only.'))
+            .element(
+                page.getByText(
+                    'Travel Log is invite-only. Sign in with the Google account that has been invited.'
+                )
+            )
             .toBeInTheDocument();
     });
 
