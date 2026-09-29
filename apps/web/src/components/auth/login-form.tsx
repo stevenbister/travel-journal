@@ -1,30 +1,19 @@
-import { GlobeHemisphereWestIcon } from '@phosphor-icons/react';
+import { InfoIcon, MapTrifoldIcon } from '@phosphor-icons/react';
 
 import { authClient } from '@repo/core/auth/client';
 
+import { Alert, AlertDescription } from '@repo/ui/components/ui/alert';
 import { Button } from '@repo/ui/components/ui/button';
-import {
-    Field,
-    FieldGroup,
-    FieldLabel,
-    FieldSeparator,
-} from '@repo/ui/components/ui/field';
-import { Input } from '@repo/ui/components/ui/input';
 
 import { genericErrorToast } from '../../lib/generic-error-toast';
 
-// TODO: Tanstack forms?
 export const LoginForm = () => {
-    const handleSubmit = async (e: React.SubmitEvent<HTMLFormElement>) => {
+    const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
-        const formData = new FormData(e.currentTarget);
-        const email = formData.get('email') as string;
-        const password = formData.get('password') as string;
 
         try {
-            await authClient.signIn.email({
-                email,
-                password,
+            await authClient.signIn.social({
+                provider: 'google',
                 callbackURL: '/',
             });
         } catch (error) {
@@ -34,59 +23,58 @@ export const LoginForm = () => {
     };
 
     return (
-        <div className="flex flex-col gap-6">
-            <form onSubmit={handleSubmit}>
-                <FieldGroup>
-                    <div className="flex flex-col items-center gap-2 text-center">
-                        <GlobeHemisphereWestIcon
-                            size={32}
-                            weight="duotone"
-                            aria-hidden="true"
+        <div className="flex flex-col gap-6 justify-between min-h-svh p-8 md:p-10 w-full max-w-md">
+            <div className="flex flex-col flex-1 items-center justify-center gap-4 text-center">
+                <div className="flex items-center justify-center rounded-2xl p-3 bg-primary text-background">
+                    <MapTrifoldIcon
+                        size={32}
+                        weight="duotone"
+                        aria-hidden="true"
+                    />
+                </div>
+                <div className="flex flex-col gap-2">
+                    <h1 className="text-3xl font-bold">Travel Journal</h1>
+                    <p className="text-muted-foreground">
+                        A place to document your travels.
+                    </p>
+                </div>
+            </div>
+
+            <div className="flex flex-col flex-1 justify-end gap-6">
+                <Button variant="outline" size="lg" onClick={handleClick}>
+                    <svg viewBox="0 0 24 24">
+                        <path
+                            fill="#4285F4"
+                            d="M23.52 12.27c0-.85-.08-1.67-.22-2.45H12v4.64h6.47a5.53 5.53 0 01-2.4 3.63v3h3.88c2.27-2.09 3.57-5.17 3.57-8.82z"
                         />
-                        <h1 className="text-xl font-bold">
-                            Where in the world
-                        </h1>
-                    </div>
-                    <Field>
-                        <FieldLabel htmlFor="email">Email</FieldLabel>
-                        <Input
-                            id="email"
-                            type="email"
-                            name="email"
-                            placeholder="m@example.com"
-                            required
+                        <path
+                            fill="#34A853"
+                            d="M12 24c3.24 0 5.95-1.08 7.94-2.91l-3.88-3c-1.08.72-2.45 1.15-4.06 1.15-3.13 0-5.78-2.11-6.73-4.96H1.27v3.1A12 12 0 0012 24z"
                         />
-                    </Field>
-                    <Field>
-                        <FieldLabel htmlFor="password">Password</FieldLabel>
-                        <Input
-                            id="password"
-                            type="password"
-                            name="password"
-                            placeholder="********"
-                            required
+                        <path
+                            fill="#FBBC05"
+                            d="M5.27 14.28a7.2 7.2 0 010-4.56v-3.1H1.27a12 12 0 000 10.76z"
                         />
-                    </Field>
-                    <Field>
-                        <Button type="submit">Login</Button>
-                    </Field>
-                    <FieldSeparator>Or</FieldSeparator>
-                    <Field className="grid gap-4">
-                        <Button variant="outline" type="button">
-                            <svg
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 24 24"
-                            >
-                                <path
-                                    d="M12.48 10.92v3.28h7.84c-.24 1.84-.853 3.187-1.787 4.133-1.147 1.147-2.933 2.4-6.053 2.4-4.827 0-8.6-3.893-8.6-8.72s3.773-8.72 8.6-8.72c2.6 0 4.507 1.027 5.907 2.347l2.307-2.307C18.747 1.44 16.133 0 12.48 0 5.867 0 .307 5.387.307 12s5.56 12 12.173 12c3.573 0 6.267-1.173 8.373-3.36 2.16-2.16 2.84-5.213 2.84-7.667 0-.76-.053-1.467-.173-2.053H12.48z"
-                                    fill="currentColor"
-                                />
-                            </svg>
-                            Continue with Google
-                        </Button>
-                    </Field>
-                </FieldGroup>
-            </form>
+                        <path
+                            fill="#EA4335"
+                            d="M12 4.76c1.77 0 3.35.61 4.6 1.8l3.44-3.44C17.94 1.19 15.23 0 12 0A12 12 0 001.27 6.62l4 3.1C6.22 6.87 8.87 4.76 12 4.76z"
+                        />
+                    </svg>
+                    Continue with Google
+                </Button>
+
+                <Alert>
+                    <InfoIcon />
+                    <AlertDescription>
+                        Travel Log is invite-only. Sign in with the Google
+                        account that has been invited.
+                    </AlertDescription>
+                </Alert>
+
+                <p className="text-muted-foreground text-sm text-center">
+                    Travel Journal v0.1.0
+                </p>
+            </div>
         </div>
     );
 };

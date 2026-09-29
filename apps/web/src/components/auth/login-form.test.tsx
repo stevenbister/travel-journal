@@ -9,7 +9,7 @@ import { LoginForm } from './login-form';
 vi.mock('@repo/core/auth/client', () => ({
     authClient: {
         signIn: {
-            email: vi.fn(),
+            social: vi.fn(),
         },
     },
 }));
@@ -20,73 +20,54 @@ vi.mock('../../lib/generic-error-toast', () => ({
 
 describe('LoginForm', () => {
     beforeEach(() => {
-        vi.mocked(authClient.signIn.email).mockReset();
-        vi.mocked(genericErrorToast).mockReset();
+        vi.resetAllMocks();
     });
 
-    it('renders email, password, and submit fields', async () => {
+    it('renders heading, Google login button, and alert', async () => {
         const page = await render(<LoginForm />);
 
-        await expect.element(page.getByLabelText('Email')).toBeInTheDocument();
         await expect
-            .element(page.getByLabelText('Password'))
+            .element(
+                page.getByRole('heading', { level: 1, name: 'Travel Journal' })
+            )
             .toBeInTheDocument();
         await expect
-            .element(page.getByRole('button', { name: 'Login' }))
+            .element(page.getByRole('button', { name: 'Continue with Google' }))
             .toBeInTheDocument();
         await expect
             .element(
-                page.getByRole('button', { name: /Continue with Google/i })
+                page.getByText(
+                    'Travel Log is invite-only. Sign in with the Google account that has been invited.'
+                )
             )
             .toBeInTheDocument();
     });
 
-    it('marks email and password as required', async () => {
+    it('calls signIn.social when the Google Button is pressed', async () => {
+        vi.mocked(authClient.signIn.social).mockResolvedValueOnce({});
         const page = await render(<LoginForm />);
 
-        await expect
-            .element(page.getByLabelText('Email'))
-            .toHaveAttribute('required');
-        await expect
-            .element(page.getByLabelText('Password'))
-            .toHaveAttribute('required');
-    });
+        await page
+            .getByRole('button', { name: 'Continue with Google' })
+            .click();
 
-    it('calls signIn.email with form values on submit', async () => {
-        vi.mocked(authClient.signIn.email).mockResolvedValueOnce({} as never);
-        const page = await render(<LoginForm />);
-
-        await page.getByLabelText('Email').fill('user@example.com');
-        await page.getByLabelText('Password').fill('password123');
-        await page.getByRole('button', { name: 'Login' }).click();
-
-        expect(authClient.signIn.email).toHaveBeenCalledWith({
-            email: 'user@example.com',
-            password: 'password123',
+        expect(authClient.signIn.social).toHaveBeenCalledWith({
+            provider: 'google',
             callbackURL: '/',
         });
+        await expect.poll(() => genericErrorToast).not.toHaveBeenCalled();
     });
 
     it('shows a generic error toast when sign in fails', async () => {
-        vi.mocked(authClient.signIn.email).mockRejectedValueOnce(
+        vi.mocked(authClient.signIn.social).mockRejectedValueOnce(
             new Error('nope')
         );
         const page = await render(<LoginForm />);
 
-        await page.getByLabelText('Email').fill('user@example.com');
-        await page.getByLabelText('Password').fill('password123');
-        await page.getByRole('button', { name: 'Login' }).click();
-
-        await expect.poll(() => genericErrorToast).toHaveBeenCalled();
-    });
-
-    it('does not submit the form when clicking the Google button', async () => {
-        const page = await render(<LoginForm />);
-
         await page
-            .getByRole('button', { name: /Continue with Google/i })
+            .getByRole('button', { name: 'Continue with Google' })
             .click();
 
-        expect(authClient.signIn.email).not.toHaveBeenCalled();
+        await expect.poll(() => genericErrorToast).toHaveBeenCalled();
     });
 });

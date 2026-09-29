@@ -49,12 +49,12 @@ jobs:
       - name: Create API .env for tests
         run: |
           {
-            echo "BETTER_AUTH_URL=${BETTER_AUTH_URL:-localhost:5174}"
+            echo "BETTER_AUTH_URL=${BETTER_AUTH_URL:-http://localhost:5174}"
             echo "BETTER_AUTH_SECRET=${BETTER_AUTH_SECRET:-test-secret-at-least-32-chars-long-1234}"
+            echo "BETTER_AUTH_OAUTH_PROXY_SECRET=${BETTER_AUTH_OAUTH_PROXY_SECRET:-test-secret-at-least-32-chars-long-1234}"
+            echo "GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID:-test-google-client-id}"
+            echo "GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET:-test-google-client-secret}"
           } > apps/api/.env
-        env:
-          BETTER_AUTH_URL: ${{ vars.BETTER_AUTH_URL }}
-          BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
 
       - name: Test
         run: pnpm test --affected

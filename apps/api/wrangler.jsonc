@@ -9,6 +9,9 @@
     "observability": {
         "enabled": true,
     },
+    "dev": {
+        "host": "localhost:5173",
+    },
     "routes": [
         {
             "pattern": "travel-journal.stevenbister.com/api/*",
@@ -23,10 +26,4 @@
             "migrations_dir": "src/db/migrations",
         },
     ],
-    "vars": {
-        "BETTER_AUTH_ALLOWED_HOSTS": [
-            "travel-journal.stevenbister.com",
-            "*-travel-journal-api.stevebister.workers.dev",
-        ],
-    },
 }
