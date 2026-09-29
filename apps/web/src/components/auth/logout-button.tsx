@@ -1,3 +1,4 @@
+import { SignOutIcon } from '@phosphor-icons/react';
 import { useNavigate } from '@tanstack/react-router';
 
 import { authClient } from '@repo/core/auth/client';
@@ -22,5 +23,9 @@ export const LogoutButton = () => {
         }
     };
 
-    return <Button onClick={handleLogout}>Logout</Button>;
+    return (
+        <Button variant="destructive" onClick={handleLogout}>
+            <SignOutIcon /> Logout
+        </Button>
+    );
 };
