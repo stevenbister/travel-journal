@@ -6,7 +6,7 @@ import { ThemeProvider } from '../components/providers/theme-provider';
 const RootLayout = () => (
     <ThemeProvider>
         <Outlet />
-        <TanStackRouterDevtools />
+        <TanStackRouterDevtools position="top-right" />
     </ThemeProvider>
 );
 

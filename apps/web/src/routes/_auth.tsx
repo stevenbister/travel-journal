@@ -1,8 +1,8 @@
-import { createFileRoute, redirect } from '@tanstack/react-router';
+import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 
 import { authClient } from '@repo/core/auth/client';
 
-import { LogoutButton } from '../components/auth/logout-button';
+import { Navbar } from '../components/navbar/navbar';
 
 export const Route = createFileRoute('/_auth')({
     beforeLoad: async ({ location }) => {
@@ -23,7 +23,8 @@ export const Route = createFileRoute('/_auth')({
 function AuthLayout() {
     return (
         <div>
-            Hello "/_auth"! <LogoutButton />
+            <Outlet />
+            <Navbar />
         </div>
     );
 }
