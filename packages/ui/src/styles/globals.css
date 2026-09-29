@@ -153,4 +153,8 @@
     h3 {
         @apply font-display;
     }
+
+    h1 {
+        @apply text-xl font-bold;
+    }
 }
