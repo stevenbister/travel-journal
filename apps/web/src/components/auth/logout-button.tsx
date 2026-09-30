@@ -1,3 +1,4 @@
+import { SignOutIcon } from '@phosphor-icons/react';
 import { useNavigate } from '@tanstack/react-router';
 
 import { authClient } from '@repo/core/auth/client';
@@ -6,7 +7,7 @@ import { Button } from '@repo/ui/components/ui/button';
 
 import { genericErrorToast } from '../../lib/generic-error-toast';
 
-export const LogoutButton = () => {
+export const LogoutButton = ({ className }: { className?: string }) => {
     const navigate = useNavigate();
     const handleLogout = async () => {
         try {
@@ -22,5 +23,13 @@ export const LogoutButton = () => {
         }
     };
 
-    return <Button onClick={handleLogout}>Logout</Button>;
+    return (
+        <Button
+            variant="destructive"
+            onClick={handleLogout}
+            className={className}
+        >
+            <SignOutIcon /> Logout
+        </Button>
+    );
 };

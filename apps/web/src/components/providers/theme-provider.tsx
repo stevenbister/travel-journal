@@ -1,6 +1,6 @@
 import * as React from 'react';
 
-type Theme = 'dark' | 'light' | 'system';
+export type Theme = 'dark' | 'light' | 'system';
 type ResolvedTheme = 'dark' | 'light';
 
 type ThemeProviderProps = {
@@ -16,7 +16,7 @@ type ThemeProviderState = {
 };
 
 const COLOR_SCHEME_QUERY = '(prefers-color-scheme: dark)';
-const THEME_VALUES: Theme[] = ['dark', 'light', 'system'];
+export const THEME_VALUES: Theme[] = ['dark', 'light', 'system'];
 
 const ThemeProviderContext = React.createContext<
     ThemeProviderState | undefined
