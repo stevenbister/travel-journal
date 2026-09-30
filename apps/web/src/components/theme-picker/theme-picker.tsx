@@ -1,20 +1,28 @@
 import { DeviceMobileIcon, MoonIcon, SunIcon } from '@phosphor-icons/react';
+
+import { Card, CardContent } from '@repo/ui/components/ui/card';
 import {
     ToggleGroup,
     ToggleGroupItem,
 } from '@repo/ui/components/ui/toggle-group';
-import { THEME_VALUES, useTheme, type Theme } from '../providers/theme-provider';
-import { Item, ItemContent } from '@repo/ui/components/ui/item';
+
+import {
+    THEME_VALUES,
+    type Theme,
+    useTheme,
+} from '../providers/theme-provider';
 
 export const ThemePicker = () => {
-    const {theme, setTheme} = useTheme();
+    const { theme, setTheme } = useTheme();
 
     return (
-        <Item variant="muted">
-            <ItemContent>
+        <Card size="sm">
+            <CardContent>
                 <ToggleGroup
                     value={[theme]}
-                    onValueChange={(value) => setTheme((value[0] ?? 'system') as Theme)}
+                    onValueChange={(value) =>
+                        setTheme((value[0] ?? 'system') as Theme)
+                    }
                     variant="outline"
                     className="w-full justify-center"
                 >
@@ -23,22 +31,28 @@ export const ThemePicker = () => {
                             <ToggleGroupItem
                                 key={scheme}
                                 value={scheme}
-                                aria-label={scheme.charAt(0).toUpperCase() + scheme.slice(1)}
+                                aria-label={
+                                    scheme.charAt(0).toUpperCase() +
+                                    scheme.slice(1)
+                                }
                                 className="flex flex-1 size-16 flex-col items-center justify-center"
                             >
                                 <span className="text-2xl leading-none font-light">
                                     {scheme === 'light' && <SunIcon />}
                                     {scheme === 'dark' && <MoonIcon />}
-                                    {scheme === 'system' && <DeviceMobileIcon />}
+                                    {scheme === 'system' && (
+                                        <DeviceMobileIcon />
+                                    )}
                                 </span>
                                 <span className="text-xs">
-                                    {scheme.charAt(0).toUpperCase() + scheme.slice(1)}
+                                    {scheme.charAt(0).toUpperCase() +
+                                        scheme.slice(1)}
                                 </span>
                             </ToggleGroupItem>
                         );
                     })}
                 </ToggleGroup>
-            </ItemContent>
-        </Item>
+            </CardContent>
+        </Card>
     );
 };

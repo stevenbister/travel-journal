@@ -7,7 +7,7 @@ import { Button } from '@repo/ui/components/ui/button';
 
 import { genericErrorToast } from '../../lib/generic-error-toast';
 
-export const LogoutButton = () => {
+export const LogoutButton = ({ className }: { className?: string }) => {
     const navigate = useNavigate();
     const handleLogout = async () => {
         try {
@@ -24,7 +24,11 @@ export const LogoutButton = () => {
     };
 
     return (
-        <Button variant="destructive" onClick={handleLogout}>
+        <Button
+            variant="destructive"
+            onClick={handleLogout}
+            className={className}
+        >
             <SignOutIcon /> Logout
         </Button>
     );

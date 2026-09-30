@@ -28,11 +28,13 @@ function AuthLayout() {
         <div className="p-8 md:p-10">
             <SidebarProvider>
                 <AppSidebar />
+
                 <SidebarInset>
                     <Outlet />
-                    <Navbar />
                 </SidebarInset>
             </SidebarProvider>
+
+            <Navbar />
         </div>
     );
 }
