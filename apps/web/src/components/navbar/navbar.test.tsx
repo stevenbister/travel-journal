@@ -10,6 +10,10 @@ vi.mock('@tanstack/react-router', () => ({
 }));
 
 describe('Navbar', () => {
+    beforeEach(() => {
+        vi.clearAllMocks();
+    })
+
     it('renders the Navbar', async () => {
         const page = await render(<Navbar />);
 
