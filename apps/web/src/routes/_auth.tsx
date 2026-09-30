@@ -22,7 +22,7 @@ export const Route = createFileRoute('/_auth')({
 
 function AuthLayout() {
     return (
-        <div>
+        <div className="p-8 md:p-10">
             <Outlet />
             <Navbar />
         </div>
