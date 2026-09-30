@@ -22,7 +22,7 @@ type NavItems = {
     to: string;
 };
 
-const NAV_ITEMS: NavItems[] = [
+export const NAV_ITEMS: NavItems[] = [
     { label: 'Trips', Icon: AirplaneTakeoffIcon, to: '/' },
     {
         label: 'Search',
