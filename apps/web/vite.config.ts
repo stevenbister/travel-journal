@@ -10,7 +10,7 @@ export default defineConfig({
     plugins: [
         tanstackRouter({
             target: 'react',
-            autoCodeSplitting: true,
+            autoCodeSplitting: false, // disabled since it may cause issues with route preloading when offline
         }),
         react(),
         tailwindcss(),

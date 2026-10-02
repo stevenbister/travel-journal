@@ -1,3 +1,4 @@
+import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
 
@@ -9,19 +10,26 @@ vi.mock('@tanstack/react-router', () => ({
         .mockImplementation(({ children }) => <a href="#">{children}</a>),
 }));
 
+const renderComponent = () =>
+    render(
+        <QueryClientProvider client={new QueryClient()}>
+            <Navbar />
+        </QueryClientProvider>
+    );
+
 describe('Navbar', () => {
     beforeEach(() => {
         vi.clearAllMocks();
-    })
+    });
 
     it('renders the Navbar', async () => {
-        const page = await render(<Navbar />);
+        const page = await renderComponent();
 
         await expect.element(page.getByRole('navigation')).toBeInTheDocument();
     });
 
     it('renders the navigation items', async () => {
-        const page = await render(<Navbar />);
+        const page = await renderComponent();
 
         await expect
             .element(page.getByRole('link', { name: 'Trips' }))
@@ -38,7 +46,7 @@ describe('Navbar', () => {
     });
 
     it('renders the add button', async () => {
-        const page = await render(<Navbar />);
+        const page = await renderComponent();
 
         await expect
             .element(page.getByRole('button', { name: 'Add' }))

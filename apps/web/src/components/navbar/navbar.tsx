@@ -16,6 +16,8 @@ import {
     NavigationMenuList,
 } from '@repo/ui/components/ui/navigation-menu';
 
+import { NetworkBanner } from '../network-banner/network-banner';
+
 type NavItems = {
     label: string;
     Icon: Icon;
@@ -45,23 +47,26 @@ const navItemsLeft = NAV_ITEMS.slice(0, 2);
 const navItemsRight = NAV_ITEMS.slice(2);
 
 export const Navbar = () => (
-    <NavigationMenu className="fixed md:hidden bottom-0 inset-x-0 bg-muted max-w-[unset] border-t">
-        <NavigationMenuList>
-            <NavbarLinkItems navItems={navItemsLeft} />
+    <div className="fixed md:hidden bottom-0 inset-x-0 border-t">
+        <NavigationMenu className="bg-muted max-w-[unset]">
+            <NavigationMenuList>
+                <NavbarLinkItems navItems={navItemsLeft} />
 
-            <NavigationMenuItem className="flex flex-1 items-center justify-center">
-                <Button
-                    size="icon-lg"
-                    className="bg-accent text-foreground hover:bg-accent/80 rounded-full size-13 drop-shadow-sm drop-shadow-accent/50 -translate-y-5"
-                >
-                    <PlusIcon weight="bold" className="size-5" />
-                    <span className="sr-only">Add</span>
-                </Button>
-            </NavigationMenuItem>
+                <NavigationMenuItem className="flex flex-1 items-center justify-center">
+                    <Button
+                        size="icon-lg"
+                        className="bg-accent text-foreground hover:bg-accent/80 rounded-full size-13 drop-shadow-sm drop-shadow-accent/50 -translate-y-5"
+                    >
+                        <PlusIcon weight="bold" className="size-5" />
+                        <span className="sr-only">Add</span>
+                    </Button>
+                </NavigationMenuItem>
 
-            <NavbarLinkItems navItems={navItemsRight} />
-        </NavigationMenuList>
-    </NavigationMenu>
+                <NavbarLinkItems navItems={navItemsRight} />
+            </NavigationMenuList>
+        </NavigationMenu>
+        <NetworkBanner />
+    </div>
 );
 
 const NavbarLinkItems = ({ navItems }: { navItems: NavItems[] }) => (

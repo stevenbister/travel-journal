@@ -12,6 +12,6 @@ describe('Health', () => {
     it('returns ok', async () => {
         const response = await app.request('/api/v1/health', {}, env);
         expect(response.status).toBe(200);
-        expect(await response.text()).toBe('ok');
+        expect(await response.json()).toEqual({ ok: true });
     });
 });

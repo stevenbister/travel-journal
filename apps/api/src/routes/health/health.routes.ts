@@ -1,6 +1,6 @@
 import { createRoute, z } from '@hono/zod-openapi';
 
-import { text } from '../../lib/response-schema';
+import { json } from '../../lib/response-schema';
 
 const tags = ['Health'];
 
@@ -13,6 +13,6 @@ export const health = createRoute({
     description: 'Returns the health status of the API.',
     tags,
     responses: {
-        200: text(z.literal('ok'), 'API status is healthy.'),
+        200: json(z.object({ ok: z.boolean() }), 'API status is healthy.'),
     },
 });
