@@ -1,16 +1,15 @@
 import { createFileRoute, redirect } from '@tanstack/react-router';
 
-import { authClient } from '@repo/core/auth/client';
-
 import { LoginForm } from '../components/auth/login-form';
+import { getSession } from '../lib/auth/session';
 
 export const Route = createFileRoute('/login')({
     validateSearch: (search) => ({
         redirect: (search.redirect as string) || '/',
     }),
     beforeLoad: async ({ search }) => {
-        const auth = await authClient.getSession();
-        if (auth?.data?.session) {
+        const session = await getSession();
+        if (session) {
             throw redirect({ to: search.redirect });
         }
     },

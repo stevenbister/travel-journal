@@ -4,12 +4,27 @@ import { authClient } from '@repo/core/auth/client';
 
 import { Alert, AlertDescription } from '@repo/ui/components/ui/alert';
 import { Button } from '@repo/ui/components/ui/button';
+import { toast } from '@repo/ui/components/ui/toast';
 
+import { flushPendingSignOut } from '../../lib/auth/session';
 import { genericErrorToast } from '../../lib/generic-error-toast';
+import { checkIsOnline } from '../../lib/online/check-is-online';
 
 export const LoginForm = () => {
     const handleClick = async (e: React.MouseEvent<HTMLButtonElement>) => {
         e.preventDefault();
+        await flushPendingSignOut();
+
+        const isOnline = await checkIsOnline();
+        if (!isOnline) {
+            return toast.add({
+                title: 'Network error',
+                description:
+                    'You are currently offline. Please check your network connection.',
+                type: 'error',
+                timeout: 0,
+            });
+        }
 
         try {
             await authClient.signIn.social({

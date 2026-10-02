@@ -1,17 +1,17 @@
 import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
 
-import { authClient } from '@repo/core/auth/client';
-
 import { SidebarInset, SidebarProvider } from '@repo/ui/components/ui/sidebar';
 
 import { AppSidebar } from '../components/app-sidebar/app-sidebar';
 import { Navbar } from '../components/navbar/navbar';
+import { getSession } from '../lib/auth/session';
+import { useRefreshSessionCache } from '../lib/auth/use-refresh-session-cache';
 
 export const Route = createFileRoute('/_auth')({
     beforeLoad: async ({ location }) => {
-        const auth = await authClient.getSession();
+        const session = await getSession();
 
-        if (!auth?.data?.session) {
+        if (!session) {
             throw redirect({
                 to: '/login',
                 search: {
@@ -24,6 +24,8 @@ export const Route = createFileRoute('/_auth')({
 });
 
 function AuthLayout() {
+    useRefreshSessionCache();
+
     return (
         <div className="p-8 md:p-10">
             <SidebarProvider>

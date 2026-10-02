@@ -1,8 +1,6 @@
 import { ArrowSquareOutIcon, UserIcon } from '@phosphor-icons/react';
 import { createFileRoute } from '@tanstack/react-router';
 
-import { authClient } from '@repo/core/auth/client';
-
 import {
     Avatar,
     AvatarFallback,
@@ -12,13 +10,14 @@ import { Card, CardContent } from '@repo/ui/components/ui/card';
 
 import { LogoutButton } from '../components/auth/logout-button';
 import { ThemePicker } from '../components/theme-picker/theme-picker';
+import { useSession } from '../lib/auth/use-session';
 
 export const Route = createFileRoute('/_auth/profile')({
     component: RouteComponent,
 });
 
 function RouteComponent() {
-    const { data } = authClient.useSession();
+    const { data } = useSession();
     const user = data?.user;
 
     return (
