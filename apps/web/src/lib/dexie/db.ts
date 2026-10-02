@@ -15,8 +15,8 @@ import type {
 export interface Trip {
     id: string;
     title: string;
-    startDate: number;
-    endDate: number;
+    startDate: Date;
+    endDate: Date;
     createdBy: string;
     createdAt: Date;
     updatedAt: Date;
