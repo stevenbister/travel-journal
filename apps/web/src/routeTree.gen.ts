@@ -13,6 +13,7 @@ import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthIndexRouteImport } from './routes/_auth.index'
 import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
+import { Route as AuthTripNewRouteImport } from './routes/_auth.trip.new'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -33,16 +34,23 @@ const AuthProfileRoute = AuthProfileRouteImport.update({
   path: '/profile',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthTripNewRoute = AuthTripNewRouteImport.update({
+  id: '/trip/new',
+  path: '/trip/new',
+  getParentRoute: () => AuthRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
   '/profile': typeof AuthProfileRoute
+  '/trip/new': typeof AuthTripNewRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
   '/profile': typeof AuthProfileRoute
   '/': typeof AuthIndexRoute
+  '/trip/new': typeof AuthTripNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -50,13 +58,20 @@ export interface FileRoutesById {
   '/login': typeof LoginRoute
   '/_auth/profile': typeof AuthProfileRoute
   '/_auth/': typeof AuthIndexRoute
+  '/_auth/trip/new': typeof AuthTripNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/login' | '/profile'
+  fullPaths: '/' | '/login' | '/profile' | '/trip/new'
   fileRoutesByTo: FileRoutesByTo
-  to: '/login' | '/profile' | '/'
-  id: '__root__' | '/_auth' | '/login' | '/_auth/profile' | '/_auth/'
+  to: '/login' | '/profile' | '/' | '/trip/new'
+  id:
+    | '__root__'
+    | '/_auth'
+    | '/login'
+    | '/_auth/profile'
+    | '/_auth/'
+    | '/_auth/trip/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -94,17 +109,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthProfileRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/trip/new': {
+      id: '/_auth/trip/new'
+      path: '/trip/new'
+      fullPath: '/trip/new'
+      preLoaderRoute: typeof AuthTripNewRouteImport
+      parentRoute: typeof AuthRoute
+    }
   }
 }
 
 interface AuthRouteChildren {
   AuthProfileRoute: typeof AuthProfileRoute
   AuthIndexRoute: typeof AuthIndexRoute
+  AuthTripNewRoute: typeof AuthTripNewRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
   AuthProfileRoute: AuthProfileRoute,
   AuthIndexRoute: AuthIndexRoute,
+  AuthTripNewRoute: AuthTripNewRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)

@@ -8,13 +8,14 @@ import {
 } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
 
-import { Button } from '@repo/ui/components/ui/button';
+import { Button, buttonVariants } from '@repo/ui/components/ui/button';
 import {
     NavigationMenu,
     NavigationMenuItem,
     NavigationMenuLink,
     NavigationMenuList,
 } from '@repo/ui/components/ui/navigation-menu';
+import { cn } from '@repo/ui/lib/utils';
 
 import { NetworkBanner } from '../network-banner/network-banner';
 
@@ -53,13 +54,16 @@ export const Navbar = () => (
                 <NavbarLinkItems navItems={navItemsLeft} />
 
                 <NavigationMenuItem className="flex flex-1 items-center justify-center">
-                    <Button
-                        size="icon-lg"
-                        className="bg-accent text-foreground hover:bg-accent/80 rounded-full size-13 drop-shadow-sm drop-shadow-accent/50 -translate-y-5"
+                    <Link
+                        to={'/trip/new'}
+                        className={cn(
+                            buttonVariants({ size: 'icon-lg' }),
+                            'bg-accent text-foreground hover:bg-accent/80 rounded-full size-13 drop-shadow-sm drop-shadow-accent/50 -translate-y-5'
+                        )}
                     >
                         <PlusIcon weight="bold" className="size-5" />
                         <span className="sr-only">Add</span>
-                    </Button>
+                    </Link>
                 </NavigationMenuItem>
 
                 <NavbarLinkItems navItems={navItemsRight} />

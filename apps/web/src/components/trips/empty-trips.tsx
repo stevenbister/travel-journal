@@ -1,6 +1,7 @@
 import { MapTrifoldIcon, PlusIcon } from '@phosphor-icons/react';
+import { Link } from '@tanstack/react-router';
 
-import { Button } from '@repo/ui/components/ui/button';
+import { buttonVariants } from '@repo/ui/components/ui/button';
 
 export const EmptyTrips = () => {
     return (
@@ -20,9 +21,9 @@ export const EmptyTrips = () => {
                 day.
             </p>
 
-            <Button size="lg">
+            <Link to={'/trip/new'} className={buttonVariants({ size: 'lg' })}>
                 <PlusIcon /> Create your first trip
-            </Button>
+            </Link>
         </section>
     );
 };

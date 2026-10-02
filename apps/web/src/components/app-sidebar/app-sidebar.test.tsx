@@ -48,7 +48,7 @@ describe('AppSidebar', () => {
         const page = await renderComponent();
 
         await expect
-            .element(page.getByRole('button', { name: 'New trip' }))
+            .element(page.getByRole('link', { name: 'New trip' }))
             .toBeInTheDocument();
     });
 });

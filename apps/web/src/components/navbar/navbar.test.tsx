@@ -49,7 +49,7 @@ describe('Navbar', () => {
         const page = await renderComponent();
 
         await expect
-            .element(page.getByRole('button', { name: 'Add' }))
+            .element(page.getByRole('link', { name: 'Add' }))
             .toBeInTheDocument();
     });
 });
