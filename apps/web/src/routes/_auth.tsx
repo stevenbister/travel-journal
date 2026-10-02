@@ -1,4 +1,9 @@
-import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+import {
+    Outlet,
+    createFileRoute,
+    redirect,
+    useLocation,
+} from '@tanstack/react-router';
 
 import { Badge } from '@repo/ui/components/ui/badge';
 import { SidebarInset, SidebarProvider } from '@repo/ui/components/ui/sidebar';
@@ -28,6 +33,7 @@ export const Route = createFileRoute('/_auth')({
 });
 
 function AuthLayout() {
+    const location = useLocation();
     useRefreshSessionCache();
     const { isFetching, error } = useSync();
 
@@ -57,7 +63,7 @@ function AuthLayout() {
                 </SidebarInset>
             </SidebarProvider>
 
-            <Navbar />
+            {location.pathname !== '/trip/new' ? <Navbar /> : null}
         </div>
     );
 }
