@@ -12,6 +12,16 @@ import type {
     User,
 } from './types';
 
+export interface Trip {
+    id: string;
+    title: string;
+    startDate: number;
+    endDate: number;
+    createdBy: string;
+    createdAt: Date;
+    updatedAt: Date;
+}
+
 const VERSION = 1;
 
 export const db = new Dexie('travel-journal') as Dexie & {
