@@ -32,6 +32,7 @@ function AuthLayout() {
     const { isFetching, error } = useSync();
 
     if (error) {
+        console.error('Sync error:', error);
         toast.add({
             title: 'Sync Error',
             description: error.message,
