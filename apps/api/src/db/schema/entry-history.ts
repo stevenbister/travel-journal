@@ -1,4 +1,6 @@
+import { sql } from 'drizzle-orm';
 import { index, int, snakeCase, text } from 'drizzle-orm/sqlite-core';
+import { createSelectSchema } from 'drizzle-zod';
 
 import { user } from './auth';
 import { entries } from './entries';
@@ -15,11 +17,15 @@ export const entryHistory = snakeCase.table(
         editedBy: text()
             .notNull()
             .references(() => user.id, { onDelete: 'restrict' }),
-        updatedAt: int({ mode: 'timestamp' })
-            .$defaultFn(() => new Date())
-            .$onUpdate(() => new Date()),
-        changeSummary: text('change_summary').notNull(),
+        editedAt: int({ mode: 'timestamp_ms' }).notNull(),
+        serverUpdatedAt: int({ mode: 'timestamp_ms' })
+            .notNull()
+            .default(sql`0`),
     },
-    (t) => [index('entry_history_entry_idx').on(t.entryId, t.updatedAt)]
+    (t) => [
+        index('entry_history_entry_idx').on(t.entryId, t.editedAt),
+        index('entry_history_cursor_idx').on(t.serverUpdatedAt, t.id),
+    ]
 );
 
+export const selectHistorySchema = createSelectSchema(entryHistory);
