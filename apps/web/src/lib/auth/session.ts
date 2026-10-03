@@ -1,6 +1,7 @@
 import { authClient } from '@repo/core/auth/client';
 
-import { type CachedSession, db } from '../dexie/db';
+import { db } from '../dexie/db';
+import type { CachedSession } from '../dexie/types';
 import { checkIsOnline } from '../online/check-is-online';
 
 export async function flushPendingSignOut() {
