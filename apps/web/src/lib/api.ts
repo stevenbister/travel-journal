@@ -1,3 +1,5 @@
+import type { Entry, Trip } from './dexie/types';
+
 export class NetworkError extends Error {
     constructor(message: string, options?: ErrorOptions) {
         super(message, options);
@@ -37,6 +39,33 @@ const apiFetch = async <T>(path: string, init?: RequestInit): Promise<T> => {
 };
 
 export const api = {
-    health: (init?: RequestInit) =>
-        apiFetch<{ ok: boolean }>('/health', { cache: 'no-store', ...init }),
+    health: (init?: RequestInit) => {
+        return apiFetch<{ ok: boolean }>('/health', {
+            cache: 'no-store',
+            ...init,
+        });
+    },
+    sync: {
+        pull: (
+            params: { trips?: string; entries?: string },
+            init?: RequestInit
+        ) => {
+            const searchParams = new URLSearchParams();
+            if (params.trips) searchParams.set('trips', params.trips);
+            if (params.entries) searchParams.set('entries', params.entries);
+
+            return apiFetch<{
+                trips: {
+                    rows: Trip[];
+                    cursor: string | null;
+                    hasMore: boolean;
+                };
+                entries: {
+                    rows: Entry[];
+                    cursor: string | null;
+                    hasMore: boolean;
+                };
+            }>(`/sync/pull?${searchParams}`, init);
+        },
+    },
 };
