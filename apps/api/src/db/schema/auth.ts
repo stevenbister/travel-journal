@@ -1,5 +1,6 @@
 import { sql } from 'drizzle-orm';
 import { index, integer, sqliteTable, text } from 'drizzle-orm/sqlite-core';
+import { createSelectSchema } from 'drizzle-zod';
 
 export const user = sqliteTable('user', {
     id: text('id').primaryKey(),
@@ -98,3 +99,5 @@ export const rateLimit = sqliteTable('rate_limit', {
     count: integer('count').notNull(),
     lastRequest: integer('last_request').notNull(),
 });
+
+export const selectUserSchema = createSelectSchema(user);

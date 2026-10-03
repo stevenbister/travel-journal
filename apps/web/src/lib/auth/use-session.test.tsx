@@ -1,7 +1,8 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from 'vitest-browser-react';
 
-import { type CachedSession, db } from '../dexie/db';
+import { db } from '../dexie/db';
+import type { CachedSession } from '../dexie/types';
 import { useSession } from './use-session';
 
 const NOW = new Date('2026-10-02T12:00:00.000Z').getTime();

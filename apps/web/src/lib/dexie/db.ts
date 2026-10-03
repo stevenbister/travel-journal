@@ -1,25 +1,39 @@
 import Dexie, { type EntityTable } from 'dexie';
 
-export interface AuthMeta {
-    key: 'pendingSignOut';
-    at: number;
-}
-
-export interface CachedSession {
-    id: 'current';
-    user: { id: string; name: string; email: string; image?: string | null };
-    expiresAt: number;
-    cachedAt: number;
-}
+import type {
+    AuthMeta,
+    CachedSession,
+    Entry,
+    EntryHistory,
+    OutboxItem,
+    SyncMeta,
+    Trip,
+    TripMember,
+    User,
+} from './types';
 
 const VERSION = 1;
 
 export const db = new Dexie('travel-journal') as Dexie & {
     authSession: EntityTable<CachedSession, 'id'>;
     authMeta: EntityTable<AuthMeta, 'key'>;
+    users: EntityTable<User, 'id'>;
+    trips: EntityTable<Trip, 'id'>;
+    entries: EntityTable<Entry, 'id'>;
+    syncMeta: EntityTable<SyncMeta, 'key'>;
+    tripMembers: EntityTable<TripMember, 'tripId'>;
+    entryHistory: EntityTable<EntryHistory, 'id'>;
+    outbox: EntityTable<OutboxItem, 'key'>;
 };
 
 db.version(VERSION).stores({
     authSession: 'id',
     authMeta: 'key',
+    users: 'id',
+    trips: 'id, updatedAt',
+    entries: 'id, tripId, date, updatedAt',
+    syncMeta: 'key',
+    tripMembers: '[tripId+userId], userId',
+    entryHistory: 'id, entryId, editedAt',
+    outbox: 'key, collection, recordId, updatedAt, queuedAt',
 });

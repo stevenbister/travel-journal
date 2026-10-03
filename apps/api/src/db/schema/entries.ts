@@ -1,4 +1,6 @@
+import { sql } from 'drizzle-orm/sql/sql';
 import { index, int, real, snakeCase, text } from 'drizzle-orm/sqlite-core';
+import { createSelectSchema } from 'drizzle-zod';
 
 import { user } from './auth';
 import { trips } from './trips';
@@ -22,10 +24,15 @@ export const entries = snakeCase.table(
         createdAt: int({ mode: 'timestamp_ms' }).notNull(),
         // Set from the client's edit time so last-write-wins compares like with like
         updatedAt: int({ mode: 'timestamp_ms' }).notNull(),
+        // Server arrival time. Pull cursor only, never used for LWW.
+        // SQL default 0 only exists so the migration can add the column; always set it on write.
+        serverUpdatedAt: int({ mode: 'timestamp_ms' })
+            .notNull()
+            .default(sql`0`),
     },
     (t) => [
-        // Pull sync: WHERE trip_id = ? AND updated_at > ?
-        index('entries_trip_updated_idx').on(t.tripId, t.updatedAt),
+        // Pull sync: WHERE (server_updated_at, id) > (?, ?)
+        index('entries_cursor_idx').on(t.serverUpdatedAt, t.id),
         // Filter/search + timeline
         index('entries_trip_date_idx').on(t.tripId, t.entryDate),
         index('entries_trip_tag_idx').on(t.tripId, t.tag),
@@ -33,3 +40,4 @@ export const entries = snakeCase.table(
     ]
 );
 
+export const selectEntrySchema = createSelectSchema(entries);

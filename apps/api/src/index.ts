@@ -1,11 +1,11 @@
 import { configureOpenAPI } from './lib/configure-open-api';
 import { createApp } from './lib/create-app';
 import { healthCheckRoutes } from './routes/health/health.index';
-import { tripRoutes } from './routes/trips/trips.index';
+import { pullRoutes } from './routes/sync/pull/pull.index';
 
 const app = createApp();
 
-app.openapiRoutes([...healthCheckRoutes, ...tripRoutes] as const);
+app.openapiRoutes([...healthCheckRoutes, ...pullRoutes] as const);
 
 configureOpenAPI(app);
 
