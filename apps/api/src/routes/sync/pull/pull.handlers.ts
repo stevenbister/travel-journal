@@ -1,4 +1,4 @@
-import { and, asc, eq, gt, inArray, ne, or } from 'drizzle-orm';
+import { and, asc, eq, gt, inArray, or } from 'drizzle-orm';
 
 import { database } from '../../../db';
 import {
@@ -73,8 +73,7 @@ export const pullHandler: AuthedAppRouteHandler<PullRoute> = async (c) => {
             // Only two users; we want to have access to some user fields besides our own
             db
                 .select({ id: user.id, name: user.name, image: user.image })
-                .from(user)
-                .where(ne(user.id, userId)),
+                .from(user),
             db
                 .select({
                     tripId: tripMembers.tripId,

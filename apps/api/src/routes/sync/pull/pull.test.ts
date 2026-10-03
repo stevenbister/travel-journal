@@ -148,13 +148,11 @@ describe('Pull', () => {
                     JSON.stringify({
                         trips: formatResponse(mockTrips),
                         entries: formatResponse(mockEntries),
-                        users: mockUsers
-                            .filter(({ id }) => id !== MOCK_SESSION.user.id)
-                            .map(({ id, name, image }) => ({
-                                id,
-                                name,
-                                image,
-                            })),
+                        users: mockUsers.map(({ id, name, image }) => ({
+                            id,
+                            name,
+                            image,
+                        })),
                         entryHistory: formatResponse(mockHistory),
                         tripMembers: mockTripMembers,
                     })
