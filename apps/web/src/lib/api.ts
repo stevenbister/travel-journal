@@ -1,4 +1,10 @@
-import type { Entry, Trip } from './dexie/types';
+import type {
+    Entry,
+    EntryHistory,
+    Trip,
+    TripMember,
+    User,
+} from './dexie/types';
 
 export class NetworkError extends Error {
     constructor(message: string, options?: ErrorOptions) {
@@ -38,6 +44,20 @@ const apiFetch = async <T>(path: string, init?: RequestInit): Promise<T> => {
     return res.json();
 };
 
+type Page<R> = {
+    rows: R[];
+    cursor: string | null;
+    hasMore: boolean;
+};
+
+export type PullResponse = {
+    users: User[];
+    tripMembers: TripMember[];
+    trips: Page<Trip>;
+    entries: Page<Entry>;
+    entryHistory: Page<EntryHistory>;
+};
+
 export const api = {
     health: (init?: RequestInit) => {
         return apiFetch<{ ok: boolean }>('/health', {
@@ -47,25 +67,15 @@ export const api = {
     },
     sync: {
         pull: (
-            params: { trips?: string; entries?: string },
+            params: { trips?: string; entries?: string; entryHistory?: string },
             init?: RequestInit
         ) => {
             const searchParams = new URLSearchParams();
-            if (params.trips) searchParams.set('trips', params.trips);
-            if (params.entries) searchParams.set('entries', params.entries);
+            for (const [key, value] of Object.entries(params)) {
+                if (value !== undefined) searchParams.set(key, value);
+            }
 
-            return apiFetch<{
-                trips: {
-                    rows: Trip[];
-                    cursor: string | null;
-                    hasMore: boolean;
-                };
-                entries: {
-                    rows: Entry[];
-                    cursor: string | null;
-                    hasMore: boolean;
-                };
-            }>(`/sync/pull?${searchParams}`, init);
+            return apiFetch<PullResponse>(`/sync/pull?${searchParams}`, init);
         },
     },
 };

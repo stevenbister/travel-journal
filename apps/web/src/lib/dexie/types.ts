@@ -10,6 +10,12 @@ export interface CachedSession {
     cachedAt: number;
 }
 
+export interface User {
+    id: string;
+    name: string;
+    image?: string | null;
+}
+
 export interface Trip {
     id: string;
     title: string;
@@ -35,12 +41,24 @@ export interface Entry {
     updatedAt: number;
 }
 
-export interface SyncMeta {
-    key: 'trips' | 'entries';
-    value: string | null;
+export interface EntryHistory {
+    id: string;
+    entryId: string;
+    editedBy: string;
+    editedAt: number;
 }
 
-export type Collection = 'trips' | 'entries';
+export interface TripMember {
+    tripId: string;
+    userId: string;
+}
+
+export type Collection = 'trips' | 'entries' | 'entryHistory';
+
+export interface SyncMeta {
+    key: Collection;
+    value: string | null;
+}
 
 export interface OutboxItem {
     key: `${string}:${string}`; // `${collection}:${recordId}`. One row per record
