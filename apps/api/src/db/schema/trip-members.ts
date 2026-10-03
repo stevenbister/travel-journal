@@ -1,4 +1,5 @@
 import { index, primaryKey, snakeCase, text } from 'drizzle-orm/sqlite-core';
+import { createSelectSchema } from 'drizzle-zod';
 
 import { user } from './auth';
 import { trips } from './trips';
@@ -19,3 +20,4 @@ export const tripMembers = snakeCase.table(
     ]
 );
 
+export const selectTripMembersSchema = createSelectSchema(tripMembers);
