@@ -1,4 +1,4 @@
-import Dexie, { type EntityTable } from 'dexie';
+import Dexie, { type EntityTable, type Table } from 'dexie';
 
 import type {
     AuthMeta,
@@ -12,28 +12,18 @@ import type {
     User,
 } from './types';
 
-export interface Trip {
-    id: string;
-    title: string;
-    startDate: Date;
-    endDate: Date;
-    createdBy: string;
-    createdAt: Date;
-    updatedAt: Date;
-}
-
-const VERSION = 1;
+const VERSION = 2;
 
 export const db = new Dexie('travel-journal') as Dexie & {
     authSession: EntityTable<CachedSession, 'id'>;
-    authMeta: EntityTable<AuthMeta, 'key'>;
-    users: EntityTable<User, 'id'>;
-    trips: EntityTable<Trip, 'id'>;
-    entries: EntityTable<Entry, 'id'>;
-    syncMeta: EntityTable<SyncMeta, 'key'>;
-    tripMembers: EntityTable<TripMember, 'tripId'>;
-    entryHistory: EntityTable<EntryHistory, 'id'>;
-    outbox: EntityTable<OutboxItem, 'key'>;
+    authMeta: Table<AuthMeta, 'key'>;
+    users: Table<User, 'id'>;
+    trips: Table<Trip, 'id', Omit<Trip, 'isDeleted'>>;
+    entries: Table<Entry, 'id'>;
+    syncMeta: Table<SyncMeta, 'key'>;
+    tripMembers: Table<TripMember, 'tripId'>;
+    entryHistory: Table<EntryHistory, 'id'>;
+    outbox: Table<OutboxItem, 'key'>;
 };
 
 db.version(VERSION).stores({

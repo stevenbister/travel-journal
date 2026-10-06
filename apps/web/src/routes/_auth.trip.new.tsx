@@ -3,6 +3,8 @@ import { createFileRoute, useRouter } from '@tanstack/react-router';
 
 import { Button } from '@repo/ui/components/ui/button';
 
+import { CreateTripForm } from '../components/trips/create-trip-form';
+
 export const Route = createFileRoute('/_auth/trip/new')({
     component: NewTripRoute,
 });
@@ -23,6 +25,8 @@ function NewTripRoute() {
                 </Button>
                 <h1>New trip</h1>
             </header>
+
+            <CreateTripForm />
         </div>
     );
 }
