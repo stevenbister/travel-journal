@@ -4,6 +4,7 @@ import {
     redirect,
     useLocation,
 } from '@tanstack/react-router';
+import { useSpinDelay } from 'spin-delay';
 
 import { Badge } from '@repo/ui/components/ui/badge';
 import { SidebarInset, SidebarProvider } from '@repo/ui/components/ui/sidebar';
@@ -36,6 +37,10 @@ function AuthLayout() {
     const location = useLocation();
     useRefreshSessionCache();
     const { isFetching, error } = useSync();
+    const showSpinner = useSpinDelay(isFetching, {
+        delay: 0,
+        minDuration: 300,
+    });
 
     if (error) {
         console.error('Sync error:', error);
@@ -52,8 +57,11 @@ function AuthLayout() {
                 <AppSidebar />
 
                 <SidebarInset>
-                    {isFetching ? (
-                        <Badge variant="outline">
+                    {showSpinner ? (
+                        <Badge
+                            variant="outline"
+                            className="absolute top-0 right-0"
+                        >
                             <Spinner data-icon="inline-start" />
                             Syncing
                         </Badge>
