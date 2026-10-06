@@ -7,6 +7,7 @@ import {
     AvatarFallback,
     AvatarImage,
 } from '@repo/ui/components/ui/avatar';
+import { Skeleton } from '@repo/ui/components/ui/skeleton';
 import {
     ToggleGroup,
     ToggleGroupItem,
@@ -33,8 +34,14 @@ export const UserPicker = ({ id, labelledBy, onChange }: UserPickerProps) => {
         a.id === currentUserId ? -1 : b.id === currentUserId ? 1 : 0
     );
 
-    // TODO: Skeleton
-    if (!sortedUsers || !currentUserId) return null;
+    if (!sortedUsers || !currentUserId) {
+        return (
+            <div className="flex gap-2">
+                <Skeleton className="h-10 w-40" />
+                <Skeleton className="h-10 w-40" />
+            </div>
+        );
+    }
 
     return (
         <UsersToggle
