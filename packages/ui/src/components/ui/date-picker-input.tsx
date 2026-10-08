@@ -33,6 +33,9 @@ export function DateRangePicker({
                         id={id}
                         className="justify-start font-normal text-base rounded-none border-0 border-b border-input px-0! hover:bg-transparent dark:hover:bg-transparent aria-expanded:bg-transparent aria-expanded:border-b-primary aria-invalid:border-destructive aria-invalid:ring-0"
                         aria-invalid={ariaInvalid}
+                        motionProps={{
+                            whileTap: undefined,
+                        }}
                     >
                         <CalendarBlankIcon data-icon="inline-start" />
                         {date?.from ? (
