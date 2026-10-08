@@ -1,21 +1,9 @@
-import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
 
+import { renderWithRouter } from '../../__test__/helpers';
 import { Navbar } from './navbar';
 
-vi.mock('@tanstack/react-router', () => ({
-    Link: vi
-        .fn()
-        .mockImplementation(({ children }) => <a href="#">{children}</a>),
-}));
-
-const renderComponent = () =>
-    render(
-        <QueryClientProvider client={new QueryClient()}>
-            <Navbar />
-        </QueryClientProvider>
-    );
+const renderComponent = () => renderWithRouter(<Navbar />);
 
 describe('Navbar', () => {
     beforeEach(() => {
@@ -49,7 +37,7 @@ describe('Navbar', () => {
         const page = await renderComponent();
 
         await expect
-            .element(page.getByRole('button', { name: 'Add' }))
+            .element(page.getByRole('link', { name: 'Add' }))
             .toBeInTheDocument();
     });
 });

@@ -1,4 +1,10 @@
-import { Outlet, createFileRoute, redirect } from '@tanstack/react-router';
+import {
+    Outlet,
+    createFileRoute,
+    redirect,
+    useLocation,
+} from '@tanstack/react-router';
+import { useSpinDelay } from 'spin-delay';
 
 import { Badge } from '@repo/ui/components/ui/badge';
 import { SidebarInset, SidebarProvider } from '@repo/ui/components/ui/sidebar';
@@ -28,8 +34,13 @@ export const Route = createFileRoute('/_auth')({
 });
 
 function AuthLayout() {
+    const location = useLocation();
     useRefreshSessionCache();
     const { isFetching, error } = useSync();
+    const showSpinner = useSpinDelay(isFetching, {
+        delay: 0,
+        minDuration: 300,
+    });
 
     if (error) {
         console.error('Sync error:', error);
@@ -41,13 +52,16 @@ function AuthLayout() {
     }
 
     return (
-        <div className="p-8 md:p-10">
+        <div className="p-6 md:p-10">
             <SidebarProvider>
                 <AppSidebar />
 
                 <SidebarInset>
-                    {isFetching ? (
-                        <Badge variant="outline">
+                    {showSpinner ? (
+                        <Badge
+                            variant="outline"
+                            className="absolute top-0 right-0"
+                        >
                             <Spinner data-icon="inline-start" />
                             Syncing
                         </Badge>
@@ -57,7 +71,7 @@ function AuthLayout() {
                 </SidebarInset>
             </SidebarProvider>
 
-            <Navbar />
+            {location.pathname !== '/trip/new' ? <Navbar /> : null}
         </div>
     );
 }

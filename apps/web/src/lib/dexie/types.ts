@@ -19,13 +19,13 @@ export interface User {
 export interface Trip {
     id: string;
     title: string;
-    startDate: number;
-    endDate: number;
+    startDate: string;
+    endDate: string;
     coverPhotoId: string | null;
     createdBy: string;
     isDeleted: boolean;
-    createdAt: number;
-    updatedAt: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface Entry {

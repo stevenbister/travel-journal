@@ -1,26 +1,11 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from 'vitest-browser-react';
 
+import { makeCachedSession } from '../../__fixtures__/session';
 import { db } from '../dexie/db';
-import type { CachedSession } from '../dexie/types';
 import { useSession } from './use-session';
 
 const NOW = new Date('2026-10-02T12:00:00.000Z').getTime();
-
-const makeCachedSession = (
-    overrides: Partial<CachedSession> = {}
-): CachedSession => ({
-    id: 'current',
-    user: {
-        id: 'u1',
-        name: 'Steven',
-        email: 's@example.com',
-        image: null,
-    },
-    expiresAt: NOW + 60_000,
-    cachedAt: NOW - 1000,
-    ...overrides,
-});
 
 beforeEach(async () => {
     await db.authSession.clear();

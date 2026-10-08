@@ -12,13 +12,13 @@ import type {
     User,
 } from './types';
 
-const VERSION = 1;
+const VERSION = 2;
 
 export const db = new Dexie('travel-journal') as Dexie & {
     authSession: EntityTable<CachedSession, 'id'>;
     authMeta: EntityTable<AuthMeta, 'key'>;
     users: EntityTable<User, 'id'>;
-    trips: EntityTable<Trip, 'id'>;
+    trips: EntityTable<Trip, 'id', Omit<Trip, 'isDeleted'>>;
     entries: EntityTable<Entry, 'id'>;
     syncMeta: EntityTable<SyncMeta, 'key'>;
     tripMembers: EntityTable<TripMember, 'tripId'>;
