@@ -21,6 +21,7 @@
         "date-fns": "^4.4.0",
         "dexie": "^4.4.6",
         "dexie-react-hooks": "^4.4.0",
+        "motion": "^14.0.0",
         "react": "19.3.0",
         "react-day-picker": "^10.0.2",
         "react-dom": "19.3.0",
