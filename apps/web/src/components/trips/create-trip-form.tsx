@@ -1,7 +1,11 @@
 import { MapPinIcon } from '@phosphor-icons/react';
 import { useForm } from '@tanstack/react-form';
 import { useNavigate } from '@tanstack/react-router';
+import { type Variants, motion, stagger } from 'motion/react';
+import React from 'react';
 import z from 'zod';
+
+import { wait } from '@repo/core/utils/wait';
 
 import { Button } from '@repo/ui/components/ui/button';
 import { DateRangePicker } from '@repo/ui/components/ui/date-picker-input';
@@ -12,6 +16,7 @@ import {
     FieldLabel,
 } from '@repo/ui/components/ui/field';
 import { Input } from '@repo/ui/components/ui/input';
+import { Spinner } from '@repo/ui/components/ui/spinner';
 import { toast } from '@repo/ui/components/ui/toast';
 
 import { useSession } from '../../lib/auth/use-session';
@@ -37,9 +42,16 @@ const formSchema = z.object({
 });
 type FormInput = z.input<typeof formSchema>;
 
-export const CreateTripForm = () => {
+const MotionField = motion.create(Field);
+
+type CreateTripFormProps = {
+    motionVariants: Variants;
+};
+
+export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
     const { data: session } = useSession();
     const navigate = useNavigate();
+    const [isSubmitting, setIsSubmitting] = React.useState(false);
 
     const defaultValues: FormInput = {
         tripName: '',
@@ -61,6 +73,7 @@ export const CreateTripForm = () => {
         }
 
         const tripId = crypto.randomUUID();
+        setIsSubmitting(true);
 
         try {
             await db.trips.add({
@@ -81,8 +94,10 @@ export const CreateTripForm = () => {
                 }))
             );
 
-            form.reset();
+            // Writing to indexDB is very fast, delay briefly so we can show the loading state as a bit of a nicety
+            await wait(500);
 
+            form.reset();
             // TODO: Navigate to the newly created trip's page once implemented
             await navigate({ to: '/' });
         } catch (error) {
@@ -92,6 +107,8 @@ export const CreateTripForm = () => {
                 description: 'Please try again later.',
                 type: 'error',
             });
+        } finally {
+            setIsSubmitting(false);
         }
     };
 
@@ -111,9 +128,12 @@ export const CreateTripForm = () => {
             }}
             className="flex flex-col gap-4 h-full pb-12"
         >
-            <div className="grid place-content-center bg-secondary text-secondary-foreground w-full h-32 rounded-2xl">
+            <motion.div
+                className="grid place-content-center bg-secondary text-secondary-foreground w-full h-32 rounded-2xl"
+                variants={motionVariants}
+            >
                 <MapPinIcon size={32} />
-            </div>
+            </motion.div>
 
             <FieldGroup>
                 <form.Field name="tripName">
@@ -123,7 +143,10 @@ export const CreateTripForm = () => {
                             !field.state.meta.isValid;
 
                         return (
-                            <Field data-invalid={isInvalid}>
+                            <MotionField
+                                data-invalid={isInvalid}
+                                variants={motionVariants}
+                            >
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -147,7 +170,7 @@ export const CreateTripForm = () => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </Field>
+                            </MotionField>
                         );
                     }}
                 </form.Field>
@@ -159,7 +182,10 @@ export const CreateTripForm = () => {
                             !field.state.meta.isValid;
 
                         return (
-                            <Field>
+                            <MotionField
+                                data-invalid={isInvalid}
+                                variants={motionVariants}
+                            >
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -181,7 +207,7 @@ export const CreateTripForm = () => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </Field>
+                            </MotionField>
                         );
                     }}
                 </form.Field>
@@ -193,7 +219,10 @@ export const CreateTripForm = () => {
                             !field.state.meta.isValid;
 
                         return (
-                            <Field>
+                            <MotionField
+                                data-invalid={isInvalid}
+                                variants={motionVariants}
+                            >
                                 <FieldLabel
                                     id={field.name + '-label'}
                                     className="text-muted-foreground"
@@ -212,26 +241,46 @@ export const CreateTripForm = () => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </Field>
+                            </MotionField>
                         );
                     }}
                 </form.Field>
             </FieldGroup>
 
             <form.Subscribe
-                selector={({ canSubmit, isPristine }) => ({
+                selector={({ canSubmit, isPristine, isSubmitted }) => ({
                     canSubmit,
                     isPristine,
+                    isSubmitted,
                 })}
             >
-                {({ canSubmit, isPristine }) => {
+                {({ canSubmit, isPristine, isSubmitted }) => {
+                    const isDisabled = !canSubmit || isPristine;
+
                     return (
                         <Button
                             type="submit"
                             className="mt-auto md:mt-0"
-                            disabled={!canSubmit || isPristine}
+                            disabled={isDisabled}
+                            motionProps={{
+                                variants: {
+                                    ...(isDisabled
+                                        ? {
+                                              ...motionVariants,
+                                              show: {
+                                                  ...motionVariants.show,
+                                                  opacity: 0.5,
+                                              },
+                                          }
+                                        : motionVariants),
+                                },
+                            }}
                         >
-                            Create trip
+                            {isSubmitting ? <Spinner /> : null}
+                            {!isSubmitting && isSubmitted
+                                ? 'Trip created!'
+                                : ''}
+                            {isSubmitting ? 'Creating trip' : 'Create trip'}
                         </Button>
                     );
                 }}
