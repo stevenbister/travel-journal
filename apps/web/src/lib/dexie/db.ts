@@ -1,4 +1,4 @@
-import Dexie, { type EntityTable, type Table } from 'dexie';
+import Dexie, { type EntityTable } from 'dexie';
 
 import type {
     AuthMeta,
@@ -16,14 +16,14 @@ const VERSION = 2;
 
 export const db = new Dexie('travel-journal') as Dexie & {
     authSession: EntityTable<CachedSession, 'id'>;
-    authMeta: Table<AuthMeta, 'key'>;
-    users: Table<User, 'id'>;
-    trips: Table<Trip, 'id', Omit<Trip, 'isDeleted'>>;
-    entries: Table<Entry, 'id'>;
-    syncMeta: Table<SyncMeta, 'key'>;
-    tripMembers: Table<TripMember, 'tripId'>;
-    entryHistory: Table<EntryHistory, 'id'>;
-    outbox: Table<OutboxItem, 'key'>;
+    authMeta: EntityTable<AuthMeta, 'key'>;
+    users: EntityTable<User, 'id'>;
+    trips: EntityTable<Trip, 'id', Omit<Trip, 'isDeleted'>>;
+    entries: EntityTable<Entry, 'id'>;
+    syncMeta: EntityTable<SyncMeta, 'key'>;
+    tripMembers: EntityTable<TripMember, 'tripId'>;
+    entryHistory: EntityTable<EntryHistory, 'id'>;
+    outbox: EntityTable<OutboxItem, 'key'>;
 };
 
 db.version(VERSION).stores({
