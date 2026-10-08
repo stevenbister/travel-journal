@@ -1,5 +1,6 @@
 import { CheckIcon } from '@phosphor-icons/react';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { AnimatePresence, motion } from 'motion/react';
 import React from 'react';
 
 import {
@@ -82,8 +83,10 @@ const UsersToggle = ({
             aria-labelledby={labelledBy}
         >
             {users.map(({ id, name, image }) => {
+                const isSelected = selected.includes(id);
+
                 return (
-                    <ToggleGroupItem key={id} value={id} className="gap-2">
+                    <ToggleGroupItem key={id} value={id} className="gap-0">
                         <Avatar size="sm">
                             {image ? <AvatarImage src={image} /> : null}
                             <AvatarFallback
@@ -93,11 +96,24 @@ const UsersToggle = ({
                             </AvatarFallback>
                         </Avatar>
 
-                        {name}
+                        <span className="ml-2">{name}</span>
 
-                        {selected.includes(id) && (
-                            <CheckIcon weight="bold" className="text-primary" />
-                        )}
+                        <AnimatePresence initial={false}>
+                            {isSelected && (
+                                <motion.span
+                                    key="check"
+                                    className="flex overflow-hidden"
+                                    initial={{ width: 0, opacity: 0 }}
+                                    animate={{ width: 'auto', opacity: 1 }}
+                                    exit={{ width: 0, opacity: 0 }}
+                                >
+                                    <CheckIcon
+                                        weight="bold"
+                                        className="ml-2 shrink-0 text-primary"
+                                    />
+                                </motion.span>
+                            )}
+                        </AnimatePresence>
                     </ToggleGroupItem>
                 );
             })}

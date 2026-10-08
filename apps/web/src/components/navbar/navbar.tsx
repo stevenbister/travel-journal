@@ -8,7 +8,7 @@ import {
 } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
 
-import { Button, buttonVariants } from '@repo/ui/components/ui/button';
+import { buttonVariants } from '@repo/ui/components/ui/button';
 import {
     NavigationMenu,
     NavigationMenuItem,
@@ -17,6 +17,7 @@ import {
 } from '@repo/ui/components/ui/navigation-menu';
 import { cn } from '@repo/ui/lib/utils';
 
+import { MotionLink } from '../MotionLink/MotionLink';
 import { NetworkBanner } from '../network-banner/network-banner';
 
 type NavItems = {
@@ -54,7 +55,7 @@ export const Navbar = () => (
                 <NavbarLinkItems navItems={navItemsLeft} />
 
                 <NavigationMenuItem className="flex flex-1 items-center justify-center">
-                    <Link
+                    <MotionLink
                         to={'/trip/new'}
                         className={cn(
                             buttonVariants({ size: 'icon-lg' }),
@@ -63,7 +64,7 @@ export const Navbar = () => (
                     >
                         <PlusIcon weight="bold" className="size-5" />
                         <span className="sr-only">Add</span>
-                    </Link>
+                    </MotionLink>
                 </NavigationMenuItem>
 
                 <NavbarLinkItems navItems={navItemsRight} />
