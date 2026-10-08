@@ -1,5 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router';
 import { useLiveQuery } from 'dexie-react-hooks';
+import { motion } from 'motion/react';
+
+import {
+    HIDE_SHOW_CONTAINER,
+    HIDE_SHOW_ITEM,
+} from '@repo/ui/constants/animation';
 
 import { EmptyTrips } from '../components/trips/empty-trips';
 import { useSession } from '../lib/auth/use-session';
@@ -14,16 +20,21 @@ function RouteComponent() {
     const user = session?.user;
 
     return (
-        <div className="flex flex-col gap-4 h-full">
-            <header>
+        <motion.div
+            className="flex flex-col gap-4 h-full"
+            variants={HIDE_SHOW_CONTAINER}
+            initial="hidden"
+            animate="show"
+        >
+            <motion.header variants={HIDE_SHOW_ITEM}>
                 <span className="text-sm text-muted-foreground">
                     Welcome {user?.name}
                 </span>
                 <h1>Your trips</h1>
-            </header>
+            </motion.header>
 
             <TripsList />
-        </div>
+        </motion.div>
     );
 }
 
