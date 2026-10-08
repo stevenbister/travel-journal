@@ -12,7 +12,7 @@ import {
 } from '@repo/ui/components/ui/sidebar';
 import { cn } from '@repo/ui/lib/utils';
 
-import { MotionLink } from '../MotionLink/MotionLink';
+import { MotionLink } from '../motion-link/motion-link';
 import { NAV_ITEMS } from '../navbar/navbar';
 
 export function AppSidebar() {

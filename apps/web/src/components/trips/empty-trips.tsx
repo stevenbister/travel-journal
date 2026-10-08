@@ -7,7 +7,7 @@ import {
     HIDE_SHOW_ITEM,
 } from '@repo/ui/constants/animation';
 
-import { MotionLink } from '../MotionLink/MotionLink';
+import { MotionLink } from '../motion-link/motion-link';
 
 export const EmptyTrips = () => {
     return (

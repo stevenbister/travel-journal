@@ -17,7 +17,7 @@ import {
 } from '@repo/ui/components/ui/navigation-menu';
 import { cn } from '@repo/ui/lib/utils';
 
-import { MotionLink } from '../MotionLink/MotionLink';
+import { MotionLink } from '../motion-link/motion-link';
 import { NetworkBanner } from '../network-banner/network-banner';
 
 type NavItems = {
