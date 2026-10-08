@@ -33,6 +33,8 @@ vi.mock('@repo/ui/components/ui/date-picker-input', () => {
     };
 });
 
+const renderComponent = () => render(<CreateTripForm motionVariants={{}} />);
+
 describe('CreateTripForm', () => {
     beforeEach(async () => {
         await db.users.bulkAdd([
@@ -53,7 +55,7 @@ describe('CreateTripForm', () => {
     });
 
     it('renders the form with the correct fields and submit button', async () => {
-        const page = await render(<CreateTripForm />);
+        const page = await renderComponent();
 
         await expect
             .element(
@@ -105,7 +107,7 @@ describe('CreateTripForm', () => {
     });
 
     it('disables the submit button when required fields are empty', async () => {
-        const page = await render(<CreateTripForm />);
+        const page = await renderComponent();
 
         const submitButton = page.getByRole('button', {
             name: 'Create trip',
@@ -115,7 +117,7 @@ describe('CreateTripForm', () => {
     });
 
     it('enables the submit button when all required fields are filled', async () => {
-        const page = await render(<CreateTripForm />);
+        const page = await renderComponent();
 
         await page
             .getByRole('textbox', {
@@ -145,7 +147,7 @@ describe('CreateTripForm', () => {
     });
 
     it('saves the trip when the form is submitted', async () => {
-        const page = await render(<CreateTripForm />);
+        const page = await renderComponent();
 
         await page
             .getByRole('textbox', {

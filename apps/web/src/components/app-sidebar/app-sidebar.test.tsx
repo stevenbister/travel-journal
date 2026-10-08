@@ -1,22 +1,16 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
 
 import { SidebarProvider } from '@repo/ui/components/ui/sidebar';
 
+import { renderWithRouter } from '../../__test__/helpers';
 import { AppSidebar } from './app-sidebar';
-
-vi.mock('@tanstack/react-router', () => ({
-    Link: vi
-        .fn()
-        .mockImplementation(({ children }) => <a href="#">{children}</a>),
-}));
 
 vi.mock('@repo/ui/hooks/use-mobile', () => ({
     useIsMobile: () => false,
 }));
 
 const renderComponent = () =>
-    render(
+    renderWithRouter(
         <SidebarProvider>
             <AppSidebar />
         </SidebarProvider>
