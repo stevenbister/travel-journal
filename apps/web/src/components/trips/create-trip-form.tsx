@@ -1,7 +1,7 @@
 import { MapPinIcon } from '@phosphor-icons/react';
 import { useForm } from '@tanstack/react-form';
 import { useNavigate } from '@tanstack/react-router';
-import { type Variants, motion, stagger } from 'motion/react';
+import { type Variants, motion } from 'motion/react';
 import React from 'react';
 import z from 'zod';
 
