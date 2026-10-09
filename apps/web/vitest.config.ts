@@ -15,6 +15,7 @@ export default defineConfig({
                     },
                     include: ['src/**/*.test.tsx'],
                     exclude: ['src/**/*.test.ts'],
+                    setupFiles: ['./vitest-setup.browser.ts'],
                 },
             },
             {

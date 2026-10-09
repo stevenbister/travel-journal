@@ -70,3 +70,10 @@ export interface OutboxItem {
     lastError?: string;
     failed?: boolean;
 }
+
+export interface TripWithDetails extends Trip {
+    members: User[];
+    entryCount?: number;
+}
+
+export type TripType = 'current' | 'upcoming' | 'past';
