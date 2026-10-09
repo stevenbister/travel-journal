@@ -1,3 +1,10 @@
+import { motion } from 'motion/react';
+
+import {
+    HIDE_SHOW_CONTAINER,
+    HIDE_SHOW_ITEM,
+} from '@repo/ui/constants/animation';
+
 export const Section = ({
     heading,
     children,
@@ -5,12 +12,21 @@ export const Section = ({
     heading?: string;
     children: React.ReactNode;
 }) => (
-    <section className="flex flex-col gap-3">
+    <motion.section
+        className="flex flex-col gap-3"
+        variants={HIDE_SHOW_CONTAINER}
+        initial="hidden"
+        animate="show"
+    >
         {heading ? (
-            <h2 className="font-sans text-muted-foreground text-sm font-medium ">
+            <motion.h2
+                className="font-sans text-muted-foreground text-sm font-medium "
+                variants={HIDE_SHOW_ITEM}
+            >
                 {heading}
-            </h2>
+            </motion.h2>
         ) : null}
-        {children}
-    </section>
+
+        <motion.div variants={HIDE_SHOW_ITEM}>{children}</motion.div>
+    </motion.section>
 );
