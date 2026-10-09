@@ -1,4 +1,5 @@
 import { AirplaneLandingIcon, CalendarDotsIcon } from '@phosphor-icons/react';
+import { Link } from '@tanstack/react-router';
 
 import {
     Avatar,
@@ -24,38 +25,43 @@ export type TripCardProps = {
 };
 
 export const TripCard = ({ trip, tripType }: TripCardProps) => {
+    const { id, title, members } = trip;
     const isPast = tripType === 'past';
     const description = getTripDateDescription(trip, tripType);
 
     return (
-        <Card size="sm">
-            <CardHeader className="flex gap-4 items-center">
-                <IconBox
-                    size="sm"
-                    Icon={isPast ? AirplaneLandingIcon : CalendarDotsIcon}
-                />
+        <Link to={'/trip/$tripId'} params={{ tripId: id }}>
+            <Card size="sm">
+                <CardHeader className="flex gap-4 items-center">
+                    <IconBox
+                        size="sm"
+                        Icon={isPast ? AirplaneLandingIcon : CalendarDotsIcon}
+                    />
 
-                <div className="flex flex-col gap-1">
-                    <CardTitle className="font-display">{trip.title}</CardTitle>
+                    <div className="flex flex-col gap-1">
+                        <CardTitle className="font-display">{title}</CardTitle>
 
-                    <CardDescription className="text-xs">
-                        {description}
-                    </CardDescription>
-                </div>
+                        <CardDescription className="text-xs">
+                            {description}
+                        </CardDescription>
+                    </div>
 
-                <AvatarGroup className="ms-auto">
-                    {trip.members.map(({ id, name, image }) => (
-                        <Avatar size="sm" key={id}>
-                            {image ? <AvatarImage src={image} /> : null}
-                            <AvatarFallback
-                                className={cn(name === 'Grace' && 'bg-primary')}
-                            >
-                                {name?.[0]}
-                            </AvatarFallback>
-                        </Avatar>
-                    ))}
-                </AvatarGroup>
-            </CardHeader>
-        </Card>
+                    <AvatarGroup className="ms-auto">
+                        {members.map(({ id, name, image }) => (
+                            <Avatar size="sm" key={id}>
+                                {image ? <AvatarImage src={image} /> : null}
+                                <AvatarFallback
+                                    className={cn(
+                                        name === 'Grace' && 'bg-primary'
+                                    )}
+                                >
+                                    {name?.[0]}
+                                </AvatarFallback>
+                            </Avatar>
+                        ))}
+                    </AvatarGroup>
+                </CardHeader>
+            </Card>
+        </Link>
     );
 };

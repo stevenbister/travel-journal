@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { intervalToDuration } from 'date-fns';
 
 import {
@@ -23,7 +24,7 @@ import type { TripCardProps } from './trip-card';
 export type HeroTripCardProps = Pick<TripCardProps, 'trip' | 'tripType'>;
 
 export const HeroTripCard = ({ trip, tripType }: HeroTripCardProps) => {
-    const { startDate, endDate } = trip;
+    const { id, startDate, endDate } = trip;
 
     const description = getTripDateDescription(trip, tripType);
 
@@ -57,51 +58,55 @@ export const HeroTripCard = ({ trip, tripType }: HeroTripCardProps) => {
     };
 
     return (
-        <Card
-            className="relative h-44 justify-between text-primary-foreground dark:text-card-foreground bg-linear-to-br from-primary to-[hsl(168_55%_13%)]"
-            data-hero-card
-        >
-            <CardHeader>
-                <div className="flex justify-between items-center">
-                    {isCurrent || isUpcoming ? (
-                        <Badge className="text-primary-foreground dark:text-card-foreground">
-                            {getBadgeContent()}
-                        </Badge>
-                    ) : null}
+        <Link to={'/trip/$tripId'} params={{ tripId: id }}>
+            <Card
+                className="relative h-44 justify-between text-primary-foreground dark:text-card-foreground bg-linear-to-br from-primary to-[hsl(168_55%_13%)]"
+                data-hero-card
+            >
+                <CardHeader>
+                    <div className="flex justify-between items-center">
+                        {isCurrent || isUpcoming ? (
+                            <Badge className="text-primary-foreground dark:text-card-foreground">
+                                {getBadgeContent()}
+                            </Badge>
+                        ) : null}
 
-                    <AvatarGroup className="ms-auto">
-                        {trip.members.map(({ id, name, image }) => (
-                            <Avatar size="sm" key={id}>
-                                {image ? <AvatarImage src={image} /> : null}
-                                <AvatarFallback
-                                    className={cn(
-                                        name === 'Grace' && 'bg-primary'
-                                    )}
-                                >
-                                    {name?.[0]}
-                                </AvatarFallback>
-                            </Avatar>
-                        ))}
-                    </AvatarGroup>
-                </div>
-            </CardHeader>
+                        <AvatarGroup className="ms-auto">
+                            {trip.members.map(({ id, name, image }) => (
+                                <Avatar size="sm" key={id}>
+                                    {image ? <AvatarImage src={image} /> : null}
+                                    <AvatarFallback
+                                        className={cn(
+                                            name === 'Grace' && 'bg-primary'
+                                        )}
+                                    >
+                                        {name?.[0]}
+                                    </AvatarFallback>
+                                </Avatar>
+                            ))}
+                        </AvatarGroup>
+                    </div>
+                </CardHeader>
 
-            <CardContent className="gap-1">
-                <CardTitle className="font-display text-2xl">
-                    {trip.title}
-                </CardTitle>
+                <CardContent className="gap-1">
+                    <CardTitle className="font-display text-2xl">
+                        {trip.title}
+                    </CardTitle>
 
-                <CardDescription className="text-sm text-primary-foreground dark:text-card-foreground">
-                    {description}
-                </CardDescription>
-            </CardContent>
+                    <CardDescription className="text-sm text-primary-foreground dark:text-card-foreground">
+                        {description}
+                    </CardDescription>
+                </CardContent>
 
-            {isCurrent ? (
-                <Progress
-                    value={(daysSinceStart.days! / lengthOfTrip.days!) * 100}
-                    className="absolute bottom-0 inset-x-0"
-                />
-            ) : null}
-        </Card>
+                {isCurrent ? (
+                    <Progress
+                        value={
+                            (daysSinceStart.days! / lengthOfTrip.days!) * 100
+                        }
+                        className="absolute bottom-0 inset-x-0"
+                    />
+                ) : null}
+            </Card>
+        </Link>
     );
 };
