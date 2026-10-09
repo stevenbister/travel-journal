@@ -34,10 +34,10 @@ export const trips = snakeCase.table(
         // Client edit time (LWW clock), same as entries
         updatedAt: int({ mode: 'timestamp_ms' }).notNull(),
         // Server arrival time. Pull cursor only, never used for LWW.
-        // SQL default 0 only exists so the migration can add the column; always set it on write.
         serverUpdatedAt: int({ mode: 'timestamp_ms' })
-            .notNull()
-            .default(sql`0`),
+            .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+            .$onUpdate(() => /* @__PURE__ */ new Date())
+            .notNull(),
     },
     (t) => [
         // Pull sync: WHERE (server_updated_at, id) > (?, ?)

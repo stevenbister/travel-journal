@@ -19,8 +19,9 @@ export const entryHistory = snakeCase.table(
             .references(() => user.id, { onDelete: 'restrict' }),
         editedAt: int({ mode: 'timestamp_ms' }).notNull(),
         serverUpdatedAt: int({ mode: 'timestamp_ms' })
-            .notNull()
-            .default(sql`0`),
+            .default(sql`(cast(unixepoch('subsecond') * 1000 as integer))`)
+            .$onUpdate(() => /* @__PURE__ */ new Date())
+            .notNull(),
     },
     (t) => [
         index('entry_history_entry_idx').on(t.entryId, t.editedAt),

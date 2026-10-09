@@ -9,6 +9,7 @@ import {
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 
 import { LogoutButton } from '../components/auth/logout-button';
+import { Section } from '../components/section/section';
 import { ThemePicker } from '../components/theme-picker/theme-picker';
 import { useSession } from '../lib/auth/use-session';
 
@@ -41,9 +42,6 @@ function RouteComponent() {
             </section>
 
             <div className="flex flex-col gap-6 col-span-full lg:col-start-2 lg:col-end-3">
-                <Section heading="Traveling with">
-                    <></>
-                </Section>
                 <Section heading="Settings">
                     <ThemePicker />
                 </Section>
@@ -70,20 +68,3 @@ function RouteComponent() {
         </div>
     );
 }
-
-const Section = ({
-    heading,
-    children,
-}: {
-    heading?: string;
-    children: React.ReactNode;
-}) => (
-    <section className="flex flex-col gap-3">
-        {heading ? (
-            <h2 className="font-sans text-muted-foreground text-sm font-medium ">
-                {heading}
-            </h2>
-        ) : null}
-        {children}
-    </section>
-);
