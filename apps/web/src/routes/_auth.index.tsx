@@ -19,7 +19,7 @@ function RouteComponent() {
 
     return (
         <motion.div
-            className="flex flex-col gap-6 h-full w-full max-w-4xl mx-auto"
+            className="container flex flex-col gap-6 h-full w-full max-w-4xl mx-auto"
             variants={HIDE_SHOW_CONTAINER}
             initial="hidden"
             animate="show"

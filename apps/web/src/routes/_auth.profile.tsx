@@ -22,7 +22,7 @@ function RouteComponent() {
     const user = data?.user;
 
     return (
-        <div className="grid gap-6 lg:my-0 lg:mx-auto lg:grid-cols-[340px_minmax(0,600px)]">
+        <div className="container grid gap-6 lg:my-0 lg:mx-auto lg:grid-cols-[340px_minmax(0,600px)]">
             <h1>Profile</h1>
 
             <section className="flex items-center gap-4 col-span-full lg:col-start-1 lg:col-end-2  lg:flex-col lg:bg-card lg:rounded-xl lg:p-6 lg:text-card-foreground lg:shadow-xs lg:ring-1 lg:ring-foreground/10">

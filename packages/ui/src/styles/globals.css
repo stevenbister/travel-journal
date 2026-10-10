@@ -162,3 +162,7 @@
         @apply text-xl font-semibold;
     }
 }
+
+@utility container {
+    @apply p-6 md:p-10;
+}
