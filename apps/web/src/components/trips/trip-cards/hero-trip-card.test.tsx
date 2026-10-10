@@ -41,7 +41,7 @@ describe('HeroTripCard', () => {
             trip: tripsFixture.upcoming[0]!,
             tripType: 'upcoming',
             description: 'Starts in 2 months',
-            badge: '22  days to go!',
+            badge: '2 months to go!',
         },
     ])(
         'renders the $tripType trip card',

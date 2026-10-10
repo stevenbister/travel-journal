@@ -7,7 +7,6 @@ import {
     AvatarGroup,
     AvatarImage,
 } from '@repo/ui/components/ui/avatar';
-import { Badge } from '@repo/ui/components/ui/badge';
 import {
     Card,
     CardContent,
@@ -18,6 +17,7 @@ import {
 import { Progress } from '@repo/ui/components/ui/progress';
 import { cn } from '@repo/ui/lib/utils';
 
+import { TripBadge } from '../trip-badge';
 import { getTripDateDescription } from '../utils/get-trip-desciprion';
 import type { TripCardProps } from './trip-card';
 
@@ -38,24 +38,9 @@ export const HeroTripCard = ({ trip, tripType }: HeroTripCardProps) => {
         end: endDate,
     });
 
-    const daysUntilStart = intervalToDuration({
-        start: new Date(),
-        end: startDate,
-    });
-
     const isCurrent =
         tripType === 'current' && !!(daysSinceStart.days && lengthOfTrip.days);
     const isUpcoming = tripType === 'upcoming';
-
-    const getBadgeContent = () => {
-        if (isCurrent) {
-            return `Day ${daysSinceStart.days} of ${lengthOfTrip.days}`;
-        }
-
-        if (isUpcoming) {
-            return `${daysUntilStart.days} days to go!`;
-        }
-    };
 
     return (
         <Link to={'/trip/$tripId'} params={{ tripId: id }}>
@@ -66,9 +51,10 @@ export const HeroTripCard = ({ trip, tripType }: HeroTripCardProps) => {
                 <CardHeader>
                     <div className="flex justify-between items-center">
                         {isCurrent || isUpcoming ? (
-                            <Badge className="text-primary-foreground dark:text-card-foreground">
-                                {getBadgeContent()}
-                            </Badge>
+                            <TripBadge
+                                startDate={startDate}
+                                endDate={endDate}
+                            />
                         ) : null}
 
                         <AvatarGroup className="ms-auto">
