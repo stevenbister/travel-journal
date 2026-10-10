@@ -1,5 +1,6 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
 
+import { TripHeader } from '../components/trips/trip-header';
 import { db } from '../lib/dexie/db';
 
 export const Route = createFileRoute('/_auth/trip/$tripId')({
@@ -15,5 +16,9 @@ export const Route = createFileRoute('/_auth/trip/$tripId')({
 });
 
 function RouteComponent() {
-    return <div>Hello "/_auth/trip/$tripId"!</div>;
+    return (
+        <div className="h-full w-full max-w-4xl mx-auto">
+            <TripHeader />
+        </div>
+    );
 }

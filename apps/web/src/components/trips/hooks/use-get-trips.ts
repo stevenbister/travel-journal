@@ -5,6 +5,7 @@ import * as React from 'react';
 import { db } from '../../../lib/dexie/db';
 import type { TripWithDetails } from '../../../lib/dexie/types';
 import { useNow } from '../../../lib/sync/use-now';
+import { mapUsersToTrip } from '../utils/map-users-to-trip';
 
 const getTripsWithDetails = async () => {
     const trips = (await db.trips.toArray()).filter((t) => !t.isDeleted);
@@ -24,25 +25,7 @@ const getTripsWithDetails = async () => {
         db.tripMembers.where('tripId').anyOf(tripIds).toArray(),
     ]);
 
-    const users = await db.users.bulkGet([
-        ...new Set(memberRows.map((m) => m.userId)),
-    ]);
-    const userById = new Map(users.filter(Boolean).map((u) => [u!.id, u!]));
-
-    const membersByTrip = new Map<
-        string,
-        { id: string; name: string; image: string | null }[]
-    >();
-
-    for (const m of memberRows) {
-        const user = userById.get(m.userId);
-        if (!user) continue;
-
-        const list = membersByTrip.get(m.tripId) ?? [];
-        list.push({ id: user.id, name: user.name, image: user.image ?? null });
-
-        membersByTrip.set(m.tripId, list);
-    }
+    const membersByTrip = await mapUsersToTrip(memberRows);
 
     return trips.map((trip, i) => ({
         ...trip,
