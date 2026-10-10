@@ -17,6 +17,7 @@ import {
 import { Progress } from '@repo/ui/components/ui/progress';
 import { cn } from '@repo/ui/lib/utils';
 
+import { MemberAvatarGroup } from '../../member-avatar-group/member-avatar-group';
 import { TripBadge } from '../trip-badge';
 import { getTripDateDescription } from '../utils/get-trip-desciprion';
 import type { TripCardProps } from './trip-card';
@@ -57,20 +58,10 @@ export const HeroTripCard = ({ trip, tripType }: HeroTripCardProps) => {
                             />
                         ) : null}
 
-                        <AvatarGroup className="ms-auto">
-                            {trip.members.map(({ id, name, image }) => (
-                                <Avatar size="sm" key={id}>
-                                    {image ? <AvatarImage src={image} /> : null}
-                                    <AvatarFallback
-                                        className={cn(
-                                            name === 'Grace' && 'bg-primary'
-                                        )}
-                                    >
-                                        {name?.[0]}
-                                    </AvatarFallback>
-                                </Avatar>
-                            ))}
-                        </AvatarGroup>
+                        <MemberAvatarGroup
+                            members={trip.members}
+                            className="ms-auto"
+                        />
                     </div>
                 </CardHeader>
 

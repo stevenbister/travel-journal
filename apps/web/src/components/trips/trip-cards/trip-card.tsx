@@ -17,6 +17,7 @@ import { cn } from '@repo/ui/lib/utils';
 
 import type { TripType, TripWithDetails } from '../../../lib/dexie/types';
 import { IconBox } from '../../icon-box/icon-box';
+import { MemberAvatarGroup } from '../../member-avatar-group/member-avatar-group';
 import { getTripDateDescription } from '../utils/get-trip-desciprion';
 
 export type TripCardProps = {
@@ -46,20 +47,10 @@ export const TripCard = ({ trip, tripType }: TripCardProps) => {
                         </CardDescription>
                     </div>
 
-                    <AvatarGroup className="ms-auto">
-                        {members.map(({ id, name, image }) => (
-                            <Avatar size="sm" key={id}>
-                                {image ? <AvatarImage src={image} /> : null}
-                                <AvatarFallback
-                                    className={cn(
-                                        name === 'Grace' && 'bg-primary'
-                                    )}
-                                >
-                                    {name?.[0]}
-                                </AvatarFallback>
-                            </Avatar>
-                        ))}
-                    </AvatarGroup>
+                    <MemberAvatarGroup
+                        members={trip.members}
+                        className="ms-auto"
+                    />
                 </CardHeader>
             </Card>
         </Link>
