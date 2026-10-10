@@ -2,18 +2,11 @@ import { AirplaneLandingIcon, CalendarDotsIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
 
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarGroup,
-    AvatarImage,
-} from '@repo/ui/components/ui/avatar';
-import {
     Card,
     CardDescription,
     CardHeader,
     CardTitle,
 } from '@repo/ui/components/ui/card';
-import { cn } from '@repo/ui/lib/utils';
 
 import type { TripType, TripWithDetails } from '../../../lib/dexie/types';
 import { IconBox } from '../../icon-box/icon-box';
@@ -26,7 +19,7 @@ export type TripCardProps = {
 };
 
 export const TripCard = ({ trip, tripType }: TripCardProps) => {
-    const { id, title, members } = trip;
+    const { id, title } = trip;
     const isPast = tripType === 'past';
     const description = getTripDateDescription(trip, tripType);
 

@@ -2,12 +2,6 @@ import { Link } from '@tanstack/react-router';
 import { intervalToDuration } from 'date-fns';
 
 import {
-    Avatar,
-    AvatarFallback,
-    AvatarGroup,
-    AvatarImage,
-} from '@repo/ui/components/ui/avatar';
-import {
     Card,
     CardContent,
     CardDescription,
@@ -15,7 +9,6 @@ import {
     CardTitle,
 } from '@repo/ui/components/ui/card';
 import { Progress } from '@repo/ui/components/ui/progress';
-import { cn } from '@repo/ui/lib/utils';
 
 import { MemberAvatarGroup } from '../../member-avatar-group/member-avatar-group';
 import { TripBadge } from '../trip-badge';
