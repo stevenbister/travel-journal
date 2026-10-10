@@ -1,16 +1,21 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
 
+import { getTripWithDetails } from '../components/trips/hooks/use-get-trip';
 import { TripHeader } from '../components/trips/trip-header';
 import { db } from '../lib/dexie/db';
 
 export const Route = createFileRoute('/_auth/trip/$tripId')({
-    beforeLoad: async ({ params }) => {
+    loader: async ({ params }) => {
         const { tripId } = params;
         const trip = await db.trips.get(tripId);
 
         if (!trip) {
             throw notFound();
         }
+
+        const tripWithDetails = await getTripWithDetails(tripId);
+
+        return tripWithDetails;
     },
     component: RouteComponent,
 });

@@ -6,20 +6,23 @@ import {
     HIDE_SHOW_ITEM,
 } from '@repo/ui/constants/animation';
 
+import { getTripsWithDetails } from '../components/trips/hooks/use-get-trips';
 import { TripsList } from '../components/trips/trips-list';
 import { useSession } from '../lib/auth/use-session';
 
 export const Route = createFileRoute('/_auth/')({
+    loader: async () => await getTripsWithDetails(),
     component: RouteComponent,
 });
 
 function RouteComponent() {
     const { data: session } = useSession();
     const user = session?.user;
+    const initialTrips = Route.useLoaderData();
 
     return (
         <motion.div
-            className="container flex flex-col gap-6 h-full w-full max-w-4xl mx-auto"
+            className="container flex flex-col gap-6 h-full w-full max-w-4xl mx-auto pb-40"
             variants={HIDE_SHOW_CONTAINER}
             initial="hidden"
             animate="show"
@@ -31,7 +34,7 @@ function RouteComponent() {
                 <h1>Your trips</h1>
             </motion.header>
 
-            <TripsList />
+            <TripsList initialTrips={initialTrips} />
         </motion.div>
     );
 }

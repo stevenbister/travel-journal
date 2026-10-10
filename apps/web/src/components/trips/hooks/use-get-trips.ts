@@ -7,7 +7,7 @@ import type { TripWithDetails } from '../../../lib/dexie/types';
 import { useNow } from '../../../lib/sync/use-now';
 import { mapUsersToTrip } from '../utils/map-users-to-trip';
 
-const getTripsWithDetails = async () => {
+export const getTripsWithDetails = async () => {
     const trips = (await db.trips.toArray()).filter((t) => !t.isDeleted);
     const tripIds = trips.map((t) => t.id);
 
@@ -60,9 +60,13 @@ const groupTrips = (trips: TripWithDetails[], now: string) => {
     return out;
 };
 
-export const useGetTrips = () => {
+export const useGetTrips = (initialTrips?: TripWithDetails[]) => {
     const now = useNow();
-    const tripsWithDetails = useLiveQuery(getTripsWithDetails);
+    const tripsWithDetails = useLiveQuery(
+        getTripsWithDetails,
+        [],
+        initialTrips
+    );
 
     const trips = React.useMemo(
         () =>

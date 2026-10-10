@@ -3,7 +3,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { db } from '../../../lib/dexie/db';
 import { mapUsersToTrip } from '../utils/map-users-to-trip';
 
-const getTripWithDetails = async (tripId: string) => {
+export const getTripWithDetails = async (tripId: string) => {
     const trip = await db.trips.get({ id: tripId });
 
     const [counts, memberRows] = await Promise.all([
