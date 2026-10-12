@@ -8,5 +8,7 @@ export const useGetEntries = (tripId: string) => {
         [tripId]
     );
 
-    return entries;
+    const isPending = entries === undefined;
+
+    return { entries, isPending };
 };

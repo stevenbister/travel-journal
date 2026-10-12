@@ -32,9 +32,9 @@ describe('useGetEntries', () => {
     it('is undefined first, then resolves with an empty array', async () => {
         const { result } = await renderHook(() => useGetEntries('trip-1'));
 
-        expect(result.current).toBeUndefined();
+        expect(result.current.entries).toBeUndefined();
 
-        await vi.waitFor(() => expect(result.current).toEqual([]));
+        await vi.waitFor(() => expect(result.current.entries).toEqual([]));
     });
 
     it('returns only entries for the requested trip', async () => {
@@ -47,7 +47,7 @@ describe('useGetEntries', () => {
         const { result } = await renderHook(() => useGetEntries('trip-a'));
 
         await vi.waitFor(() =>
-            expect(result.current?.map((e) => e.id).sort()).toEqual([
+            expect(result.current.entries?.map((e) => e.id).sort()).toEqual([
                 'a1',
                 'a2',
             ])
@@ -57,12 +57,12 @@ describe('useGetEntries', () => {
     it('updates when an entry is added', async () => {
         const { result } = await renderHook(() => useGetEntries('trip-a'));
 
-        await vi.waitFor(() => expect(result.current).toEqual([]));
+        await vi.waitFor(() => expect(result.current.entries).toEqual([]));
 
         await db.entries.add(makeEntry('a1', 'trip-a'));
 
         await vi.waitFor(() =>
-            expect(result.current?.map((e) => e.id)).toEqual(['a1'])
+            expect(result.current.entries?.map((e) => e.id)).toEqual(['a1'])
         );
     });
 });

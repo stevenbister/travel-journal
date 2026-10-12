@@ -37,7 +37,7 @@ const groupEntriesByDay = <T extends { entryDate: string }>(
 };
 
 export const EntriesTimeline = ({ tripId }: { tripId: string }) => {
-    const entries = useGetEntries(tripId);
+    const { entries } = useGetEntries(tripId);
     const groupedEntries = React.useMemo(
         () =>
             [...groupEntriesByDay(entries ?? [])].map(([date, items]) => ({
