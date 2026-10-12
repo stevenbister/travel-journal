@@ -8,7 +8,7 @@ import {
 } from '@repo/ui/components/ui/tabs';
 
 import { EntriesTimeline } from '../components/entries/entries-timeline';
-import { StatsGrid, StatsGridItem } from '../components/stats-grid/stats-grid';
+import { EntryStatsGrid } from '../components/entries/entry-stats-grid';
 import { getTripWithDetails } from '../components/trips/hooks/use-get-trip';
 import { TripHeader } from '../components/trips/trip-header';
 import { db } from '../lib/dexie/db';
@@ -36,11 +36,7 @@ function RouteComponent() {
         <div className="flex flex-col w-full max-w-4xl mx-auto">
             <TripHeader initialTrip={trip} />
 
-            <StatsGrid>
-                <StatsGridItem value="10" label="Entries" />
-                <StatsGridItem value="5" label="places" />
-                <StatsGridItem value="20" label="Days" />
-            </StatsGrid>
+            <EntryStatsGrid tripId={trip.id} />
 
             <Tabs
                 defaultValue="timeline"

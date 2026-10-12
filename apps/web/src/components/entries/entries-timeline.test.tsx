@@ -1,6 +1,6 @@
+import { format, parseISO } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vitest';
 import { render } from 'vitest-browser-react';
-import { format, parseISO } from 'date-fns';
 
 import type { Entry } from '../../lib/dexie/types';
 import { EntriesTimeline } from './entries-timeline';
@@ -30,7 +30,7 @@ const makeEntry = (
 });
 
 const renderComponent = (entries: Entry[] | undefined) => {
-    vi.mocked(useGetEntries).mockReturnValue(entries);
+    vi.mocked(useGetEntries).mockReturnValue({ entries, isPending: false });
     return render(<EntriesTimeline tripId="trip-1" />);
 };
 
@@ -67,9 +67,7 @@ describe('EntriesTimeline', () => {
             .element(page.getByText('Morning ramen'))
             .toBeInTheDocument();
         await expect
-            .element(
-                page.getByText(format(parseISO(entry.entryDate), 'p'))
-            )
+            .element(page.getByText(format(parseISO(entry.entryDate), 'p')))
             .toBeInTheDocument();
         await expect
             .element(page.getByText('35.68, 139.69'))
