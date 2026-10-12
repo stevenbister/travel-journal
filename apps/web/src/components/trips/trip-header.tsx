@@ -15,7 +15,6 @@ import { useGetTrip } from './hooks/use-get-trip';
 import { TripBadge } from './trip-badge';
 import { tripLayoutIds } from './utils/trip-layout';
 
-// TODO: Fix You are trying to animate minHeight from "auto" to "68". "auto" is not an animatable value.. For more information and steps for solving, visit https://motion.dev/troubleshooting/value-not-animatable
 const COLLAPSE_AT = 40;
 
 /**
@@ -60,7 +59,6 @@ export const TripHeader = ({ initialTrip }: TripHeaderProps) => {
     return (
         <motion.header
             layoutId={layoutIds.container}
-            initial={false}
             animate={{
                 gap: compact ? '0px' : '24px',
                 minHeight: compact ? TRIP_HEADER_COMPACT_HEIGHT : 208,
