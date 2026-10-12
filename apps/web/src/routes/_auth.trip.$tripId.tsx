@@ -21,9 +21,11 @@ export const Route = createFileRoute('/_auth/trip/$tripId')({
 });
 
 function RouteComponent() {
+    const trip = Route.useLoaderData();
+
     return (
         <div className="h-full w-full max-w-4xl mx-auto">
-            <TripHeader />
+            <TripHeader initialTrip={trip} />
         </div>
     );
 }

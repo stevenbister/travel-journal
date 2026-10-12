@@ -1,5 +1,6 @@
 import { AirplaneLandingIcon, CalendarDotsIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
+import { motion } from 'motion/react';
 
 import {
     Card,
@@ -12,6 +13,11 @@ import type { TripType, TripWithDetails } from '../../../lib/dexie/types';
 import { IconBox } from '../../icon-box/icon-box';
 import { MemberAvatarGroup } from '../../member-avatar-group/member-avatar-group';
 import { getTripDateDescription } from '../utils/get-trip-desciprion';
+import { tripLayoutIds } from '../utils/trip-layout';
+
+const MotionCard = motion.create(Card);
+const MotionCardTitle = motion.create(CardTitle);
+const MotionDescription = motion.create(CardDescription);
 
 export type TripCardProps = {
     trip: TripWithDetails;
@@ -22,10 +28,11 @@ export const TripCard = ({ trip, tripType }: TripCardProps) => {
     const { id, title } = trip;
     const isPast = tripType === 'past';
     const description = getTripDateDescription(trip, tripType);
+    const layoutIds = tripLayoutIds(id);
 
     return (
-        <Link to={'/trip/$tripId'} params={{ tripId: id }}>
-            <Card size="sm">
+        <Link to={'/trip/$tripId'} params={{ tripId: id }} className="block">
+            <MotionCard size="sm" layoutId={layoutIds.container}>
                 <CardHeader className="flex gap-4 items-center">
                     <IconBox
                         size="sm"
@@ -33,19 +40,29 @@ export const TripCard = ({ trip, tripType }: TripCardProps) => {
                     />
 
                     <div className="flex flex-col gap-1">
-                        <CardTitle className="font-display">{title}</CardTitle>
+                        <MotionCardTitle
+                            layoutId={layoutIds.title}
+                            className="font-display"
+                        >
+                            {title}
+                        </MotionCardTitle>
 
-                        <CardDescription className="text-xs">
+                        <MotionDescription
+                            className="text-xs"
+                            layoutId={layoutIds.badge}
+                        >
                             {description}
-                        </CardDescription>
+                        </MotionDescription>
                     </div>
 
-                    <MemberAvatarGroup
-                        members={trip.members}
+                    <motion.div
+                        layoutId={layoutIds.members}
                         className="ms-auto"
-                    />
+                    >
+                        <MemberAvatarGroup members={trip.members} />
+                    </motion.div>
                 </CardHeader>
-            </Card>
+            </MotionCard>
         </Link>
     );
 };
