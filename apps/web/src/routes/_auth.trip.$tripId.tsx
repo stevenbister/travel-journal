@@ -1,6 +1,5 @@
 import { createFileRoute, notFound } from '@tanstack/react-router';
 
-import { ScrollArea } from '@repo/ui/components/ui/scroll-area';
 import {
     Tabs,
     TabsContent,
@@ -34,7 +33,7 @@ function RouteComponent() {
     const trip = Route.useLoaderData();
 
     return (
-        <div className="flex flex-col h-dvh w-full max-w-4xl mx-auto overflow-hidden">
+        <div className="flex flex-col w-full max-w-4xl mx-auto">
             <TripHeader initialTrip={trip} />
 
             <StatsGrid>
@@ -47,7 +46,9 @@ function RouteComponent() {
                 defaultValue="timeline"
                 className="flex min-h-0 flex-1 flex-col"
             >
-                <div className="container-x border-b w-full shrink-0">
+                {/* Sticks just below the collapsed header
+                (68px mobile, 116px on md+ where the header uses p-10). */}
+                <div className="container-x sticky top-17 md:top-29 z-20 border-b w-full shrink-0 bg-background">
                     <TabsList>
                         <TabsTrigger value="timeline">Timeline</TabsTrigger>
                         <TabsTrigger value="map">Map</TabsTrigger>
@@ -58,17 +59,12 @@ function RouteComponent() {
                     value="timeline"
                     className="container-x min-h-0 flex-1"
                 >
-                    <ScrollArea
-                        className="h-[calc(100%-(--spacing(16)))]"
-                        showScrollbar={false}
-                    >
-                        <div className="pb-16">
-                            <EntriesTimeline tripId={trip.id} />
-                        </div>
-                    </ScrollArea>
+                    <div className="pb-20">
+                        <EntriesTimeline tripId={trip.id} />
+                    </div>
                 </TabsContent>
                 <TabsContent value="map" className="container-x min-h-0 flex-1">
-                    Map
+                    <div className="h-lvh">Map</div>
                 </TabsContent>
             </Tabs>
         </div>

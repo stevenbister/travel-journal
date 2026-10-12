@@ -49,7 +49,7 @@ const navItemsLeft = NAV_ITEMS.slice(0, 2);
 const navItemsRight = NAV_ITEMS.slice(2);
 
 export const Navbar = () => (
-    <div className="fixed md:hidden bottom-0 inset-x-0 border-t">
+    <div className="fixed md:hidden bottom-0 inset-x-0 border-t z-20">
         <NavigationMenu className="bg-muted max-w-[unset]">
             <NavigationMenuList>
                 <NavbarLinkItems navItems={navItemsLeft} />
