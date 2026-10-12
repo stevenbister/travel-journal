@@ -1,4 +1,4 @@
-import type { TripType } from '../../lib/dexie/types';
+import type { TripType, TripWithDetails } from '../../lib/dexie/types';
 import { Section } from '../section/section';
 import { EmptyTrips } from './empty-trips';
 import { useGetTrips } from './hooks/use-get-trips';
@@ -11,8 +11,12 @@ const mapKeyToHeading: Record<string, string> = {
     past: 'Past trips',
 };
 
-export const TripsList = () => {
-    const { trips, isPending } = useGetTrips();
+type TripsListProps = {
+    initialTrips?: TripWithDetails[];
+};
+
+export const TripsList = ({ initialTrips }: TripsListProps) => {
+    const { trips, isPending } = useGetTrips(initialTrips);
 
     if (isPending) return <div>Loading trips...</div>;
 

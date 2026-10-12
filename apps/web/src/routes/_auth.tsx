@@ -52,7 +52,7 @@ function AuthLayout() {
     }
 
     return (
-        <div className="p-6 md:p-10">
+        <>
             <SidebarProvider>
                 <AppSidebar />
 
@@ -72,6 +72,6 @@ function AuthLayout() {
             </SidebarProvider>
 
             {location.pathname !== '/trip/new' ? <Navbar /> : null}
-        </div>
+        </>
     );
 }

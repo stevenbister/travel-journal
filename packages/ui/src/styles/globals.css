@@ -162,3 +162,15 @@
         @apply text-xl font-semibold;
     }
 }
+
+@utility container {
+    @apply p-4 md:p-10;
+}
+
+@utility container-x {
+    @apply px-4 md:px-10;
+}
+
+@utility container-y {
+    @apply py-4 md:py-10;
+}

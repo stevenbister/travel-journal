@@ -1,23 +1,23 @@
 import { AirplaneLandingIcon, CalendarDotsIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
+import { motion } from 'motion/react';
 
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarGroup,
-    AvatarImage,
-} from '@repo/ui/components/ui/avatar';
 import {
     Card,
     CardDescription,
     CardHeader,
     CardTitle,
 } from '@repo/ui/components/ui/card';
-import { cn } from '@repo/ui/lib/utils';
 
 import type { TripType, TripWithDetails } from '../../../lib/dexie/types';
 import { IconBox } from '../../icon-box/icon-box';
+import { MemberAvatarGroup } from '../../member-avatar-group/member-avatar-group';
 import { getTripDateDescription } from '../utils/get-trip-desciprion';
+import { tripLayoutIds } from '../utils/trip-layout';
+
+const MotionCard = motion.create(Card);
+const MotionCardTitle = motion.create(CardTitle);
+const MotionDescription = motion.create(CardDescription);
 
 export type TripCardProps = {
     trip: TripWithDetails;
@@ -25,13 +25,14 @@ export type TripCardProps = {
 };
 
 export const TripCard = ({ trip, tripType }: TripCardProps) => {
-    const { id, title, members } = trip;
+    const { id, title } = trip;
     const isPast = tripType === 'past';
     const description = getTripDateDescription(trip, tripType);
+    const layoutIds = tripLayoutIds(id);
 
     return (
-        <Link to={'/trip/$tripId'} params={{ tripId: id }}>
-            <Card size="sm">
+        <Link to={'/trip/$tripId'} params={{ tripId: id }} className="block">
+            <MotionCard size="sm" layoutId={layoutIds.container}>
                 <CardHeader className="flex gap-4 items-center">
                     <IconBox
                         size="sm"
@@ -39,29 +40,29 @@ export const TripCard = ({ trip, tripType }: TripCardProps) => {
                     />
 
                     <div className="flex flex-col gap-1">
-                        <CardTitle className="font-display">{title}</CardTitle>
+                        <MotionCardTitle
+                            layoutId={layoutIds.title}
+                            className="font-display"
+                        >
+                            {title}
+                        </MotionCardTitle>
 
-                        <CardDescription className="text-xs">
+                        <MotionDescription
+                            className="text-xs"
+                            layoutId={layoutIds.badge}
+                        >
                             {description}
-                        </CardDescription>
+                        </MotionDescription>
                     </div>
 
-                    <AvatarGroup className="ms-auto">
-                        {members.map(({ id, name, image }) => (
-                            <Avatar size="sm" key={id}>
-                                {image ? <AvatarImage src={image} /> : null}
-                                <AvatarFallback
-                                    className={cn(
-                                        name === 'Grace' && 'bg-primary'
-                                    )}
-                                >
-                                    {name?.[0]}
-                                </AvatarFallback>
-                            </Avatar>
-                        ))}
-                    </AvatarGroup>
+                    <motion.div
+                        layoutId={layoutIds.members}
+                        className="ms-auto"
+                    >
+                        <MemberAvatarGroup members={trip.members} />
+                    </motion.div>
                 </CardHeader>
-            </Card>
+            </MotionCard>
         </Link>
     );
 };

@@ -1,13 +1,7 @@
 import { Link } from '@tanstack/react-router';
 import { intervalToDuration } from 'date-fns';
+import { motion } from 'motion/react';
 
-import {
-    Avatar,
-    AvatarFallback,
-    AvatarGroup,
-    AvatarImage,
-} from '@repo/ui/components/ui/avatar';
-import { Badge } from '@repo/ui/components/ui/badge';
 import {
     Card,
     CardContent,
@@ -16,10 +10,15 @@ import {
     CardTitle,
 } from '@repo/ui/components/ui/card';
 import { Progress } from '@repo/ui/components/ui/progress';
-import { cn } from '@repo/ui/lib/utils';
 
+import { MemberAvatarGroup } from '../../member-avatar-group/member-avatar-group';
+import { TripBadge } from '../trip-badge';
 import { getTripDateDescription } from '../utils/get-trip-desciprion';
+import { tripLayoutIds } from '../utils/trip-layout';
 import type { TripCardProps } from './trip-card';
+
+const MotionCard = motion.create(Card);
+const MotionCardTitle = motion.create(CardTitle);
 
 export type HeroTripCardProps = Pick<TripCardProps, 'trip' | 'tripType'>;
 
@@ -27,6 +26,7 @@ export const HeroTripCard = ({ trip, tripType }: HeroTripCardProps) => {
     const { id, startDate, endDate } = trip;
 
     const description = getTripDateDescription(trip, tripType);
+    const layoutIds = tripLayoutIds(id);
 
     const daysSinceStart = intervalToDuration({
         start: startDate,
@@ -38,60 +38,44 @@ export const HeroTripCard = ({ trip, tripType }: HeroTripCardProps) => {
         end: endDate,
     });
 
-    const daysUntilStart = intervalToDuration({
-        start: new Date(),
-        end: startDate,
-    });
-
     const isCurrent =
         tripType === 'current' && !!(daysSinceStart.days && lengthOfTrip.days);
     const isUpcoming = tripType === 'upcoming';
 
-    const getBadgeContent = () => {
-        if (isCurrent) {
-            return `Day ${daysSinceStart.days} of ${lengthOfTrip.days}`;
-        }
-
-        if (isUpcoming) {
-            return `${daysUntilStart.days} days to go!`;
-        }
-    };
-
     return (
-        <Link to={'/trip/$tripId'} params={{ tripId: id }}>
-            <Card
+        <Link to={'/trip/$tripId'} params={{ tripId: id }} className="block">
+            <MotionCard
+                layoutId={layoutIds.container}
                 className="relative h-44 justify-between text-primary-foreground dark:text-card-foreground bg-linear-to-br from-primary to-[hsl(168_55%_13%)]"
                 data-hero-card
             >
                 <CardHeader>
                     <div className="flex justify-between items-center">
                         {isCurrent || isUpcoming ? (
-                            <Badge className="text-primary-foreground dark:text-card-foreground">
-                                {getBadgeContent()}
-                            </Badge>
+                            <motion.div layoutId={layoutIds.badge}>
+                                <TripBadge
+                                    startDate={startDate}
+                                    endDate={endDate}
+                                />
+                            </motion.div>
                         ) : null}
 
-                        <AvatarGroup className="ms-auto">
-                            {trip.members.map(({ id, name, image }) => (
-                                <Avatar size="sm" key={id}>
-                                    {image ? <AvatarImage src={image} /> : null}
-                                    <AvatarFallback
-                                        className={cn(
-                                            name === 'Grace' && 'bg-primary'
-                                        )}
-                                    >
-                                        {name?.[0]}
-                                    </AvatarFallback>
-                                </Avatar>
-                            ))}
-                        </AvatarGroup>
+                        <motion.div
+                            layoutId={layoutIds.members}
+                            className="ms-auto"
+                        >
+                            <MemberAvatarGroup members={trip.members} />
+                        </motion.div>
                     </div>
                 </CardHeader>
 
                 <CardContent className="gap-1">
-                    <CardTitle className="font-display text-2xl">
+                    <MotionCardTitle
+                        layoutId={layoutIds.title}
+                        className="font-display text-2xl"
+                    >
                         {trip.title}
-                    </CardTitle>
+                    </MotionCardTitle>
 
                     <CardDescription className="text-sm text-primary-foreground dark:text-card-foreground">
                         {description}
@@ -106,7 +90,7 @@ export const HeroTripCard = ({ trip, tripType }: HeroTripCardProps) => {
                         className="absolute bottom-0 inset-x-0"
                     />
                 ) : null}
-            </Card>
+            </MotionCard>
         </Link>
     );
 };
