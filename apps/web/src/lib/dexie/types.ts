@@ -36,6 +36,7 @@ export interface Entry {
     entryDate: string;
     lat: number | null;
     lng: number | null;
+    tag: string | null;
     isDeleted: boolean;
     createdAt: number;
     updatedAt: number;
