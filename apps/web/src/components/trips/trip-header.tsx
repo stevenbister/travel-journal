@@ -35,7 +35,7 @@ export const TripHeader = ({ initialTrip }: TripHeaderProps) => {
 
                 <motion.h1
                     layoutId={layoutIds.title}
-                    className="font-display text-2xl"
+                    className="font-display text-2xl font-medium"
                 >
                     {title}
                 </motion.h1>
