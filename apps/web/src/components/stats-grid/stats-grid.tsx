@@ -2,6 +2,8 @@ import { Children, type ReactNode } from 'react';
 
 import { cn } from '@repo/ui/lib/utils';
 
+import { CountUp } from '../count-up/count-up';
+
 const MAX_COLUMNS = 4;
 
 const columnClasses = {
@@ -51,9 +53,11 @@ export const StatsGridItem = ({
                 className
             )}
         >
-            <span className="font-serif text-2xl leading-none text-foreground tabular-nums">
-                {value}
-            </span>
+            <CountUp
+                to={typeof value === 'number' ? value : 0}
+                className="font-serif text-xl leading-none text-foreground tabular-nums"
+            />
+
             <span className="text-xs text-muted-foreground">{label}</span>
         </div>
     );
