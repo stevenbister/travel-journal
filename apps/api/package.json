@@ -15,7 +15,8 @@
         "db:studio": "node scripts/run-drizzle.js studio",
         "db:migrate:ci": "drizzle-kit migrate",
         "db:setup": "node scripts/setup-db.js",
-        "db:seed-admin": "node scripts/seed-admin.js"
+        "db:seed-admin": "node scripts/seed-admin.js",
+        "db:seed": "wrangler d1 execute DB --file=src/db/seed.sql"
     },
     "dependencies": {
         "@hono/zod-openapi": "^1.6.3",
