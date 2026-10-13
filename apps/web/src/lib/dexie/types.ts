@@ -28,14 +28,29 @@ export interface Trip {
     updatedAt: string;
 }
 
+export interface Place {
+    osmType: string | null;
+    osmId: number | null;
+    displayName: string;
+    name: string | null;
+    lat: number;
+    lng: number;
+    category: string | null;
+    type: string | null;
+    locality: string | null;
+    country: string | null;
+    countryCode: string | null;
+    boundingBox:
+        [south: number, north: number, west: number, east: number] | null;
+}
+
 export interface Entry {
     id: string;
     tripId: string;
     authorId: string;
     note: string | null;
     entryDate: string;
-    lat: number | null;
-    lng: number | null;
+    location: Place | null;
     tag: string | null;
     isDeleted: boolean;
     createdAt: number;

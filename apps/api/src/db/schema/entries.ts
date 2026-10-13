@@ -1,9 +1,25 @@
 import { sql } from 'drizzle-orm/sql/sql';
-import { index, int, real, snakeCase, text } from 'drizzle-orm/sqlite-core';
+import { index, int, snakeCase, text } from 'drizzle-orm/sqlite-core';
 import { createSelectSchema } from 'drizzle-zod';
 
 import { user } from './auth';
 import { trips } from './trips';
+
+type Place = {
+    osmType: string | null;
+    osmId: number | null;
+    displayName: string;
+    name: string | null;
+    lat: number;
+    lng: number;
+    category: string | null;
+    type: string | null;
+    locality: string | null;
+    country: string | null;
+    countryCode: string | null;
+    boundingBox:
+        [south: number, north: number, west: number, east: number] | null;
+};
 
 export const entries = snakeCase.table(
     'entries',
@@ -17,9 +33,8 @@ export const entries = snakeCase.table(
             .references(() => user.id, { onDelete: 'restrict' }),
         note: text(),
         entryDate: int({ mode: 'timestamp' }).notNull(),
-        lat: real(),
-        lng: real(),
         tag: text(),
+        location: text({ mode: 'json' }).$type<Place>(),
         isDeleted: int({ mode: 'boolean' }).notNull().default(false),
         createdAt: int({ mode: 'timestamp_ms' }).notNull(),
         // Set from the client's edit time so last-write-wins compares like with like

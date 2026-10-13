@@ -78,7 +78,7 @@ type EntryItemProps = {
 };
 
 const EntryItem = ({ entry }: EntryItemProps) => {
-    const { note, entryDate, lat, lng, tag } = entry;
+    const { note, entryDate, tag, location } = entry;
 
     const tagIconMap: Record<string, Icon> = {
         // TODO: Add more tag-icon mappings as needed (need to decide how best to handle this so it's scalable)
@@ -106,8 +106,7 @@ const EntryItem = ({ entry }: EntryItemProps) => {
                 <h4 className="font-display text-base">{note}</h4>
 
                 <p className="flex gap-px items-center text-muted-foreground text-xs">
-                    {/* TODO: Once geocoding is implemented, replace lat/lng with the actual location name */}
-                    <MapPinIcon weight="duotone" /> {lat}, {lng}
+                    <MapPinIcon weight="duotone" /> {location?.name ?? ''}
                 </p>
             </div>
         </li>

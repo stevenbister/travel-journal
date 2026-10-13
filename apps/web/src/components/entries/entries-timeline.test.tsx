@@ -20,8 +20,20 @@ const makeEntry = (
     authorId: 'user-1',
     note: `note-${id}`,
     entryDate,
-    lat: 35.68,
-    lng: 139.69,
+    location: {
+        osmType: null,
+        osmId: null,
+        displayName: 'Sagres, Algarve, Portugal',
+        name: 'Sagres',
+        lat: 37.0086,
+        lng: -8.9411,
+        category: null,
+        type: null,
+        locality: 'Sagres',
+        country: 'Portugal',
+        countryCode: 'pt',
+        boundingBox: null,
+    },
     tag: null,
     isDeleted: false,
     createdAt: 0,
@@ -63,14 +75,12 @@ describe('EntriesTimeline', () => {
         });
         const page = await renderComponent([entry]);
 
-        await expect
-            .element(page.getByText('Morning ramen'))
-            .toBeInTheDocument();
+        await expect.element(page.getByText(entry.note!)).toBeInTheDocument();
         await expect
             .element(page.getByText(format(parseISO(entry.entryDate), 'p')))
             .toBeInTheDocument();
         await expect
-            .element(page.getByText('35.68, 139.69'))
+            .element(page.getByText(entry.location!.name!))
             .toBeInTheDocument();
     });
 

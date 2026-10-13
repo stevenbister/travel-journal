@@ -56,8 +56,7 @@ const mockEntries: Entries[] = [
         authorId: mockUsers[1]!.id!,
         note: 'Sample note',
         entryDate: new Date('2026-04-01'),
-        lat: null,
-        lng: null,
+        location: null,
         tag: 'food',
         isDeleted: false,
         createdAt: now,
@@ -91,16 +90,23 @@ const formatResponse = (mockItem: Trips[] | Entries[] | EntryHistory[]) => {
     const lastItem = mockItem[mockItem.length - 1];
 
     return {
-        // eslint-disable-next-line @typescript-eslint/no-unused-vars
-        rows: mockItem.map(({ serverUpdatedAt, ...item }) => ({
-            ...item,
-            createdAt:
-                'createdAt' in item ? item.createdAt?.toISOString() : undefined,
-            updatedAt:
-                'updatedAt' in item ? item.updatedAt?.toISOString() : undefined,
-            editedAt:
-                'editedAt' in item ? item.editedAt?.toISOString() : undefined,
-        })),
+        rows: mockItem.map(
+            ({ serverUpdatedAt: _serverUpdatedAt, ...item }) => ({
+                ...item,
+                createdAt:
+                    'createdAt' in item
+                        ? item.createdAt?.toISOString()
+                        : undefined,
+                updatedAt:
+                    'updatedAt' in item
+                        ? item.updatedAt?.toISOString()
+                        : undefined,
+                editedAt:
+                    'editedAt' in item
+                        ? item.editedAt?.toISOString()
+                        : undefined,
+            })
+        ),
         cursor: `${lastItem?.serverUpdatedAt.getTime()}_${lastItem?.id}`,
         hasMore: false,
     };
