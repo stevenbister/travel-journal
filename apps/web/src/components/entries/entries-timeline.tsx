@@ -1,16 +1,7 @@
-import {
-    BowlFoodIcon,
-    HouseIcon,
-    type Icon,
-    MapPinIcon,
-    SynagogueIcon,
-    TrainSimpleIcon,
-} from '@phosphor-icons/react';
 import { compareDesc, format, parseISO } from 'date-fns';
 import * as React from 'react';
 
-import type { Entry } from '../../lib/dexie/types';
-import { IconBox } from '../icon-box/icon-box';
+import { EntryDetails } from './entry-details';
 import { useGetEntries } from './hooks/use-get-entries';
 
 const groupEntriesByDay = <T extends { entryDate: string }>(
@@ -64,51 +55,18 @@ export const EntriesTimeline = ({ tripId }: { tripId: string }) => {
                         <li className="absolute inset-s-1.5 -translate-x-0.5 h-full w-px bg-muted-foreground/50" />
 
                         {items.map((item) => (
-                            <EntryItem key={item.id} entry={item} />
+                            <li
+                                key={item.id}
+                                className="grid grid-cols-[auto_auto_1fr] gap-3 items-start py-2"
+                            >
+                                <div className="block size-2.5 bg-accent rounded-full mt-1 shrink-0 z-10" />
+
+                                <EntryDetails entry={item} />
+                            </li>
                         ))}
                     </ul>
                 </div>
             ))}
         </div>
-    );
-};
-
-type EntryItemProps = {
-    entry: Entry;
-};
-
-const EntryItem = ({ entry }: EntryItemProps) => {
-    const { note, entryDate, tag, location } = entry;
-
-    const tagIconMap: Record<string, Icon> = {
-        // TODO: Add more tag-icon mappings as needed (need to decide how best to handle this so it's scalable)
-        food: BowlFoodIcon,
-        sights: SynagogueIcon,
-        transport: TrainSimpleIcon,
-        accommodation: HouseIcon,
-    };
-
-    return (
-        <li className="grid grid-cols-[auto_auto_1fr] gap-3 items-start py-2">
-            <div className="block size-2.5 bg-accent rounded-full mt-1 shrink-0 z-10" />
-
-            <IconBox
-                size="sm"
-                Icon={tag ? (tagIconMap[tag] ?? MapPinIcon) : MapPinIcon}
-                className="shrink-0"
-            />
-
-            <div className="flex flex-col gap-px">
-                <p className="text-muted-foreground text-xs">
-                    {format(parseISO(entryDate), 'p')}
-                </p>
-
-                <h4 className="font-display text-base">{note}</h4>
-
-                <p className="flex gap-px items-center text-muted-foreground text-xs">
-                    <MapPinIcon weight="duotone" /> {location?.name ?? ''}
-                </p>
-            </div>
-        </li>
     );
 };
