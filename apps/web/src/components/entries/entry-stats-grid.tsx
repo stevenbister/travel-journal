@@ -32,8 +32,10 @@ export const EntryStatsGrid = ({ tripId }: EntryStatsGridProps) => {
         });
 
     const entryLatLng = entries?.reduce<string[]>((acc, entry) => {
-        if (entry.lat && entry.lng) {
-            acc.push(`${entry.lat},${entry.lng}`);
+        if (!entry.location) return acc;
+
+        if (entry.location.lat && entry.location.lng) {
+            acc.push(`${entry.location.lat},${entry.location.lng}`);
         }
 
         return acc;
