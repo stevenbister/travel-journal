@@ -28,29 +28,29 @@ FROM trips t
 CROSS JOIN user u;
 
 -- Seed entries
-WITH v(id, trip_id, note, entry_date, lat, lng, tag) AS (
+WITH v(id, trip_id, note, entry_date, location, tag) AS (
     VALUES
         -- Japan
-        ('00000000-0000-0000-0001-000000000001', '00000000-0000-0000-0000-000000000001', 'Landed at Haneda, ramen near the hotel',   '2026-03-10 19:30:00', 35.6762, 139.6503, 'food'),
-        ('00000000-0000-0000-0001-000000000002', '00000000-0000-0000-0000-000000000001', 'Shibuya Crossing at night',               '2026-03-11 21:00:00', 35.6595, 139.7005, 'sights'),
-        ('00000000-0000-0000-0001-000000000003', '00000000-0000-0000-0000-000000000001', 'Shinkansen to Kyoto',                     '2026-03-15 09:15:00', 35.0116, 135.7681, 'transport'),
-        ('00000000-0000-0000-0001-000000000004', '00000000-0000-0000-0000-000000000001', 'Fushimi Inari at sunrise',                '2026-03-16 06:45:00', 34.9671, 135.7727, 'sights'),
-        ('00000000-0000-0000-0001-000000000005', '00000000-0000-0000-0000-000000000001', 'Takoyaki in Dotonbori',                   '2026-03-19 20:00:00', 34.6687, 135.5013, 'food'),
+        ('00000000-0000-0000-0001-000000000001', '00000000-0000-0000-0000-000000000001', 'Landed at Haneda, ramen near the hotel',   '2026-03-10 19:30:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Haneda Airport, Ota, Tokyo, Japan', 'name', 'Haneda Airport', 'lat', 35.6762, 'lng', 139.6503, 'category', NULL, 'type', NULL, 'locality', 'Tokyo', 'country', 'Japan', 'countryCode', 'jp', 'boundingBox', NULL), 'food'),
+        ('00000000-0000-0000-0001-000000000002', '00000000-0000-0000-0000-000000000001', 'Shibuya Crossing at night',               '2026-03-11 21:00:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Shibuya Crossing, Shibuya, Tokyo, Japan', 'name', 'Shibuya Crossing', 'lat', 35.6595, 'lng', 139.7005, 'category', NULL, 'type', NULL, 'locality', 'Tokyo', 'country', 'Japan', 'countryCode', 'jp', 'boundingBox', NULL), 'sights'),
+        ('00000000-0000-0000-0001-000000000003', '00000000-0000-0000-0000-000000000001', 'Shinkansen to Kyoto',                     '2026-03-15 09:15:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Kyoto Station, Kyoto, Japan', 'name', 'Kyoto Station', 'lat', 35.0116, 'lng', 135.7681, 'category', NULL, 'type', NULL, 'locality', 'Kyoto', 'country', 'Japan', 'countryCode', 'jp', 'boundingBox', NULL), 'transport'),
+        ('00000000-0000-0000-0001-000000000004', '00000000-0000-0000-0000-000000000001', 'Fushimi Inari at sunrise',                '2026-03-16 06:45:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Fushimi Inari Taisha, Kyoto, Japan', 'name', 'Fushimi Inari Taisha', 'lat', 34.9671, 'lng', 135.7727, 'category', NULL, 'type', NULL, 'locality', 'Kyoto', 'country', 'Japan', 'countryCode', 'jp', 'boundingBox', NULL), 'sights'),
+        ('00000000-0000-0000-0001-000000000005', '00000000-0000-0000-0000-000000000001', 'Takoyaki in Dotonbori',                   '2026-03-19 20:00:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Dotonbori, Osaka, Japan', 'name', 'Dotonbori', 'lat', 34.6687, 'lng', 135.5013, 'category', NULL, 'type', NULL, 'locality', 'Osaka', 'country', 'Japan', 'countryCode', 'jp', 'boundingBox', NULL), 'food'),
 
         -- Portugal
-        ('00000000-0000-0000-0002-000000000001', '00000000-0000-0000-0000-000000000002', 'Pastéis de nata in Lisbon',               '2026-12-02 10:30:00', 38.7223, -9.1393, 'food'),
-        ('00000000-0000-0000-0002-000000000002', '00000000-0000-0000-0000-000000000002', 'Tram 28 up to the Alfama',                '2026-12-03 15:00:00', 38.7139, -9.1334, 'sights'),
-        ('00000000-0000-0000-0002-000000000003', '00000000-0000-0000-0000-000000000002', 'Drive down to the Algarve',               '2026-12-06 11:00:00', 37.1028, -8.6730, 'transport'),
-        ('00000000-0000-0000-0002-000000000004', '00000000-0000-0000-0000-000000000002', 'Cliff walk near Sagres',                  '2026-12-08 14:20:00', 37.0086, -8.9411, 'sights'),
+        ('00000000-0000-0000-0002-000000000001', '00000000-0000-0000-0000-000000000002', 'Pastéis de nata in Lisbon',               '2026-12-02 10:30:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Pastéis de Belém, Lisbon, Portugal', 'name', 'Pastéis de Belém', 'lat', 38.7223, 'lng', -9.1393, 'category', NULL, 'type', NULL, 'locality', 'Lisbon', 'country', 'Portugal', 'countryCode', 'pt', 'boundingBox', NULL), 'food'),
+        ('00000000-0000-0000-0002-000000000002', '00000000-0000-0000-0000-000000000002', 'Tram 28 up to the Alfama',                '2026-12-03 15:00:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Alfama, Lisbon, Portugal', 'name', 'Alfama', 'lat', 38.7139, 'lng', -9.1334, 'category', NULL, 'type', NULL, 'locality', 'Lisbon', 'country', 'Portugal', 'countryCode', 'pt', 'boundingBox', NULL), 'sights'),
+        ('00000000-0000-0000-0002-000000000003', '00000000-0000-0000-0000-000000000002', 'Drive down to the Algarve',               '2026-12-06 11:00:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Algarve, Portugal', 'name', 'Algarve', 'lat', 37.1028, 'lng', -8.6730, 'category', NULL, 'type', NULL, 'locality', 'Algarve', 'country', 'Portugal', 'countryCode', 'pt', 'boundingBox', NULL), 'transport'),
+        ('00000000-0000-0000-0002-000000000004', '00000000-0000-0000-0000-000000000002', 'Cliff walk near Sagres',                  '2026-12-08 14:20:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Sagres, Algarve, Portugal', 'name', 'Sagres', 'lat', 37.0086, 'lng', -8.9411, 'category', NULL, 'type', NULL, 'locality', 'Sagres', 'country', 'Portugal', 'countryCode', 'pt', 'boundingBox', NULL), 'sights'),
 
         -- Tenerife
-        ('00000000-0000-0000-0003-000000000001', '00000000-0000-0000-0000-000000000003', 'Arrived, apartment in Costa Adeje',       '2026-02-19 17:00:00', 28.0916, -16.7291, 'stay'),
-        ('00000000-0000-0000-0003-000000000002', '00000000-0000-0000-0000-000000000003', 'Cable car up Teide',                      '2026-02-22 10:00:00', 28.2724, -16.6425, 'sights'),
-        ('00000000-0000-0000-0003-000000000003', '00000000-0000-0000-0000-000000000003', 'Masca valley hike',                       '2026-02-25 09:30:00', 28.3066, -16.8396, 'sights'),
-        ('00000000-0000-0000-0003-000000000004', '00000000-0000-0000-0000-000000000003', 'Lazy beach day, no plans',                '2026-02-27 13:00:00', NULL,    NULL,     NULL)
+        ('00000000-0000-0000-0003-000000000001', '00000000-0000-0000-0000-000000000003', 'Arrived, apartment in Costa Adeje',       '2026-02-19 17:00:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Costa Adeje, Tenerife, Spain', 'name', 'Costa Adeje', 'lat', 28.0916, 'lng', -16.7291, 'category', NULL, 'type', NULL, 'locality', 'Adeje', 'country', 'Spain', 'countryCode', 'es', 'boundingBox', NULL), 'stay'),
+        ('00000000-0000-0000-0003-000000000002', '00000000-0000-0000-0000-000000000003', 'Cable car up Teide',                      '2026-02-22 10:00:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Mount Teide, Tenerife, Spain', 'name', 'Mount Teide', 'lat', 28.2724, 'lng', -16.6425, 'category', NULL, 'type', NULL, 'locality', 'Tenerife', 'country', 'Spain', 'countryCode', 'es', 'boundingBox', NULL), 'sights'),
+        ('00000000-0000-0000-0003-000000000003', '00000000-0000-0000-0000-000000000003', 'Masca valley hike',                       '2026-02-25 09:30:00', json_object('osmType', NULL, 'osmId', NULL, 'displayName', 'Masca, Tenerife, Spain', 'name', 'Masca', 'lat', 28.3066, 'lng', -16.8396, 'category', NULL, 'type', NULL, 'locality', 'Masca', 'country', 'Spain', 'countryCode', 'es', 'boundingBox', NULL), 'sights'),
+        ('00000000-0000-0000-0003-000000000004', '00000000-0000-0000-0000-000000000003', 'Lazy beach day, no plans',                '2026-02-27 13:00:00', NULL, NULL)
 )
 INSERT INTO entries (
-    id, trip_id, author_id, note, entry_date, lat, lng, tag,
+    id, trip_id, author_id, note, entry_date, location, tag,
     is_deleted, created_at, updated_at, server_updated_at
 )
 SELECT
@@ -59,8 +59,7 @@ SELECT
     (SELECT id FROM user ORDER BY created_at LIMIT 1),
     v.note,
     unixepoch(v.entry_date),
-    v.lat,
-    v.lng,
+    v.location,
     v.tag,
     0,
     unixepoch(v.entry_date) * 1000,
