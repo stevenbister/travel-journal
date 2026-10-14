@@ -14,7 +14,7 @@ const trip = {
     endDate: new Date('2025-01-05'),
 };
 
-const entry = (lat?: number, lng?: number) => ({ lat, lng });
+const entry = (lat?: number, lng?: number) => ({ location: { lat, lng } });
 
 type Options = {
     tripData?: Trip;
