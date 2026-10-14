@@ -53,15 +53,15 @@ export interface Entry {
     location: Place | null;
     tag: string | null;
     isDeleted: boolean;
-    createdAt: number;
-    updatedAt: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface EntryHistory {
     id: string;
     entryId: string;
     editedBy: string;
-    editedAt: number;
+    editedAt: string;
 }
 
 export interface TripMember {
@@ -80,8 +80,8 @@ export interface OutboxItem {
     key: `${string}:${string}`; // `${collection}:${recordId}`. One row per record
     collection: Collection;
     recordId: string;
-    updatedAt: number;
-    queuedAt: number;
+    updatedAt: string;
+    queuedAt: string;
     attempts: number;
     lastError?: string;
     failed?: boolean;
