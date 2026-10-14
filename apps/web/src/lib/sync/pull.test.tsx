@@ -60,8 +60,8 @@ const pending = (
     key: `${collection}:${recordId}`,
     collection,
     recordId,
-    updatedAt: Date.now(),
-    queuedAt: Date.now(),
+    updatedAt: Date.now().toString(),
+    queuedAt: Date.now().toString(),
     attempts: 0,
 });
 

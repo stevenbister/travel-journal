@@ -18,8 +18,8 @@ const makeEntry = (
     location: null,
     tag: null,
     isDeleted: false,
-    createdAt: 0,
-    updatedAt: 0,
+    createdAt: '',
+    updatedAt: '',
     ...overrides,
 });
 
