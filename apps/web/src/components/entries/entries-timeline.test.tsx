@@ -1,7 +1,7 @@
 import { format, parseISO } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
 
+import { renderWithRouter } from '../../__test__/helpers';
 import type { Entry } from '../../lib/dexie/types';
 import { useGetTrip } from '../trips/hooks/use-get-trip';
 import { EntriesTimeline } from './entries-timeline';
@@ -56,7 +56,7 @@ const renderComponent = (entries: Entry[] | undefined) => {
         trip: { startDate: TRIP_START } as never,
         isPending: false,
     });
-    return render(<EntriesTimeline tripId="trip-1" />);
+    return renderWithRouter(<EntriesTimeline tripId="trip-1" />);
 };
 
 // Trip-relative day number via the shared util, so the test is not brittle
