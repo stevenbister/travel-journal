@@ -1,8 +1,10 @@
 import { compareDesc, format, parseISO } from 'date-fns';
 import * as React from 'react';
 
+import { useGetTrip } from '../trips/hooks/use-get-trip';
 import { EntryDetails } from './entry-details';
 import { useGetEntries } from './hooks/use-get-entries';
+import { getEntryDayNumber } from './utils/get-entry-day-number';
 
 const groupEntriesByDay = <T extends { entryDate: string }>(
     entries: T[]
@@ -29,23 +31,25 @@ const groupEntriesByDay = <T extends { entryDate: string }>(
 
 export const EntriesTimeline = ({ tripId }: { tripId: string }) => {
     const { entries } = useGetEntries(tripId);
+    const { trip } = useGetTrip(tripId);
     const groupedEntries = React.useMemo(
         () =>
             [...groupEntriesByDay(entries ?? [])].map(([date, items]) => ({
                 date,
                 items,
+                dayNumber: getEntryDayNumber(date, trip?.startDate),
             })),
-        [entries]
+        [entries, trip?.startDate]
     );
 
     return (
         <div className="flex flex-col gap-6 py-2">
-            {groupedEntries.map(({ date, items }, index) => (
+            {groupedEntries.map(({ date, items, dayNumber }) => (
                 <div key={date}>
                     <h3 className="flex gap-2 items-center mb-2">
-                        <span className="text-base">
-                            Day {groupedEntries.length - index}
-                        </span>
+                        {dayNumber !== undefined && (
+                            <span className="text-base">Day {dayNumber}</span>
+                        )}
                         <span className="text-muted-foreground font-sans">
                             {format(parseISO(date), 'PP')}
                         </span>
