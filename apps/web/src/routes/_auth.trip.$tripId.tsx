@@ -8,6 +8,7 @@ import {
 } from '@repo/ui/components/ui/tabs';
 
 import { EntriesTimeline } from '../components/entries/entries-timeline';
+import { EntryMap } from '../components/entries/entry-map';
 import { EntryStatsGrid } from '../components/entries/entry-stats-grid';
 import { getTripWithDetails } from '../components/trips/hooks/use-get-trip';
 import { TripHeader } from '../components/trips/trip-header';
@@ -59,8 +60,10 @@ function RouteComponent() {
                         <EntriesTimeline tripId={trip.id} />
                     </div>
                 </TabsContent>
-                <TabsContent value="map" className="container-x min-h-0 flex-1">
-                    <div className="h-lvh">Map</div>
+                <TabsContent value="map" className="min-h-0 flex-1">
+                    <div className="h-lvh">
+                        <EntryMap tripId={trip.id} />
+                    </div>
                 </TabsContent>
             </Tabs>
         </div>
