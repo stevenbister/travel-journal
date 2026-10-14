@@ -19,7 +19,7 @@ export const IconBox = ({
 }: IconBoxProps) => {
     const variants = {
         default: 'bg-secondary text-secondary-foreground',
-        accent: 'bg-accent text-accent-foreground',
+        accent: 'bg-accent text-foreground',
     };
 
     const sizes = {

@@ -1,3 +1,4 @@
+import { Link } from '@tanstack/react-router';
 import { compareDesc, format, parseISO } from 'date-fns';
 import * as React from 'react';
 
@@ -59,13 +60,19 @@ export const EntriesTimeline = ({ tripId }: { tripId: string }) => {
                         <li className="absolute inset-s-1.5 -translate-x-0.5 h-full w-px bg-muted-foreground/50" />
 
                         {items.map((item) => (
-                            <li
-                                key={item.id}
-                                className="grid grid-cols-[auto_auto_1fr] gap-3 items-start py-2"
-                            >
-                                <div className="block size-2.5 bg-accent rounded-full mt-1 shrink-0 z-10" />
+                            <li key={item.id}>
+                                <Link
+                                    to="/trip/$tripId/entry/$entryId"
+                                    params={{
+                                        tripId,
+                                        entryId: item.id,
+                                    }}
+                                    className="grid grid-cols-[auto_auto_1fr] gap-3 items-start py-2"
+                                >
+                                    <div className="block size-2.5 bg-accent rounded-full mt-1 shrink-0 z-10" />
 
-                                <EntryDetails entry={item} />
+                                    <EntryDetails entry={item} />
+                                </Link>
                             </li>
                         ))}
                     </ul>

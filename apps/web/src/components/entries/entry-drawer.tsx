@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router';
+
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import {
     Drawer,
@@ -46,7 +48,15 @@ export const EntryDrawer = ({
                         {isPending ? (
                             <Skeleton className="h-6 w-full" />
                         ) : (
-                            <EntryDetails entry={entry!} dateType="date" />
+                            <Link
+                                to="/trip/$tripId/entry/$entryId"
+                                params={{
+                                    tripId: entry!.tripId,
+                                    entryId,
+                                }}
+                            >
+                                <EntryDetails entry={entry!} dateType="date" />
+                            </Link>
                         )}
                     </CardContent>
                 </Card>

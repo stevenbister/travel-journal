@@ -93,3 +93,7 @@ export interface TripWithDetails extends Trip {
 }
 
 export type TripType = 'current' | 'upcoming' | 'past';
+
+export interface EntryWithAuthor extends Entry {
+    author: User | null;
+}
