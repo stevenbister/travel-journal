@@ -48,7 +48,8 @@ export interface Entry {
     id: string;
     tripId: string;
     authorId: string;
-    note: string | null;
+    title: string | null;
+    notes: string | null;
     entryDate: string;
     location: Place | null;
     tag: string | null;

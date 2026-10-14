@@ -44,7 +44,7 @@ export const EntryDrawer = ({
 
             <DrawerContent>
                 <Card>
-                    <CardContent className="grid grid-cols-[auto_1fr] gap-3 items-start">
+                    <CardContent>
                         {isPending ? (
                             <Skeleton className="h-6 w-full" />
                         ) : (
@@ -54,6 +54,7 @@ export const EntryDrawer = ({
                                     tripId: entry!.tripId,
                                     entryId,
                                 }}
+                                className="grid grid-cols-[auto_1fr] gap-3 items-start"
                             >
                                 <EntryDetails entry={entry!} dateType="date" />
                             </Link>

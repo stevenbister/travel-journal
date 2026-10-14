@@ -48,7 +48,9 @@ function RouteComponent() {
 
             {entry && trip ? <EntryHeader entry={entry} trip={trip} /> : null}
 
-            <div className="container">
+            <div className="container-x flex flex-col gap-4">
+                <p>{entry?.notes}</p>
+
                 <aside className="bg-secondary rounded-xl p-4 grid grid-cols-[auto_1fr] gap-4 items-center">
                     <IconBox Icon={MapPinIcon} size="sm" variant="accent" />
 

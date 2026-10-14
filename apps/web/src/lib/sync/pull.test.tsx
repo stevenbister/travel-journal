@@ -194,7 +194,7 @@ describe('pull', () => {
 
     it('skips rows with pending outbox entries', async () => {
         await db.trips.put(trip('t1', { title: 'Local' }));
-        await db.entries.put(entry('e1', { note: 'Local' }));
+        await db.entries.put(entry('e1', { title: 'Local' }));
         await db.outbox.bulkPut([
             pending('t1', 'trips'),
             pending('e1', 'entries'),

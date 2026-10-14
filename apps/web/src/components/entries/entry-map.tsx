@@ -127,7 +127,12 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
                                 <EntryDrawer
                                     entryId={entry.id}
                                     trigger={
-                                        <MapPinIcon size={40} weight="fill" />
+                                        <button>
+                                            <MapPinIcon
+                                                weight="fill"
+                                                size={40}
+                                            />
+                                        </button>
                                     }
                                     isOpen={isSelected}
                                     setIsOpen={(isOpen) =>

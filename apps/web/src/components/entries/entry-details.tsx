@@ -20,7 +20,7 @@ export const EntryDetails = ({
     entry,
     dateType = 'time',
 }: EntryDetailsProps) => {
-    const { entryDate, note, location, tag } = entry;
+    const { entryDate, title, location, tag } = entry;
     const tagIconMap: Record<string, Icon> = {
         // TODO: Add more tag-icon mappings as needed (need to decide how best to handle this so it's scalable)
         food: BowlFoodIcon,
@@ -48,7 +48,7 @@ export const EntryDetails = ({
                     {getFormattedDate()}
                 </p>
 
-                <h4 className="font-display text-base">{note}</h4>
+                <h4 className="font-display text-base">{title}</h4>
 
                 <p className="flex gap-px items-center text-muted-foreground text-xs">
                     <MapPinIcon weight="duotone" /> {location?.name ?? ''}

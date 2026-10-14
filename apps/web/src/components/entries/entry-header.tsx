@@ -23,7 +23,7 @@ export const EntryHeader = ({ entry, trip }: EntryHeaderProps) => {
                     </p>
                 </div>
 
-                <h1>{entry?.note}</h1>
+                <h1>{entry?.title}</h1>
 
                 <div className="flex items-center gap-2 text-sm text-muted-foreground">
                     <span className="flex items-center gap-0.5">

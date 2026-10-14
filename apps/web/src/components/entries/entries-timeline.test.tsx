@@ -24,7 +24,8 @@ const makeEntry = (
     id,
     tripId: 'trip-1',
     authorId: 'user-1',
-    note: `note-${id}`,
+    title: `title-${id}`,
+    notes: `notes-${id}`,
     entryDate,
     location: {
         osmType: null,
@@ -91,13 +92,13 @@ describe('EntriesTimeline', () => {
             .toBeInTheDocument();
     });
 
-    it('renders the note, time, and location for each entry', async () => {
+    it('renders the title, time, and location for each entry', async () => {
         const entry = makeEntry('a1', '2026-10-10T09:30:00.000Z', {
-            note: 'Morning ramen',
+            title: 'Morning ramen',
         });
         const page = await renderComponent([entry]);
 
-        await expect.element(page.getByText(entry.note!)).toBeInTheDocument();
+        await expect.element(page.getByText(entry.title!)).toBeInTheDocument();
         await expect
             .element(page.getByText(format(parseISO(entry.entryDate), 'p')))
             .toBeInTheDocument();
