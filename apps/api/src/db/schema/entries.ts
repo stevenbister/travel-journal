@@ -31,7 +31,8 @@ export const entries = snakeCase.table(
         authorId: text()
             .notNull()
             .references(() => user.id, { onDelete: 'restrict' }),
-        note: text(),
+        title: text(),
+        notes: text(),
         entryDate: int({ mode: 'timestamp' }).notNull(),
         tag: text(),
         location: text({ mode: 'json' }).$type<Place>(),

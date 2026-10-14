@@ -5,6 +5,7 @@ import { cn } from '@repo/ui/lib/utils';
 type IconBoxProps = {
     Icon?: Icon;
     size?: 'default' | 'sm';
+    variant?: 'default' | 'accent';
     className?: string;
     ref?: React.Ref<HTMLDivElement>;
 };
@@ -12,9 +13,15 @@ type IconBoxProps = {
 export const IconBox = ({
     Icon = MapTrifoldIcon,
     size = 'default',
+    variant = 'default',
     className,
     ref,
 }: IconBoxProps) => {
+    const variants = {
+        default: 'bg-secondary text-secondary-foreground',
+        accent: 'bg-accent text-foreground',
+    };
+
     const sizes = {
         default: {
             container: 'size-28',
@@ -32,7 +39,8 @@ export const IconBox = ({
         <div
             ref={ref}
             className={cn(
-                'grid place-items-center bg-secondary text-secondary-foreground',
+                'grid place-items-center',
+                variants[variant],
                 sizes[size].container,
                 sizes[size].radius,
                 className

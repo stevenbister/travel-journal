@@ -57,7 +57,8 @@ erDiagram
         string id
         string trip_id
         string author_id
-        text note
+        text title
+        text notes
         datetime entry_date
         float lat
         float lng
@@ -161,7 +162,7 @@ sequenceDiagram
 ## 6. V1 Features Beyond Core Logging
 
 - **Tags/categories**; each entry carries a `tag` (food/sight/activity/accommodation, etc.). Feeds both search and stats.
-- **Search/filter within a trip**; filter entries by date, tag, or keyword match against `note`. Straightforward query against local database (and D1 server-side) once tags exist.
+- **Search/filter within a trip**; filter entries by date, tag, or keyword match against `title`. Straightforward query against local database (and D1 server-side) once tags exist.
 - **Trip stats/summary**; computed from existing entry data: days traveled (from `start_date`/`end_date`), locations visited, entry counts by tag.
 - **Map view**; pins for each entry plotted using existing `lat`/`lng`.
 - **Entry edit/delete history**; since past trips remain always-editable, changes are tracked via an `entry_history` table (who edited, when, summary of the change) rather than silent overwrites. Deletes are soft (`is_deleted` flag) rather than destructive, so history stays intact and entries remain recoverable.

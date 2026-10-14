@@ -1,3 +1,5 @@
+import { Link } from '@tanstack/react-router';
+
 import { Card, CardContent } from '@repo/ui/components/ui/card';
 import {
     Drawer,
@@ -42,11 +44,20 @@ export const EntryDrawer = ({
 
             <DrawerContent>
                 <Card>
-                    <CardContent className="grid grid-cols-[auto_1fr] gap-3 items-start">
+                    <CardContent>
                         {isPending ? (
                             <Skeleton className="h-6 w-full" />
                         ) : (
-                            <EntryDetails entry={entry!} dateType="date" />
+                            <Link
+                                to="/trip/$tripId/entry/$entryId"
+                                params={{
+                                    tripId: entry!.tripId,
+                                    entryId,
+                                }}
+                                className="grid grid-cols-[auto_1fr] gap-3 items-start"
+                            >
+                                <EntryDetails entry={entry!} dateType="date" />
+                            </Link>
                         )}
                     </CardContent>
                 </Card>

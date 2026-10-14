@@ -48,20 +48,21 @@ export interface Entry {
     id: string;
     tripId: string;
     authorId: string;
-    note: string | null;
+    title: string | null;
+    notes: string | null;
     entryDate: string;
     location: Place | null;
     tag: string | null;
     isDeleted: boolean;
-    createdAt: number;
-    updatedAt: number;
+    createdAt: string;
+    updatedAt: string;
 }
 
 export interface EntryHistory {
     id: string;
     entryId: string;
     editedBy: string;
-    editedAt: number;
+    editedAt: string;
 }
 
 export interface TripMember {
@@ -80,8 +81,8 @@ export interface OutboxItem {
     key: `${string}:${string}`; // `${collection}:${recordId}`. One row per record
     collection: Collection;
     recordId: string;
-    updatedAt: number;
-    queuedAt: number;
+    updatedAt: string;
+    queuedAt: string;
     attempts: number;
     lastError?: string;
     failed?: boolean;
@@ -93,3 +94,7 @@ export interface TripWithDetails extends Trip {
 }
 
 export type TripType = 'current' | 'upcoming' | 'past';
+
+export interface EntryWithAuthor extends Entry {
+    author: User | null;
+}

@@ -1,13 +1,19 @@
 import { format, parseISO } from 'date-fns';
 import { afterEach, describe, expect, it, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
 
+import { renderWithRouter } from '../../__test__/helpers';
 import type { Entry } from '../../lib/dexie/types';
+import { useGetTrip } from '../trips/hooks/use-get-trip';
 import { EntriesTimeline } from './entries-timeline';
 import { useGetEntries } from './hooks/use-get-entries';
+import { getEntryDayNumber } from './utils/get-entry-day-number';
 
 vi.mock('./hooks/use-get-entries', () => ({
     useGetEntries: vi.fn(),
+}));
+
+vi.mock('../trips/hooks/use-get-trip', () => ({
+    useGetTrip: vi.fn(),
 }));
 
 const makeEntry = (
@@ -18,7 +24,8 @@ const makeEntry = (
     id,
     tripId: 'trip-1',
     authorId: 'user-1',
-    note: `note-${id}`,
+    title: `title-${id}`,
+    notes: `notes-${id}`,
     entryDate,
     location: {
         osmType: null,
@@ -36,30 +43,46 @@ const makeEntry = (
     },
     tag: null,
     isDeleted: false,
-    createdAt: 0,
-    updatedAt: 0,
+    createdAt: '',
+    updatedAt: '',
     ...overrides,
 });
 
+const TRIP_START = '2026-10-07T23:00:00.000Z';
+
 const renderComponent = (entries: Entry[] | undefined) => {
     vi.mocked(useGetEntries).mockReturnValue({ entries, isPending: false });
-    return render(<EntriesTimeline tripId="trip-1" />);
+    vi.mocked(useGetTrip).mockReturnValue({
+        trip: { startDate: TRIP_START } as never,
+        isPending: false,
+    });
+    return renderWithRouter(<EntriesTimeline tripId="trip-1" />);
 };
+
+// Trip-relative day number via the shared util, so the test is not brittle
+// across timezones (trip start is near midnight UTC).
+const dayFor = (entryDate: string) => getEntryDayNumber(entryDate, TRIP_START);
 
 describe('EntriesTimeline', () => {
     afterEach(() => {
         vi.clearAllMocks();
     });
 
-    it('groups entries by day, newest first with ascending day numbers', async () => {
+    it('groups entries by day, newest first with trip-relative day numbers', async () => {
+        const oldDate = '2026-10-08T09:00:00.000Z';
+        const newDate = '2026-10-10T09:00:00.000Z';
         const page = await renderComponent([
-            makeEntry('old', '2026-10-08T09:00:00.000Z'),
-            makeEntry('new', '2026-10-10T09:00:00.000Z'),
+            makeEntry('old', oldDate),
+            makeEntry('new', newDate),
         ]);
 
         const headings = page.getByRole('heading', { level: 3 });
-        await expect.element(headings.first()).toHaveTextContent('Day 2');
-        await expect.element(headings.last()).toHaveTextContent('Day 1');
+        await expect
+            .element(headings.first())
+            .toHaveTextContent(`Day ${dayFor(newDate)}`);
+        await expect
+            .element(headings.last())
+            .toHaveTextContent(`Day ${dayFor(oldDate)}`);
 
         await expect
             .element(page.getByText(format(parseISO('2026-10-10'), 'PP')))
@@ -69,13 +92,13 @@ describe('EntriesTimeline', () => {
             .toBeInTheDocument();
     });
 
-    it('renders the note, time, and location for each entry', async () => {
+    it('renders the title, time, and location for each entry', async () => {
         const entry = makeEntry('a1', '2026-10-10T09:30:00.000Z', {
-            note: 'Morning ramen',
+            title: 'Morning ramen',
         });
         const page = await renderComponent([entry]);
 
-        await expect.element(page.getByText(entry.note!)).toBeInTheDocument();
+        await expect.element(page.getByText(entry.title!)).toBeInTheDocument();
         await expect
             .element(page.getByText(format(parseISO(entry.entryDate), 'p')))
             .toBeInTheDocument();

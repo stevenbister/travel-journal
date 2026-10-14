@@ -60,8 +60,8 @@ const pending = (
     key: `${collection}:${recordId}`,
     collection,
     recordId,
-    updatedAt: Date.now(),
-    queuedAt: Date.now(),
+    updatedAt: Date.now().toString(),
+    queuedAt: Date.now().toString(),
     attempts: 0,
 });
 
@@ -194,7 +194,7 @@ describe('pull', () => {
 
     it('skips rows with pending outbox entries', async () => {
         await db.trips.put(trip('t1', { title: 'Local' }));
-        await db.entries.put(entry('e1', { note: 'Local' }));
+        await db.entries.put(entry('e1', { title: 'Local' }));
         await db.outbox.bulkPut([
             pending('t1', 'trips'),
             pending('e1', 'entries'),

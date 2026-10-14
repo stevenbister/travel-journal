@@ -13,13 +13,14 @@ const makeEntry = (
     id,
     tripId,
     authorId: 'user-1',
-    note: id,
+    title: id,
+    notes: 'notes',
     entryDate: '2026-10-09T12:00:00.000Z',
     location: null,
     tag: null,
     isDeleted: false,
-    createdAt: 0,
-    updatedAt: 0,
+    createdAt: '',
+    updatedAt: '',
     ...overrides,
 });
 
