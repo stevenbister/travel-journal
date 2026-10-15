@@ -26,4 +26,27 @@
             "migrations_dir": "src/db/migrations",
         },
     ],
+    "vars": {
+        "NOMINATIM_USER_AGENT": "TravelJournal/1.0 (https://travel-journal.stevenbister.com)",
+    },
+    "kv_namespaces": [
+        {
+            "binding": "GEOCODE_CACHE",
+            "id": "f2421ea1f5b1488998f25251b1c33820",
+        },
+    ],
+    "durable_objects": {
+        "bindings": [
+            {
+                "name": "GEOCODING_GATE",
+                "class_name": "GeocodeGate",
+            },
+        ],
+    },
+    "exports": {
+        "GeocodeGate": {
+            "type": "durable-object",
+            "storage": "sqlite",
+        },
+    },
 }
