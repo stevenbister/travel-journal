@@ -5,7 +5,7 @@ import { createSelectSchema } from 'drizzle-zod';
 import { user } from './auth';
 import { trips } from './trips';
 
-type Place = {
+export type Place = {
     osmType: string | null;
     osmId: number | null;
     displayName: string;
@@ -17,8 +17,7 @@ type Place = {
     locality: string | null;
     country: string | null;
     countryCode: string | null;
-    boundingBox:
-        [south: number, north: number, west: number, east: number] | null;
+    boundingBox: [string, string, string, string] | null;
 };
 
 export const entries = snakeCase.table(
