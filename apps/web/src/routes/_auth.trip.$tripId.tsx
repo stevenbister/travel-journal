@@ -10,6 +10,7 @@ import {
 import { EntriesTimeline } from '../components/entries/entries-timeline';
 import { EntryMap } from '../components/entries/entry-map';
 import { EntryStatsGrid } from '../components/entries/entry-stats-grid';
+import { FloatingActionButton } from '../components/floating-action-button/floating-action-button';
 import { getTripWithDetails } from '../components/trips/hooks/use-get-trip';
 import { TripHeader } from '../components/trips/trip-header';
 import { db } from '../lib/dexie/db';
@@ -56,8 +57,12 @@ function RouteComponent() {
                     value="timeline"
                     className="container-x min-h-0 flex-1"
                 >
-                    <div className="pb-20">
+                    <div className="relative pb-20">
                         <EntriesTimeline tripId={trip.id} />
+
+                        <FloatingActionButton
+                            to={`/trip/${trip.id}/entry/new`}
+                        />
                     </div>
                 </TabsContent>
                 <TabsContent value="map" className="min-h-0 flex-1">
