@@ -2,6 +2,7 @@ import { DurableObject } from 'cloudflare:workers';
 
 import { configureOpenAPI } from './lib/configure-open-api';
 import { createApp } from './lib/create-app';
+import { geocodingRoutes } from './routes/geocoding/geocoding.index';
 import { healthCheckRoutes } from './routes/health/health.index';
 import { pullRoutes } from './routes/sync/pull/pull.index';
 
@@ -25,7 +26,11 @@ export class GeocodeGate extends DurableObject {
 
 const app = createApp();
 
-app.openapiRoutes([...healthCheckRoutes, ...pullRoutes] as const);
+app.openapiRoutes([
+    ...healthCheckRoutes,
+    ...geocodingRoutes,
+    ...pullRoutes,
+] as const);
 
 configureOpenAPI(app);
 

@@ -1,6 +1,6 @@
 import { env } from 'cloudflare:workers';
 
-import type { GeocodeGate } from '..';
+import { mockFetch, mockGeocodingGate } from '../__test__/helpers';
 import {
     HIT_TTL_S,
     MAX_QUEUE_WAIT_MS,
@@ -9,38 +9,6 @@ import {
     getCacheKey,
     queryNominatim,
 } from './geocoding';
-
-const mockFetch = <T>({
-    ok,
-    status,
-    json,
-}: {
-    ok: boolean;
-    status: number;
-    json?: () => Promise<T>;
-}) => {
-    const fetchMock = vi.fn().mockResolvedValue({
-        ok,
-        status,
-        json,
-    });
-    vi.stubGlobal('fetch', fetchMock);
-
-    return fetchMock;
-};
-
-const mockGeocodingGate = ({
-    acquire,
-    backoff,
-}: {
-    acquire: () => Promise<number | null>;
-    backoff: (_ms: number) => void;
-}) => {
-    return vi.spyOn(env.GEOCODING_GATE, 'get').mockReturnValue({
-        acquire,
-        backoff,
-    } as unknown as DurableObjectStub<GeocodeGate>);
-};
 
 describe('geocoding', () => {
     beforeEach(() => {
@@ -165,7 +133,7 @@ describe('geocoding', () => {
 
             await queryNominatim(env, { q: 'New York' });
 
-            const [url] = fetchMock.mock.calls[0]!;
+            const [url] = fetchMock.mock.calls[0]! as [URL];
 
             expect(url.origin).toBe('https://nominatim.openstreetmap.org');
             expect(url.pathname).toBe('/search');
@@ -183,7 +151,12 @@ describe('geocoding', () => {
             await queryNominatim(env, { q: 'New York' });
 
             expect(fetchMock).toHaveBeenCalledTimes(1);
-            const [_, init] = fetchMock.mock.calls[0]!;
+            const [_, init] = fetchMock.mock.calls[0]! as [
+                URL,
+                RequestInit & {
+                    headers: Record<string, string>;
+                },
+            ];
 
             expect(init.headers['User-Agent']).toBe(env.NOMINATIM_USER_AGENT);
         });
