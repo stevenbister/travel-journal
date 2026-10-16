@@ -64,7 +64,7 @@ describe('Geocoding', () => {
         // Ensure a cache miss so the request reaches the mock fetch.
         // GEOCODE_CACHE is real Miniflare KV and persists across watch-mode runs,
         // so a stale entry would otherwise short-circuit queryNominatim entirely.
-        cacheKey = await getCacheKey('search', normalizedQuery);
+        cacheKey = await getCacheKey('search', normalizedQuery, '');
         await env.GEOCODE_CACHE.delete(cacheKey);
     });
 
