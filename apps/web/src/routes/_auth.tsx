@@ -2,7 +2,7 @@ import {
     Outlet,
     createFileRoute,
     redirect,
-    useLocation,
+    useMatches,
 } from '@tanstack/react-router';
 import { useSpinDelay } from 'spin-delay';
 
@@ -33,14 +33,26 @@ export const Route = createFileRoute('/_auth')({
     component: AuthLayout,
 });
 
+const navigationHiddenRouteIds = new Set([
+    '/_auth/trip/new',
+    '/_auth/trip/$tripId',
+    '/_auth/trip/$tripId_/entry/$entryId',
+    '/_auth/trip/$tripId_/entry/new',
+]);
+
 function AuthLayout() {
-    const location = useLocation();
     useRefreshSessionCache();
     const { isFetching, error } = useSync();
     const showSpinner = useSpinDelay(isFetching, {
         delay: 0,
         minDuration: 300,
     });
+
+    const matches = useMatches();
+    const routeIds = matches.map((route) => route.routeId);
+    const isNavigationHidden = routeIds.some((routeId) =>
+        navigationHiddenRouteIds.has(routeId)
+    );
 
     if (error) {
         console.error('Sync error:', error);
@@ -71,7 +83,7 @@ function AuthLayout() {
                 </SidebarInset>
             </SidebarProvider>
 
-            {location.pathname !== '/trip/new' ? <Navbar /> : null}
+            {!isNavigationHidden ? <Navbar /> : null}
         </>
     );
 }
