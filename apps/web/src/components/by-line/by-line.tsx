@@ -22,7 +22,7 @@ export const ByLine = ({
     const isEdited = !isEqual(createdAtDate, updatedAtDate);
 
     const getEditedDate = (date: Date) => {
-        return formatDistance(now, date, {
+        return formatDistance(date, now, {
             addSuffix: true,
         });
     };

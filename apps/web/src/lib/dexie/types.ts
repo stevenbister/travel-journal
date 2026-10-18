@@ -40,8 +40,7 @@ export interface Place {
     locality: string | null;
     country: string | null;
     countryCode: string | null;
-    boundingBox:
-        [south: number, north: number, west: number, east: number] | null;
+    boundingBox: [string, string, string, string] | null;
 }
 
 export interface Entry {

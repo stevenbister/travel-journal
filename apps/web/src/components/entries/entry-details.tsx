@@ -1,15 +1,9 @@
-import {
-    BowlFoodIcon,
-    HouseIcon,
-    type Icon,
-    MapPinIcon,
-    SynagogueIcon,
-    TrainSimpleIcon,
-} from '@phosphor-icons/react';
+import { MapPinIcon } from '@phosphor-icons/react';
 import { format, parseISO } from 'date-fns';
 
 import type { Entry } from '../../lib/dexie/types';
 import { IconBox } from '../icon-box/icon-box';
+import { TAGS_LIST } from './tags-list';
 
 type EntryDetailsProps = {
     entry: Entry;
@@ -21,13 +15,6 @@ export const EntryDetails = ({
     dateType = 'time',
 }: EntryDetailsProps) => {
     const { entryDate, title, location, tag } = entry;
-    const tagIconMap: Record<string, Icon> = {
-        // TODO: Add more tag-icon mappings as needed (need to decide how best to handle this so it's scalable)
-        food: BowlFoodIcon,
-        sights: SynagogueIcon,
-        transport: TrainSimpleIcon,
-        accommodation: HouseIcon,
-    };
 
     const getFormattedDate = () => {
         if (dateType === 'time') return format(parseISO(entryDate), 'p');
@@ -39,7 +26,7 @@ export const EntryDetails = ({
         <>
             <IconBox
                 size="sm"
-                Icon={tag ? (tagIconMap[tag] ?? MapPinIcon) : MapPinIcon}
+                Icon={tag ? (TAGS_LIST[tag] ?? MapPinIcon) : MapPinIcon}
                 className="shrink-0"
             />
 

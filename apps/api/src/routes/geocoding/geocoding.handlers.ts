@@ -15,11 +15,20 @@ export const searchHandler: AppRouteHandler<GeocodingSearchRoute> = async (
 ) => {
     const { q } = c.req.valid('query');
     const normalized = normalizeQuery(q);
+    const acceptLanguage = c.req.header('Accept-Language');
 
     try {
-        const cachedKey = await getCacheKey('search', normalized);
+        const cachedKey = await getCacheKey(
+            'search',
+            normalized,
+            acceptLanguage ?? ''
+        );
         const results = await cached(c.env, cachedKey, async () => {
-            return await queryNominatim(c.env, { q: normalized });
+            return await queryNominatim(
+                c.env,
+                { q: normalized },
+                { acceptLanguage }
+            );
         });
 
         return c.json(

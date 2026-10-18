@@ -8,7 +8,7 @@ import z from 'zod';
 import { wait } from '@repo/core/utils/wait';
 
 import { Button } from '@repo/ui/components/ui/button';
-import { DateRangePicker } from '@repo/ui/components/ui/date-picker-input';
+import { DateRangePicker } from '@repo/ui/components/ui/date-range-picker-input';
 import {
     Field,
     FieldError,

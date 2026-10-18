@@ -1,6 +1,7 @@
 import type {
     Entry,
     EntryHistory,
+    Place,
     Trip,
     TripMember,
     User,
@@ -58,12 +59,33 @@ export type PullResponse = {
     entryHistory: Page<EntryHistory>;
 };
 
+export type GeocodeSearchResponse = {
+    locations: Place[];
+    attribution: string;
+};
+
 export const api = {
     health: (init?: RequestInit) => {
         return apiFetch<{ ok: boolean }>('/health', {
             cache: 'no-store',
             ...init,
         });
+    },
+    geocode: {
+        search: (
+            params: { q: string },
+            init?: RequestInit
+        ): Promise<GeocodeSearchResponse> => {
+            const searchParams = new URLSearchParams();
+            for (const [key, value] of Object.entries(params)) {
+                if (value !== undefined) searchParams.set(key, value);
+            }
+
+            return apiFetch<GeocodeSearchResponse>(
+                `/geocoding/search?${searchParams}`,
+                init
+            );
+        },
     },
     sync: {
         pull: (

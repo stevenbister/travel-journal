@@ -72,7 +72,8 @@ type NominatimRow = {
 
 export const queryNominatim = async (
     env: AppBindings['Bindings'],
-    params: Record<string, string>
+    params: Record<string, string>,
+    options?: { acceptLanguage?: string }
 ): Promise<Place[]> => {
     // Set up Durable object to manage rate limiting and queueing for the geocoding service
     const gate = env.GEOCODING_GATE.get(
@@ -101,6 +102,9 @@ export const queryNominatim = async (
         headers: {
             'User-Agent': env.NOMINATIM_USER_AGENT,
             Accept: 'application/json',
+            ...(options?.acceptLanguage
+                ? { 'Accept-Language': options.acceptLanguage }
+                : {}),
         },
     });
 
