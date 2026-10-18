@@ -1,4 +1,5 @@
-import { beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { page as browserPage } from 'vitest/browser';
 
 import { SidebarProvider } from '@repo/ui/components/ui/sidebar';
 
@@ -17,8 +18,13 @@ const renderComponent = () =>
     );
 
 describe('AppSidebar', () => {
-    beforeEach(() => {
+    beforeEach(async () => {
+        await browserPage.viewport(1280, 720);
         vi.clearAllMocks();
+    });
+
+    afterEach(async () => {
+        await browserPage.viewport(414, 896); // default size
     });
 
     it('renders the navigation items', async () => {

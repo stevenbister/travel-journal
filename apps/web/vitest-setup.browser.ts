@@ -1,5 +1,8 @@
 import { type Locator, locators } from 'vitest/browser';
 
+// @ts-expect-error CSS is loaded by the bundler and has no TypeScript declarations.
+import '@repo/ui/globals.css';
+
 locators.extend({
     getByAttribute: (attribute: string, value: string) =>
         `[${attribute}="${value}"]`,
