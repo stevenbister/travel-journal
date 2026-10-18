@@ -24,7 +24,9 @@ import { toast } from '@repo/ui/components/ui/toast';
 
 import { useSession } from '../../lib/auth/use-session';
 import { db } from '../../lib/dexie/db';
+import { BadgeSelector } from '../badge-selector/badge-selector';
 import { LocationSearch } from '../location-search/location-search';
+import { TAGS_LIST } from './tags-list';
 
 const placeSchema = z.object({
     osmType: z.string().nullable(),
@@ -286,6 +288,44 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                                     onLocationSelect={(location) =>
                                         field.handleChange(location)
                                     }
+                                />
+
+                                {isInvalid && (
+                                    <FieldError
+                                        errors={field.state.meta.errors}
+                                    />
+                                )}
+                            </MotionField>
+                        );
+                    }}
+                </form.Field>
+            </FieldGroup>
+
+            <FieldGroup>
+                <form.Field name="tag">
+                    {(field) => {
+                        const isInvalid =
+                            field.state.meta.isTouched &&
+                            !field.state.meta.isValid;
+
+                        return (
+                            <MotionField
+                                data-invalid={isInvalid}
+                                variants={motionVariants}
+                            >
+                                <FieldLabel
+                                    htmlFor={field.name}
+                                    className="text-muted-foreground"
+                                >
+                                    Tags
+                                </FieldLabel>
+
+                                <BadgeSelector
+                                    items={Object.keys(TAGS_LIST)}
+                                    value={[field.state.value ?? '']}
+                                    onValueChange={(tag) => {
+                                        field.handleChange(tag.join(', '));
+                                    }}
                                 />
 
                                 {isInvalid && (

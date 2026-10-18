@@ -6,6 +6,7 @@ import { makeTrip, renderWithRouter } from '../../__test__/helpers';
 import { db } from '../../lib/dexie/db';
 import { useLocationQuery } from '../location-search/hooks/use-location-query';
 import { CreateEntryForm } from './create-entry-form';
+import { TAGS_LIST } from './tags-list';
 
 const mockSession = makeCachedSession();
 vi.mock('../../lib/auth/use-session', () => {
@@ -116,6 +117,16 @@ describe('CreateEntryForm', () => {
             )
             .toBeInTheDocument();
 
+        Object.keys(TAGS_LIST).forEach(async (tag) => {
+            await expect
+                .element(
+                    page.getByRole('button', {
+                        name: tag,
+                    })
+                )
+                .toBeInTheDocument();
+        });
+
         await expect
             .element(
                 page.getByRole('textbox', {
@@ -203,6 +214,12 @@ describe('CreateEntryForm', () => {
         await page.getByText('Paris', { exact: true }).click();
 
         await page
+            .getByRole('button', {
+                name: 'food',
+            })
+            .click();
+
+        await page
             .getByRole('textbox', {
                 name: 'Notes',
             })
@@ -223,7 +240,7 @@ describe('CreateEntryForm', () => {
             location: paris,
             notes: 'Some notes',
             entryDate: new Date(now.setHours(10, 30)).toISOString(),
-            tag: '',
+            tag: 'food',
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
         });
