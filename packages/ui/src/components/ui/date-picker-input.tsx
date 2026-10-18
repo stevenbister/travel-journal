@@ -1,7 +1,6 @@
 import { CalendarBlankIcon } from '@phosphor-icons/react';
 import { format } from 'date-fns';
 import React from 'react';
-import { type DateRange } from 'react-day-picker';
 
 import { Button } from '@repo/ui/components/ui/button';
 import { Calendar } from '@repo/ui/components/ui/calendar';
@@ -13,16 +12,12 @@ import {
 
 type DatePickerProps = {
     id: string;
-    onSelect: (date: DateRange | undefined) => void;
+    onSelect: (_date: Date | undefined) => void;
     ariaInvalid?: boolean;
 };
 
-export function DateRangePicker({
-    id,
-    onSelect,
-    ariaInvalid,
-}: DatePickerProps) {
-    const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+export function DatePicker({ id, onSelect, ariaInvalid }: DatePickerProps) {
+    const [date, setDate] = React.useState<Date | undefined>(undefined);
 
     return (
         <Popover>
@@ -38,15 +33,8 @@ export function DateRangePicker({
                         }}
                     >
                         <CalendarBlankIcon data-icon="inline-start" />
-                        {date?.from ? (
-                            date.to ? (
-                                <>
-                                    {format(date.from, 'LLL dd, y')} -{' '}
-                                    {format(date.to, 'LLL dd, y')}
-                                </>
-                            ) : (
-                                format(date.from, 'LLL dd, y')
-                            )
+                        {date ? (
+                            format(date, 'LLL dd, y')
                         ) : (
                             <span className="text-muted-foreground">
                                 Pick a date
@@ -57,14 +45,13 @@ export function DateRangePicker({
             />
             <PopoverContent className="w-auto p-0" align="center">
                 <Calendar
-                    mode="range"
-                    defaultMonth={date?.from}
+                    mode="single"
+                    defaultMonth={date}
                     selected={date}
                     onSelect={(selectedDate) => {
                         setDate(selectedDate);
                         onSelect(selectedDate);
                     }}
-                    numberOfMonths={1}
                     className="[--cell-size:--spacing(10)]"
                 />
             </PopoverContent>

@@ -1,7 +1,7 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
-import { render } from 'vitest-browser-react';
 
 import { makeCachedSession } from '../../__fixtures__/session';
+import { renderWithRouter } from '../../__test__/helpers';
 import { db } from '../../lib/dexie/db';
 import { CreateTripForm } from './create-trip-form';
 
@@ -14,7 +14,7 @@ vi.mock('../../lib/auth/use-session', () => {
     };
 });
 
-vi.mock('@repo/ui/components/ui/date-picker-input', () => {
+vi.mock('@repo/ui/components/ui/date-range-picker-input', () => {
     return {
         DateRangePicker: ({ id, onSelect, ariaInvalid }: any) => {
             return (
@@ -33,7 +33,8 @@ vi.mock('@repo/ui/components/ui/date-picker-input', () => {
     };
 });
 
-const renderComponent = () => render(<CreateTripForm motionVariants={{}} />);
+const renderComponent = () =>
+    renderWithRouter(<CreateTripForm motionVariants={{}} />);
 
 describe('CreateTripForm', () => {
     beforeEach(async () => {
