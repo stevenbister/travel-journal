@@ -1,35 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from 'vitest-browser-react';
 
-import { tripsFixture } from '../../../__fixtures__/trips';
+import { makeTrip } from '../../../__test__/helpers';
 import { db } from '../../../lib/dexie/db';
 import type { Entry } from '../../../lib/dexie/types';
 import { useGetTrips } from './use-get-trips';
 
 const NOW = new Date(2026, 9, 9, 12, 0, 0);
 const NEXT_MORNING = new Date(2026, 9, 10, 8, 0, 0);
-
-const at = (day: number) => new Date(2026, 9, day).toISOString();
-
-const {
-    entryCount: _entryCount,
-    members: _members,
-    ...baseTrip
-} = tripsFixture.current[0]!;
-
-const makeTrip = (
-    id: string,
-    startDay: number,
-    endDay: number,
-    overrides: Record<string, unknown> = {}
-) => ({
-    ...baseTrip,
-    id,
-    title: id,
-    startDate: at(startDay),
-    endDate: at(endDay),
-    ...overrides,
-});
 
 const makeEntry = (id: string, tripId: string, isDeleted = false) =>
     ({
