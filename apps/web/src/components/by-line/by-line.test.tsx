@@ -36,7 +36,7 @@ describe('ByLine', () => {
             <ByLine
                 author="John Doe"
                 createdAt="2025-01-01T12:00:00.000Z"
-                updatedAt="2025-01-01T12:05:00.000Z"
+                updatedAt="2025-01-01T11:55:00.000Z"
             />
         );
 
