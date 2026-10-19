@@ -107,11 +107,27 @@ describe('EntriesTimeline', () => {
             .toBeInTheDocument();
     });
 
-    it('renders nothing when there are no entries', async () => {
+    it('renders the empty state when there are no entries', async () => {
         const page = await renderComponent([]);
 
         await expect
-            .element(page.getByRole('heading').first())
-            .not.toBeInTheDocument();
+            .element(
+                page.getByRole('heading', {
+                    name: 'No entries',
+                })
+            )
+            .toBeInTheDocument();
+
+        await expect
+            .element(page.getByText('Add your plans for this trip'))
+            .toBeInTheDocument();
+
+        await expect
+            .element(
+                page.getByRole('link', {
+                    name: 'Create your first entry',
+                })
+            )
+            .toBeInTheDocument();
     });
 });
