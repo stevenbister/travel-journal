@@ -12,6 +12,6 @@ export const Section = ({
             </h2>
         ) : null}
 
-        <div>{children}</div>
+        <div className="flex flex-col gap-4">{children}</div>
     </section>
 );
