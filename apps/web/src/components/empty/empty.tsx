@@ -1,7 +1,6 @@
-import { type Icon, PlusIcon } from '@phosphor-icons/react';
+import { type Icon } from '@phosphor-icons/react';
 import { motion } from 'motion/react';
 
-import { buttonVariants } from '@repo/ui/components/ui/button';
 import {
     HIDE_SHOW_CONTAINER,
     HIDE_SHOW_ITEM,
@@ -9,27 +8,26 @@ import {
 import { cn } from '@repo/ui/lib/utils';
 
 import { IconBox } from '../icon-box/icon-box';
-import { MotionLink } from '../motion-link/motion-link';
 
 const MotionIconBox = motion.create(IconBox);
 
-type EmptyTripsProps = {
+type EmptyProps = {
     size?: 'default' | 'sm';
-    heading?: string;
+    heading: string;
     description?: string;
     Icon?: Icon;
-    showButton?: boolean;
     className?: string;
+    CTA?: React.ReactNode;
 };
 
-export const EmptyTrips = ({
+export const Empty = ({
     size = 'default',
-    heading = 'No trips yet',
-    description = 'Start a trip and every place you visit will show up here, day by day.',
+    heading,
+    description,
     Icon,
-    showButton = true,
     className,
-}: EmptyTripsProps) => {
+    CTA,
+}: EmptyProps) => {
     return (
         <motion.section
             className={cn(
@@ -50,15 +48,7 @@ export const EmptyTrips = ({
                 </p>
             </motion.div>
 
-            {showButton ? (
-                <MotionLink
-                    to={'/trip/new'}
-                    className={buttonVariants({ size: 'lg' })}
-                    variants={HIDE_SHOW_ITEM}
-                >
-                    <PlusIcon /> Create your first trip
-                </MotionLink>
-            ) : null}
+            {CTA}
         </motion.section>
     );
 };

@@ -19,6 +19,7 @@ export const Route = createFileRoute('/_auth/trip/$tripId')({
     loader: async ({ params }) => {
         const { tripId } = params;
         const trip = await db.trips.get(tripId);
+        const entries = await db.entries.where({ tripId }).toArray();
 
         if (!trip) {
             throw notFound();
@@ -26,13 +27,13 @@ export const Route = createFileRoute('/_auth/trip/$tripId')({
 
         const tripWithDetails = await getTripWithDetails(tripId);
 
-        return tripWithDetails;
+        return { trip: tripWithDetails, entries };
     },
     component: RouteComponent,
 });
 
 function RouteComponent() {
-    const trip = Route.useLoaderData();
+    const { trip, entries } = Route.useLoaderData();
 
     return (
         <div className="flex flex-col w-full">
@@ -49,7 +50,10 @@ function RouteComponent() {
                 <div className="container-x sticky top-17 md:top-29 z-20 border-b w-full shrink-0 bg-background">
                     <TabsList>
                         <TabsTrigger value="timeline">Timeline</TabsTrigger>
-                        <TabsTrigger value="map">Map</TabsTrigger>
+
+                        {entries.length > 0 ? (
+                            <TabsTrigger value="map">Map</TabsTrigger>
+                        ) : null}
                     </TabsList>
                 </div>
 
@@ -65,11 +69,14 @@ function RouteComponent() {
                         />
                     </div>
                 </TabsContent>
-                <TabsContent value="map" className="min-h-0 flex-1">
-                    <div className="h-lvh">
-                        <EntryMap tripId={trip.id} />
-                    </div>
-                </TabsContent>
+
+                {entries.length > 0 ? (
+                    <TabsContent value="map" className="min-h-0 flex-1">
+                        <div className="h-lvh">
+                            <EntryMap tripId={trip.id} />
+                        </div>
+                    </TabsContent>
+                ) : null}
             </Tabs>
         </div>
     );

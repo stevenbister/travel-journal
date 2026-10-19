@@ -1,7 +1,14 @@
+import { PlusIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
 import { compareDesc, format, parseISO } from 'date-fns';
 import * as React from 'react';
 
+import { buttonVariants } from '@repo/ui/components/ui/button';
+import { HIDE_SHOW_ITEM } from '@repo/ui/constants/animation';
+
+import type { Entry } from '../../lib/dexie/types';
+import { Empty } from '../empty/empty';
+import { MotionLink } from '../motion-link/motion-link';
 import { useGetTrip } from '../trips/hooks/use-get-trip';
 import { EntryDetails } from './entry-details';
 import { useGetEntries } from './hooks/use-get-entries';
@@ -30,8 +37,16 @@ const groupEntriesByDay = <T extends { entryDate: string }>(
     return groups;
 };
 
-export const EntriesTimeline = ({ tripId }: { tripId: string }) => {
-    const { entries } = useGetEntries(tripId);
+type EntriesTimelineProps = {
+    tripId: string;
+    entries?: Entry[];
+};
+
+export const EntriesTimeline = ({
+    tripId,
+    entries: initialEntries,
+}: EntriesTimelineProps) => {
+    const { entries } = useGetEntries(tripId, initialEntries);
     const { trip } = useGetTrip(tripId);
     const groupedEntries = React.useMemo(
         () =>
@@ -43,8 +58,32 @@ export const EntriesTimeline = ({ tripId }: { tripId: string }) => {
         [entries, trip?.startDate]
     );
 
+    if (groupedEntries.length === 0) {
+        return (
+            <Empty
+                size="sm"
+                heading="No entries"
+                description="Add your plans for this trip"
+                CTA={
+                    <MotionLink
+                        to="/trip/$tripId/entry/new"
+                        params={{
+                            tripId,
+                        }}
+                        className={buttonVariants({
+                            size: 'lg',
+                        })}
+                        variants={HIDE_SHOW_ITEM}
+                    >
+                        <PlusIcon /> Create your first entry
+                    </MotionLink>
+                }
+            />
+        );
+    }
+
     return (
-        <div className="flex flex-col gap-6 py-2">
+        <section className="flex flex-col gap-6 py-2">
             {groupedEntries.map(({ date, items, dayNumber }) => (
                 <div key={date}>
                     <h3 className="flex gap-2 items-center mb-2">
@@ -78,6 +117,6 @@ export const EntriesTimeline = ({ tripId }: { tripId: string }) => {
                     </ul>
                 </div>
             ))}
-        </div>
+        </section>
     );
 };

@@ -48,7 +48,9 @@ export const EntryStatsGrid = ({ tripId }: EntryStatsGridProps) => {
                 <StatsGridItem value={entries.length} label="Entries" />
             ) : null}
 
-            <StatsGridItem value={uniquePlaces.length} label="places" />
+            {uniquePlaces.length > 0 ? (
+                <StatsGridItem value={uniquePlaces.length} label="places" />
+            ) : null}
 
             {lengthOfTrip ? (
                 <StatsGridItem value={lengthOfTrip.days ?? 0} label="Days" />

@@ -1,6 +1,12 @@
+import { PlusIcon } from '@phosphor-icons/react';
+
+import { buttonVariants } from '@repo/ui/components/ui/button';
+import { HIDE_SHOW_ITEM } from '@repo/ui/constants/animation';
+
 import type { TripType, TripWithDetails } from '../../lib/dexie/types';
+import { Empty } from '../empty/empty';
+import { MotionLink } from '../motion-link/motion-link';
 import { Section } from '../section/section';
-import { EmptyTrips } from './empty-trips';
 import { useGetTrips } from './hooks/use-get-trips';
 import { HeroTripCard } from './trip-cards/hero-trip-card';
 import { TripCard } from './trip-cards/trip-card';
@@ -21,7 +27,24 @@ export const TripsList = ({ initialTrips }: TripsListProps) => {
     if (isPending) return <div>Loading trips...</div>;
 
     if (!trips || Object.values(trips).flat().length === 0) {
-        return <EmptyTrips className="pb-16" />;
+        return (
+            <Empty
+                className="pb-16"
+                heading="No trips yet"
+                description="Start a trip and every place you visit will show up here, day by day."
+                CTA={
+                    <MotionLink
+                        to="/trip/new"
+                        className={buttonVariants({
+                            size: 'lg',
+                        })}
+                        variants={HIDE_SHOW_ITEM}
+                    >
+                        <PlusIcon /> Create your first trip
+                    </MotionLink>
+                }
+            />
+        );
     }
 
     const groups = Object.entries(trips);
@@ -33,11 +56,10 @@ export const TripsList = ({ initialTrips }: TripsListProps) => {
                 if (key === 'upcoming' && (!value || value.length === 0)) {
                     return (
                         <Section heading={mapKeyToHeading[key]} key={key}>
-                            <EmptyTrips
+                            <Empty
                                 size="sm"
                                 heading="No upcoming trips"
                                 description="No trips planned? Start by creating your first trip."
-                                showButton={false}
                             />
                         </Section>
                     );
