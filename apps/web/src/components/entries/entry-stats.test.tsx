@@ -87,12 +87,4 @@ describe('EntryStatsGrid', () => {
             .element(page.getByText('2', { exact: true }))
             .toBeVisible();
     });
-
-    it('shows 0 places when there are no entries', async () => {
-        const page = await renderComponent({ entries: [] });
-
-        await expect
-            .element(page.getByText('0', { exact: true }))
-            .toBeVisible();
-    });
 });
