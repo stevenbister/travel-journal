@@ -8,6 +8,11 @@ import {
     trips,
     user,
 } from '../../../db/schema';
+import {
+    serializeEntry,
+    serializeEntryHistory,
+    serializeTrip,
+} from '../../../lib/sync/serialize';
 import type { AuthedAppRouteHandler } from '../../../types';
 import type { PullRoute } from './pull.routes';
 
@@ -32,7 +37,7 @@ function paginate<R extends { id: string; serverUpdatedAt: Date }, O>(
     rows: R[],
     limit: number,
     cursor: string | undefined,
-    serialize: (row: R) => O
+    serialize: (_row: R) => O
 ) {
     const hasMore = rows.length > limit;
     const pageRows = hasMore ? rows.slice(0, limit) : rows;
@@ -125,40 +130,14 @@ export const pullHandler: AuthedAppRouteHandler<PullRoute> = async (c) => {
         {
             users: userRows,
             tripMembers: memberRows,
-            trips: paginate(
-                tripRows,
-                limit,
-                tripsCursor,
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars -- serverUpdatedAt is only needed for the cursor
-                ({ serverUpdatedAt, ...r }) => ({
-                    ...r,
-                    startDate: r.startDate?.toISOString() ?? null,
-                    endDate: r.endDate?.toISOString() ?? null,
-                    createdAt: r.createdAt.toISOString(),
-                    updatedAt: r.updatedAt.toISOString(),
-                })
+            trips: paginate(tripRows, limit, tripsCursor, (row) =>
+                serializeTrip(row)
             ),
-            entries: paginate(
-                entryRows,
-                limit,
-                entriesCursor,
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars -- serverUpdatedAt is only needed for the cursor
-                ({ serverUpdatedAt, ...r }) => ({
-                    ...r,
-                    entryDate: r.entryDate.toISOString(),
-                    createdAt: r.createdAt.toISOString(),
-                    updatedAt: r.updatedAt.toISOString(),
-                })
+            entries: paginate(entryRows, limit, entriesCursor, (row) =>
+                serializeEntry(row)
             ),
-            entryHistory: paginate(
-                historyRows,
-                limit,
-                historyCursor,
-                // eslint-disable-next-line @typescript-eslint/no-unused-vars -- serverUpdatedAt is only needed for the cursor
-                ({ serverUpdatedAt, ...r }) => ({
-                    ...r,
-                    editedAt: r.editedAt.toISOString(),
-                })
+            entryHistory: paginate(historyRows, limit, historyCursor, (row) =>
+                serializeEntryHistory(row)
             ),
         },
         200

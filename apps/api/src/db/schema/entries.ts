@@ -1,24 +1,29 @@
+import { z } from '@hono/zod-openapi';
 import { sql } from 'drizzle-orm/sql/sql';
 import { index, int, snakeCase, text } from 'drizzle-orm/sqlite-core';
-import { createSelectSchema } from 'drizzle-zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 import { user } from './auth';
 import { trips } from './trips';
 
-export type Place = {
-    osmType: string | null;
-    osmId: number | null;
-    displayName: string;
-    name: string | null;
-    lat: number;
-    lng: number;
-    category: string | null;
-    type: string | null;
-    locality: string | null;
-    country: string | null;
-    countryCode: string | null;
-    boundingBox: [string, string, string, string] | null;
-};
+export const placeSchema = z.object({
+    osmType: z.string().nullable(),
+    osmId: z.number().nullable(),
+    displayName: z.string(),
+    name: z.string().nullable(),
+    lat: z.number(),
+    lng: z.number(),
+    category: z.string().nullable(),
+    type: z.string().nullable(),
+    locality: z.string().nullable(),
+    country: z.string().nullable(),
+    countryCode: z.string().nullable(),
+    boundingBox: z
+        .tuple([z.string(), z.string(), z.string(), z.string()])
+        .nullable(),
+});
+
+export type Place = z.infer<typeof placeSchema>;
 
 export const entries = snakeCase.table(
     'entries',
@@ -57,3 +62,10 @@ export const entries = snakeCase.table(
 );
 
 export const selectEntrySchema = createSelectSchema(entries);
+export const insertEntrySchema = createInsertSchema(entries)
+    .omit({
+        serverUpdatedAt: true,
+    })
+    .extend({
+        location: placeSchema,
+    });

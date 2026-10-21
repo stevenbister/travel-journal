@@ -5,6 +5,7 @@ import { createApp } from './lib/create-app';
 import { geocodingRoutes } from './routes/geocoding/geocoding.index';
 import { healthCheckRoutes } from './routes/health/health.index';
 import { pullRoutes } from './routes/sync/pull/pull.index';
+import { pushRoutes } from './routes/sync/push/push.index';
 
 export class GeocodeGate extends DurableObject {
     #nextSlot = 0;
@@ -30,6 +31,7 @@ app.openapiRoutes([
     ...healthCheckRoutes,
     ...geocodingRoutes,
     ...pullRoutes,
+    ...pushRoutes,
 ] as const);
 
 configureOpenAPI(app);
