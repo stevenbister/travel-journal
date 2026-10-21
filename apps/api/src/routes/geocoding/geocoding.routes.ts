@@ -1,28 +1,12 @@
 import { createRoute, z } from '@hono/zod-openapi';
 
+import { placeSchema } from '../../db/schema/entries';
 import { json } from '../../lib/response-schema';
 import { requireAuth } from '../../middleware/require-auth';
 
 export type GeocodingSearchRoute = typeof search;
 
 const tags = ['Geocoding'];
-
-const placeSchema = z.object({
-    osmType: z.string().nullable(),
-    osmId: z.number().nullable(),
-    displayName: z.string(),
-    name: z.string().nullable(),
-    lat: z.number(),
-    lng: z.number(),
-    category: z.string().nullable(),
-    type: z.string().nullable(),
-    locality: z.string().nullable(),
-    country: z.string().nullable(),
-    countryCode: z.string().nullable(),
-    boundingBox: z
-        .tuple([z.string(), z.string(), z.string(), z.string()])
-        .nullable(),
-});
 
 export const search = createRoute({
     method: 'get',
