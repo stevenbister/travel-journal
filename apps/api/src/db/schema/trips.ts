@@ -6,12 +6,7 @@ import {
     snakeCase,
     text,
 } from 'drizzle-orm/sqlite-core';
-import {
-    createInsertSchema,
-    createSelectSchema,
-    createUpdateSchema,
-} from 'drizzle-zod';
-import { z } from 'zod';
+import { createInsertSchema, createSelectSchema } from 'drizzle-zod';
 
 import { media } from './media';
 
@@ -46,15 +41,6 @@ export const trips = snakeCase.table(
 );
 
 export const selectTripSchema = createSelectSchema(trips);
-export const insertTripSchema = createInsertSchema(trips, {
-    startDate: z.coerce.date().nullish(),
-    endDate: z.coerce.date().nullish(),
-    createdAt: z.coerce.date().nullish(),
-    updatedAt: z.coerce.date().nullish(),
-});
-export const updateTripSchema = createUpdateSchema(trips, {
-    startDate: z.coerce.date().nullish(),
-    endDate: z.coerce.date().nullish(),
-    createdAt: z.coerce.date().nullish(),
-    updatedAt: z.coerce.date().nullish(),
+export const insertTripSchema = createInsertSchema(trips).omit({
+    serverUpdatedAt: true,
 });
