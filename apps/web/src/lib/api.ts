@@ -59,6 +59,27 @@ export type PullResponse = {
     entryHistory: Page<EntryHistory>;
 };
 
+type PushResult =
+    | { id: string; status: 'applied' | 'stale' }
+    | {
+          id: string;
+          status: 'rejected';
+          reason: 'trip_not_found' | 'trip_mismatch' | 'forbidden';
+      };
+
+export type PushResponse = {
+    trips: PushResult[];
+    tripMembers: PushResult[];
+    entries: PushResult[];
+};
+
+export type PushBody = {
+    // Local rows, stripped of the `synced` flag;
+    trips: (Omit<Trip, 'synced'> & { isDeleted: boolean })[];
+    tripMembers: TripMember[];
+    entries: (Omit<Entry, 'synced'> & { isDeleted: boolean })[];
+};
+
 export type GeocodeSearchResponse = {
     locations: Place[];
     attribution: string;
@@ -98,6 +119,13 @@ export const api = {
             }
 
             return apiFetch<PullResponse>(`/sync/pull?${searchParams}`, init);
+        },
+        push: (body: PushBody, init?: RequestInit) => {
+            return apiFetch<PushResponse>('/sync/push', {
+                method: 'POST',
+                body: JSON.stringify(body),
+                ...init,
+            });
         },
     },
 };
