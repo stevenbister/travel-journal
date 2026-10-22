@@ -1,5 +1,7 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 
+import { toast } from '@repo/ui/components/ui/toast';
+
 import { api } from '../api';
 import { db } from '../dexie/db';
 import type { Entry, Trip, TripMember } from '../dexie/types';
@@ -7,7 +9,12 @@ import { push } from './push';
 
 vi.mock('../api', () => ({ api: { sync: { push: vi.fn() } } }));
 
+vi.mock('@repo/ui/components/ui/toast', () => ({
+    toast: { add: vi.fn() },
+}));
+
 const pushMock = vi.mocked(api.sync.push);
+const toastAdd = vi.mocked(toast.add);
 
 type PushResponse = Awaited<ReturnType<typeof api.sync.push>>;
 
@@ -65,6 +72,7 @@ const member = (tripId: string, userId = 'u1'): TripMember => ({
 
 beforeEach(async () => {
     pushMock.mockReset();
+    toastAdd.mockReset();
     await Promise.all([
         db.trips.clear(),
         db.entries.clear(),
@@ -174,6 +182,93 @@ describe('push', () => {
         expect(await db.entries.get('e-rejected')).toMatchObject({
             synced: false,
         });
+    });
+
+    it('shows one error toast when rows are rejected', async () => {
+        await db.trips.put(trip('t-toast'));
+        await db.entries.put(entry('e-toast', { tripId: 't-toast' }));
+        pushMock.mockResolvedValueOnce(
+            response(
+                [rejected('t-toast', 'forbidden')],
+                [],
+                [rejected('e-toast', 'trip_not_found')]
+            )
+        );
+
+        await push();
+
+        expect(toastAdd).toHaveBeenCalledTimes(1);
+        expect(toastAdd).toHaveBeenCalledWith({
+            title: "Some changes couldn't be synced",
+            description:
+                'Your changes are saved on this device and will be retried automatically.',
+            type: 'error',
+        });
+    });
+
+    it('gives the rejection reason when all rejected rows share it', async () => {
+        await db.entries.put(entry('e1'));
+        await db.entries.put(entry('e2'));
+        pushMock.mockResolvedValueOnce(
+            response(
+                [],
+                [],
+                [
+                    rejected('e1', 'trip_not_found'),
+                    rejected('e2', 'trip_not_found'),
+                ]
+            )
+        );
+
+        await push();
+
+        expect(toastAdd).toHaveBeenCalledTimes(1);
+        expect(toastAdd).toHaveBeenCalledWith({
+            title: "Some changes couldn't be synced",
+            description:
+                "An entry's trip hasn't synced to the server yet. Your changes are saved on this device and will be retried automatically.",
+            type: 'error',
+        });
+    });
+
+    it('toasts each rejected row only once while it keeps retrying', async () => {
+        await db.trips.put(trip('t1'));
+        pushMock.mockReturnValue(
+            Promise.resolve(response([rejected('t1', 'forbidden')]))
+        );
+
+        await push();
+        await push();
+
+        expect(toastAdd).toHaveBeenCalledTimes(1);
+    });
+
+    it('toasts again after a rejected row has synced successfully in between', async () => {
+        await db.trips.put(trip('t2'));
+        pushMock
+            .mockResolvedValueOnce(response([rejected('t2', 'forbidden')]))
+            .mockResolvedValueOnce(response([applied('t2')]))
+            .mockResolvedValueOnce(response([rejected('t2', 'forbidden')]));
+
+        await push();
+        expect(toastAdd).toHaveBeenCalledTimes(1);
+
+        await push();
+        expect(toastAdd).toHaveBeenCalledTimes(1);
+
+        await db.trips.update('t2', { synced: false }); // a fresh unsynced version
+
+        await push();
+        expect(toastAdd).toHaveBeenCalledTimes(2);
+    });
+
+    it('does not toast when the request itself fails', async () => {
+        await db.trips.put(trip('t1'));
+        pushMock.mockRejectedValueOnce(new Error('Network request failed'));
+
+        await expect(push()).rejects.toThrow();
+
+        expect(toastAdd).not.toHaveBeenCalled();
     });
 
     it('leaves rows unsynced when the request fails', async () => {
