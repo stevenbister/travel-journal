@@ -67,5 +67,5 @@ export const insertEntrySchema = createInsertSchema(entries)
         serverUpdatedAt: true,
     })
     .extend({
-        location: placeSchema,
+        location: placeSchema.nullable(),
     });
