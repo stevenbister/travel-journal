@@ -103,6 +103,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                 entryDate: entryDate?.toISOString(),
                 location: value.location ?? null,
                 tag: value.tag ?? null,
+                synced: false,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
             });
