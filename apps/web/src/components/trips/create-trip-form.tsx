@@ -83,6 +83,7 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                 endDate: value.dates.to.toISOString(),
                 coverPhotoId: null,
                 createdBy: userId,
+                synced: false,
                 createdAt: new Date().toISOString(),
                 updatedAt: new Date().toISOString(),
             });

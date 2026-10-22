@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query';
 
 import { HttpError } from '../api';
 import { pull } from './pull';
+import { push } from './push';
 
 let running: Promise<void> | null = null;
 let rerun = false;
@@ -19,7 +20,8 @@ export const syncNow = (): Promise<void> => {
     const executeSync = async () => {
         do {
             rerun = false;
-            // await push() // TODO: push first, so local edits are sent before we pull
+            // Push first, so local edits are sent before we pull
+            await push();
             await pull();
         } while (rerun);
     };

@@ -43,6 +43,7 @@ const makeEntry = (
     },
     tag: null,
     isDeleted: false,
+    synced: true,
     createdAt: '',
     updatedAt: '',
     ...overrides,

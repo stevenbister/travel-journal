@@ -241,6 +241,7 @@ describe('CreateEntryForm', () => {
             notes: 'Some notes',
             entryDate: new Date(now.setHours(10, 30)).toISOString(),
             tag: 'food',
+            synced: false,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
         });

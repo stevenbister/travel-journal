@@ -24,6 +24,7 @@ export interface Trip {
     coverPhotoId: string | null;
     createdBy: string;
     isDeleted: boolean;
+    synced: boolean;
     createdAt: string;
     updatedAt: string;
 }
@@ -53,6 +54,7 @@ export interface Entry {
     location: Place | null;
     tag: string | null;
     isDeleted: boolean;
+    synced: boolean;
     createdAt: string;
     updatedAt: string;
 }

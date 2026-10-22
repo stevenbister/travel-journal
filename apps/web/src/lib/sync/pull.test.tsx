@@ -5,7 +5,6 @@ import { db } from '../dexie/db';
 import type {
     Entry,
     EntryHistory,
-    OutboxItem,
     Trip,
     TripMember,
     User,
@@ -19,13 +18,19 @@ const pullMock = vi.mocked(api.sync.pull);
 type PullResponse = Awaited<ReturnType<typeof api.sync.pull>>;
 
 const trip = (id: string, o: Partial<Trip> = {}) =>
-    ({ id, isDeleted: false, ...o }) as Trip;
+    ({ id, isDeleted: false, synced: true, ...o }) as Trip;
 
 const entry = (id: string, o: Partial<Entry> = {}) =>
-    ({ id, isDeleted: false, ...o }) as Entry;
+    ({ id, isDeleted: false, synced: true, ...o }) as Entry;
 
 const history = (id: string, o: Partial<EntryHistory> = {}) =>
     ({ id, entryId: 'e1', editedBy: 'u1', editedAt: 1, ...o }) as EntryHistory;
+
+const unsyncedTrip = (id: string, o: Partial<Trip> = {}) =>
+    trip(id, { synced: false, ...o });
+
+const unsyncedEntry = (id: string, o: Partial<Entry> = {}) =>
+    entry(id, { synced: false, ...o });
 
 const user = (id: string, o: Partial<User> = {}) =>
     ({ id, name: id, ...o }) as User;
@@ -53,18 +58,6 @@ const response = (
     tripMembers: TripMember[] = []
 ) => ({ users, tripMembers, trips, entries, entryHistory }) as PullResponse;
 
-const pending = (
-    recordId: string,
-    collection: OutboxItem['collection'] = 'trips'
-): OutboxItem => ({
-    key: `${collection}:${recordId}`,
-    collection,
-    recordId,
-    updatedAt: Date.now().toString(),
-    queuedAt: Date.now().toString(),
-    attempts: 0,
-});
-
 beforeEach(async () => {
     pullMock.mockReset();
     await Promise.all([
@@ -74,7 +67,6 @@ beforeEach(async () => {
         db.users.clear(),
         db.tripMembers.clear(),
         db.syncMeta.clear(),
-        db.outbox.clear(),
     ]);
 });
 
@@ -92,8 +84,14 @@ describe('pull', () => {
 
         await pull();
 
-        expect(await db.trips.get('t1')).toMatchObject({ title: 'Japan' });
-        expect(await db.entries.get('e1')).toMatchObject({ tripId: 't1' });
+        expect(await db.trips.get('t1')).toMatchObject({
+            title: 'Japan',
+            synced: true,
+        });
+        expect(await db.entries.get('e1')).toMatchObject({
+            tripId: 't1',
+            synced: true,
+        });
         expect(await db.entryHistory.get('h1')).toMatchObject({
             entryId: 'e1',
         });
@@ -168,15 +166,14 @@ describe('pull', () => {
         expect(await db.entryHistory.get('h2')).toBeDefined();
     });
 
-    it('removes trips (and children) that lost membership, keeping offline pending trips', async () => {
+    it('removes trips (and children) that lost membership, keeping unsynced local trips', async () => {
         await db.trips.bulkPut([
             trip('t-gone'),
-            trip('t-local'),
+            unsyncedTrip('t-local'),
             trip('t-keep'),
         ]);
         await db.entries.put(entry('e-gone', { tripId: 't-gone' }));
         await db.entryHistory.put(history('h-gone', { entryId: 'e-gone' }));
-        await db.outbox.put(pending('t-local', 'trips'));
 
         pullMock.mockResolvedValueOnce(
             response(page(), page(), page(), [user('u1')], [member('t-keep')])
@@ -192,13 +189,36 @@ describe('pull', () => {
         expect(await db.trips.get('t-keep')).toBeDefined();
     });
 
-    it('skips rows with pending outbox entries', async () => {
-        await db.trips.put(trip('t1', { title: 'Local' }));
-        await db.entries.put(entry('e1', { title: 'Local' }));
-        await db.outbox.bulkPut([
-            pending('t1', 'trips'),
-            pending('e1', 'entries'),
+    it('keeps the trip members of unsynced local trips when replacing membership', async () => {
+        await db.trips.bulkPut([unsyncedTrip('t-local'), trip('t-keep')]);
+        await db.tripMembers.bulkPut([
+            { tripId: 't-local', userId: 'u1' },
+            { tripId: 't-stale', userId: 'u1' },
         ]);
+
+        pullMock.mockResolvedValueOnce(
+            response(page(), page(), page(), [user('u1')], [member('t-keep')])
+        );
+
+        await pull();
+
+        expect(
+            await db.tripMembers
+                .where('[tripId+userId]')
+                .equals(['t-local', 'u1'])
+                .first()
+        ).toBeDefined();
+        expect(
+            await db.tripMembers
+                .where('[tripId+userId]')
+                .equals(['t-stale', 'u1'])
+                .first()
+        ).toBeUndefined();
+    });
+
+    it('skips rows not synced with the server yet', async () => {
+        await db.trips.put(unsyncedTrip('t1', { title: 'Local' }));
+        await db.entries.put(unsyncedEntry('e1', { title: 'Local' }));
 
         pullMock.mockResolvedValueOnce(
             response(

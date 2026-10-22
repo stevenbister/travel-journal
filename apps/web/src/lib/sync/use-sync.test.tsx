@@ -1,16 +1,18 @@
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query';
 import type { ReactNode } from 'react';
-// or @testing-library/react
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from 'vitest-browser-react';
 
 import { HttpError } from '../api';
 import { pull } from './pull';
+import { push } from './push';
 import { syncNow, useSync } from './use-sync';
 
 vi.mock('./pull', () => ({ pull: vi.fn() }));
+vi.mock('./push', () => ({ push: vi.fn() }));
 
 const pullMock = vi.mocked(pull);
+const pushMock = vi.mocked(push);
 
 const deferred = () => {
     let resolve!: () => void;
@@ -25,9 +27,25 @@ const deferred = () => {
 beforeEach(() => {
     pullMock.mockReset();
     pullMock.mockResolvedValue(undefined);
+    pushMock.mockReset();
+    pushMock.mockResolvedValue(undefined);
 });
 
 describe('syncNow', () => {
+    it('pushes before it pulls', async () => {
+        const order: string[] = [];
+        pushMock.mockImplementation(async () => {
+            order.push('push');
+        });
+        pullMock.mockImplementation(async () => {
+            order.push('pull');
+        });
+
+        await syncNow();
+
+        expect(order).toEqual(['push', 'pull']);
+    });
+
     it('collapses overlapping calls into one run', async () => {
         const d = deferred();
         pullMock.mockReturnValueOnce(d.promise);
@@ -36,7 +54,7 @@ describe('syncNow', () => {
         const b = syncNow();
 
         expect(a).toBe(b);
-        expect(pullMock).toHaveBeenCalledTimes(1);
+        await vi.waitFor(() => expect(pullMock).toHaveBeenCalledTimes(1));
 
         d.resolve();
         await a;

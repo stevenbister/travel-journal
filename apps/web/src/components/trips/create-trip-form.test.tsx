@@ -183,6 +183,7 @@ describe('CreateTripForm', () => {
             coverPhotoId: null,
             endDate: expect.any(String),
             startDate: expect.any(String),
+            synced: false,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
         });
