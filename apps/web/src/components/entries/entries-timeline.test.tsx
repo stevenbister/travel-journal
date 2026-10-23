@@ -69,7 +69,7 @@ describe('EntriesTimeline', () => {
         vi.clearAllMocks();
     });
 
-    it('groups entries by day, newest first with trip-relative day numbers', async () => {
+    it('groups entries by day, oldest first with trip-relative day numbers', async () => {
         const oldDate = '2026-10-08T09:00:00.000Z';
         const newDate = '2026-10-10T09:00:00.000Z';
         const page = await renderComponent([
@@ -80,10 +80,10 @@ describe('EntriesTimeline', () => {
         const headings = page.getByRole('heading', { level: 3 });
         await expect
             .element(headings.first())
-            .toHaveTextContent(`Day ${dayFor(newDate)}`);
+            .toHaveTextContent(`Day ${dayFor(oldDate)}`);
         await expect
             .element(headings.last())
-            .toHaveTextContent(`Day ${dayFor(oldDate)}`);
+            .toHaveTextContent(`Day ${dayFor(newDate)}`);
 
         await expect
             .element(page.getByText(format(parseISO('2026-10-10'), 'PP')))
