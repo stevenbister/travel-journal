@@ -1,29 +1,9 @@
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from 'vitest-browser-react';
 
+import { makeEntry } from '../../../__fixtures__/entries';
 import { db } from '../../../lib/dexie/db';
-import type { Entry } from '../../../lib/dexie/types';
 import { useGetEntries } from './use-get-entries';
-
-const makeEntry = (
-    id: string,
-    tripId: string,
-    overrides: Partial<Entry> = {}
-): Entry => ({
-    id,
-    tripId,
-    authorId: 'user-1',
-    title: id,
-    notes: 'notes',
-    entryDate: '2026-10-09T12:00:00.000Z',
-    location: null,
-    tag: null,
-    isDeleted: false,
-    synced: true,
-    createdAt: '',
-    updatedAt: '',
-    ...overrides,
-});
 
 describe('useGetEntries', () => {
     beforeEach(async () => {
