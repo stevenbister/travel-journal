@@ -1,20 +1,13 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { renderHook } from 'vitest-browser-react';
 
-import { makeTrip } from '../../../__test__/helpers';
+import { makeEntry } from '../../../__fixtures__/entries';
+import { makeTrip } from '../../../__fixtures__/trips';
 import { db } from '../../../lib/dexie/db';
-import type { Entry } from '../../../lib/dexie/types';
 import { useGetTrips } from './use-get-trips';
 
 const NOW = new Date(2026, 9, 9, 12, 0, 0);
 const NEXT_MORNING = new Date(2026, 9, 10, 8, 0, 0);
-
-const makeEntry = (id: string, tripId: string, isDeleted = false) =>
-    ({
-        id,
-        tripId,
-        isDeleted,
-    }) as Entry;
 
 const setVisibility = (state: DocumentVisibilityState) => {
     Object.defineProperty(document, 'visibilityState', {
@@ -143,7 +136,7 @@ describe('useGetTrips', () => {
             await db.entries.bulkAdd([
                 makeEntry('a1', 'a'),
                 makeEntry('a2', 'a'),
-                makeEntry('a3', 'a', true),
+                makeEntry('a3', 'a', { isDeleted: true }),
                 makeEntry('b1', 'b'),
             ]);
 
