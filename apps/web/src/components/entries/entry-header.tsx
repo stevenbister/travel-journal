@@ -42,7 +42,9 @@ export const EntryHeader = ({ entry, trip }: EntryHeaderProps) => {
             </div>
 
             <div className="container-x">
-                <Badge variant="accent">{entry?.tag}</Badge>
+                {entry?.tag ? (
+                    <Badge variant="accent">{entry?.tag}</Badge>
+                ) : null}
             </div>
         </header>
     );
