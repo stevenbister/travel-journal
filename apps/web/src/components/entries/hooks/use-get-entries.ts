@@ -5,7 +5,10 @@ import type { Entry } from '../../../lib/dexie/types';
 
 export const useGetEntries = (tripId: string, initialEntries?: Entry[]) => {
     const entries = useLiveQuery(
-        () => db.entries.where({ tripId }).toArray(),
+        async () =>
+            (await db.entries.where({ tripId }).toArray()).filter(
+                (e) => !e.isDeleted
+            ),
         [tripId],
         initialEntries
     );
