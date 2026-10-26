@@ -18,8 +18,8 @@ export const db = new Dexie('travel-journal') as Dexie & {
     authSession: EntityTable<CachedSession, 'id'>;
     authMeta: EntityTable<AuthMeta, 'key'>;
     users: EntityTable<User, 'id'>;
-    trips: EntityTable<Trip, 'id', Omit<Trip, 'isDeleted'>>;
-    entries: EntityTable<Entry, 'id', Omit<Entry, 'isDeleted'>>;
+    trips: EntityTable<Trip, 'id'>;
+    entries: EntityTable<Entry, 'id'>;
     syncMeta: EntityTable<SyncMeta, 'key'>;
     tripMembers: EntityTable<TripMember, 'tripId'>;
     entryHistory: EntityTable<EntryHistory, 'id'>;
