@@ -14,10 +14,16 @@ type DatePickerProps = {
     id: string;
     onSelect: (_date: Date | undefined) => void;
     ariaInvalid?: boolean;
+    defaultValue?: Date | undefined;
 };
 
-export function DatePicker({ id, onSelect, ariaInvalid }: DatePickerProps) {
-    const [date, setDate] = React.useState<Date | undefined>(undefined);
+export function DatePicker({
+    id,
+    onSelect,
+    ariaInvalid,
+    defaultValue,
+}: DatePickerProps) {
+    const [date, setDate] = React.useState<Date | undefined>(defaultValue);
 
     return (
         <Popover>
