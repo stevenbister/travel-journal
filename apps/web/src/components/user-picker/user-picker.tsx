@@ -22,10 +22,16 @@ import type { User } from '../../lib/dexie/types';
 export type UserPickerProps = {
     id: string;
     labelledBy: string;
-    onChange: (selected: string[]) => void;
+    onChange: (_selected: string[]) => void;
+    defaultSelected?: string[];
 };
 
-export const UserPicker = ({ id, labelledBy, onChange }: UserPickerProps) => {
+export const UserPicker = ({
+    id,
+    labelledBy,
+    onChange,
+    defaultSelected,
+}: UserPickerProps) => {
     const { data: session } = useSession();
     const currentUserId = session?.user.id;
 
@@ -51,6 +57,7 @@ export const UserPicker = ({ id, labelledBy, onChange }: UserPickerProps) => {
             users={sortedUsers}
             currentUserId={currentUserId}
             onChange={onChange}
+            defaultSelected={defaultSelected}
         />
     );
 };
@@ -58,6 +65,7 @@ export const UserPicker = ({ id, labelledBy, onChange }: UserPickerProps) => {
 type UsersToggleProps = UserPickerProps & {
     users: User[];
     currentUserId: string;
+    defaultSelected?: string[];
 };
 
 const UsersToggle = ({
@@ -66,8 +74,11 @@ const UsersToggle = ({
     users,
     currentUserId,
     onChange,
+    defaultSelected,
 }: UsersToggleProps) => {
-    const [selected, setSelected] = React.useState([currentUserId]);
+    const [selected, setSelected] = React.useState(
+        defaultSelected ?? [currentUserId]
+    );
 
     return (
         <ToggleGroup
