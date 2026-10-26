@@ -6,6 +6,10 @@ import { ActionDropdown } from '../components/action-dropdown/action-dropdown';
 import { BackButton } from '../components/back-button/back-button';
 import { ByLine } from '../components/by-line/by-line';
 import { ConfirmationDrawer } from '../components/confirmation-drawer/confirmation-drawer';
+import {
+    EditEntryDrawer,
+    EditEntryDrawerHandler,
+} from '../components/entries/edit-entry-drawer';
 import { EntryHeader } from '../components/entries/entry-header';
 import { useDeleteEntry } from '../components/entries/hooks/use-delete-entry';
 import {
@@ -48,6 +52,9 @@ function RouteComponent() {
     const [isConfirmationDrawerOpen, setIsConfirmationDrawerOpen] =
         React.useState(false);
 
+    const [isEditEntryDrawerOpen, setIsEditEntryDrawerOpen] =
+        React.useState(false);
+
     const handleConfirmDelete = async () => {
         await deleteEntry({ tripId, entryId });
         setIsConfirmationDrawerOpen(false);
@@ -62,8 +69,9 @@ function RouteComponent() {
                     <BackButton />
 
                     <ActionDropdown
+                        editDrawerHandle={EditEntryDrawerHandler}
                         onEdit={() => {
-                            // Handle edit action here
+                            setIsEditEntryDrawerOpen(true);
                         }}
                         onDelete={() => {
                             setIsConfirmationDrawerOpen(true);
@@ -103,6 +111,16 @@ function RouteComponent() {
                 onOpenChange={setIsConfirmationDrawerOpen}
                 onConfirm={async () => {
                     await handleConfirmDelete();
+                }}
+            />
+
+            <EditEntryDrawer
+                entryId={entryId}
+                title="Edit Entry"
+                open={isEditEntryDrawerOpen}
+                onOpenChange={setIsEditEntryDrawerOpen}
+                onSubmit={() => {
+                    setIsEditEntryDrawerOpen(false);
                 }}
             />
         </>
