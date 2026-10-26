@@ -184,6 +184,7 @@ describe('CreateTripForm', () => {
             endDate: expect.any(String),
             startDate: expect.any(String),
             synced: false,
+            isDeleted: false,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
         });
