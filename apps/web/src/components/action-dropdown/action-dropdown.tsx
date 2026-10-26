@@ -5,7 +5,10 @@ import {
 } from '@phosphor-icons/react';
 
 import { Button } from '@repo/ui/components/ui/button';
-import { DrawerTrigger } from '@repo/ui/components/ui/drawer';
+import {
+    type DrawerPrimitive,
+    DrawerTrigger,
+} from '@repo/ui/components/ui/drawer';
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -19,9 +22,14 @@ import { ConfirmationDrawerHandler } from '../confirmation-drawer/confirmation-d
 type ActionDropdownProps = {
     onEdit: () => void;
     onDelete: () => void;
+    editDrawerHandle: DrawerPrimitive.Handle<unknown>;
 };
 
-export const ActionDropdown = ({ onEdit, onDelete }: ActionDropdownProps) => (
+export const ActionDropdown = ({
+    onEdit,
+    onDelete,
+    editDrawerHandle,
+}: ActionDropdownProps) => (
     <DropdownMenu>
         <DropdownMenuTrigger render={<Button variant="outline" size="icon" />}>
             <DotsThreeIcon weight="bold" />
@@ -29,7 +37,16 @@ export const ActionDropdown = ({ onEdit, onDelete }: ActionDropdownProps) => (
         </DropdownMenuTrigger>
         <DropdownMenuContent>
             <DropdownMenuGroup>
-                <DropdownMenuItem onSelect={onEdit}>
+                <DropdownMenuItem
+                    onSelect={onEdit}
+                    nativeButton
+                    render={
+                        <DrawerTrigger
+                            handle={editDrawerHandle}
+                            className="w-full"
+                        />
+                    }
+                >
                     <PencilSimpleIcon /> Edit
                 </DropdownMenuItem>
 

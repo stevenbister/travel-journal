@@ -13,6 +13,7 @@ import { ActionDropdown } from '../action-dropdown/action-dropdown';
 import { BackButton } from '../back-button/back-button';
 import { ConfirmationDrawer } from '../confirmation-drawer/confirmation-drawer';
 import { MemberAvatarGroup } from '../member-avatar-group/member-avatar-group';
+import { EditTripDrawer, TripActionDrawerHandler } from './edit-trip-drawer';
 import { useDeleteTrip } from './hooks/use-delete-trip';
 import { useGetTrip } from './hooks/use-get-trip';
 import { TripBadge } from './trip-badge';
@@ -39,6 +40,7 @@ export const TripHeader = ({ initialTrip }: TripHeaderProps) => {
 
     const [isConfirmationDrawerOpen, setIsConfirmationDrawerOpen] =
         useState(false);
+    const [isActionDrawerOpen, setIsActionDrawerOpen] = useState(false);
 
     const handleConfirmDelete = async () => {
         if (!tripId) return;
@@ -100,9 +102,9 @@ export const TripHeader = ({ initialTrip }: TripHeaderProps) => {
                     </motion.span>
 
                     <ActionDropdown
+                        editDrawerHandle={TripActionDrawerHandler}
                         onEdit={() => {
-                            if (!tripId) return;
-                            // Handle edit action here
+                            setIsActionDrawerOpen(true);
                         }}
                         onDelete={() => {
                             setIsConfirmationDrawerOpen(true);
@@ -157,6 +159,14 @@ export const TripHeader = ({ initialTrip }: TripHeaderProps) => {
                     await handleConfirmDelete();
                 }}
             />
+
+            <EditTripDrawer
+                title="Edit Trip"
+                tripId={tripId!}
+                open={isActionDrawerOpen}
+                onOpenChange={setIsActionDrawerOpen}
+                onSubmit={() => setIsActionDrawerOpen(false)}
+            ></EditTripDrawer>
         </>
     );
 };
