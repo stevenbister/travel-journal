@@ -15,7 +15,12 @@ export const resultSchema = z.discriminatedUnion('status', [
     z.object({
         id: z.string(),
         status: z.literal('rejected'),
-        reason: z.enum(['trip_not_found', 'trip_mismatch', 'forbidden']),
+        reason: z.enum([
+            'trip_not_found',
+            'trip_mismatch',
+            'forbidden',
+            'future_updated_at',
+        ]),
     }),
 ]);
 

@@ -118,6 +118,39 @@ describe('queueEntries', () => {
         ]);
     });
 
+    it('rejects an entry dated too far in the future', async () => {
+        const queue = await runWithAppContext(() =>
+            queueEntries({
+                queue: makeQueue(),
+                insertTripIds: [],
+                insertEntries: [
+                    buildEntry({ updatedAt: new Date(Date.now() + 10 * 60_000) }),
+                ],
+            })
+        );
+
+        expect(queue.applied).toEqual([]);
+        expect(queue.rejected).toEqual([
+            { type: 'entry', id: 'new-entry', reason: 'future_updated_at' },
+        ]);
+    });
+
+    it('allows an entry within the clock skew tolerance', async () => {
+        const queue = await runWithAppContext(() =>
+            queueEntries({
+                queue: makeQueue(),
+                insertTripIds: [],
+                insertEntries: [
+                    buildEntry({ updatedAt: new Date(Date.now() + 60_000) }),
+                ],
+            })
+        );
+
+        expect(queue.rejected).toEqual([]);
+        expect(queue.applied).toHaveLength(1);
+        expect(queue.applied[0]?.id).toBe('new-entry');
+    });
+
     it('assumes trips listed in insertTripIds exist', async () => {
         const queue = await runWithAppContext(() =>
             queueEntries({

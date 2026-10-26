@@ -2,6 +2,7 @@ import type { z } from '@hono/zod-openapi';
 import { inArray, lt } from 'drizzle-orm';
 
 import { database } from '../../../db';
+import { isFromTheFuture } from './clock';
 import { entries, type insertEntrySchema } from '../../../db/schema/entries';
 import { trips } from '../../../db/schema/trips';
 import type { DrizzleD1 } from '../../../types';
@@ -102,6 +103,16 @@ export const queueEntries = async ({
 
     for (const entry of insertEntries) {
         if (!entry.id) throw new Error('Entry must have an ID');
+
+        // Guard the LWW clock against far-future timestamps
+        if (isFromTheFuture(entry.updatedAt)) {
+            queue.rejected.push({
+                type: 'entry',
+                id: entry.id,
+                reason: 'future_updated_at',
+            });
+            continue;
+        }
 
         const existingEntry = existingEntries.get(entry.id);
         if (existingEntry && existingEntry.tripId !== entry.tripId) {
