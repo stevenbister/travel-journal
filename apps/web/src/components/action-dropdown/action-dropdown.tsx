@@ -36,8 +36,12 @@ export const ActionDropdown = ({ onEdit, onDelete }: ActionDropdownProps) => (
                 <DropdownMenuItem
                     className="text-destructive"
                     onSelect={onDelete}
+                    nativeButton
                     render={
-                        <DrawerTrigger handle={ConfirmationDrawerHandler} />
+                        <DrawerTrigger
+                            handle={ConfirmationDrawerHandler}
+                            className="w-full"
+                        />
                     }
                 >
                     <TrashIcon /> Delete
