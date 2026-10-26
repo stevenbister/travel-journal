@@ -9,7 +9,7 @@ import {
 import { useState } from 'react';
 
 import type { TripWithDetails } from '../../lib/dexie/types';
-import { ActionDropdown } from '../action-dropdown/action-dropdown';
+import { ActionDropdown } from '../action-drawer/action-drawer';
 import { BackButton } from '../back-button/back-button';
 import { ConfirmationDrawer } from '../confirmation-drawer/confirmation-drawer';
 import { MemberAvatarGroup } from '../member-avatar-group/member-avatar-group';

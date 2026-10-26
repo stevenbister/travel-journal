@@ -2,7 +2,7 @@ import { MapPinIcon } from '@phosphor-icons/react';
 import { createFileRoute, notFound } from '@tanstack/react-router';
 import * as React from 'react';
 
-import { ActionDropdown } from '../components/action-dropdown/action-dropdown';
+import { ActionDropdown } from '../components/action-drawer/action-drawer';
 import { BackButton } from '../components/back-button/back-button';
 import { ByLine } from '../components/by-line/by-line';
 import { ConfirmationDrawer } from '../components/confirmation-drawer/confirmation-drawer';
