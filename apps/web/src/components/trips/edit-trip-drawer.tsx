@@ -1,5 +1,7 @@
+import { Button } from '@repo/ui/components/ui/button';
 import {
     Drawer,
+    DrawerClose,
     DrawerContent,
     DrawerDescription,
     DrawerHeader,
@@ -38,8 +40,13 @@ export const EditTripDrawer = ({
                 <DrawerTitle className="text-balance">{title}</DrawerTitle>
                 <DrawerDescription>{description}</DrawerDescription>
             </DrawerHeader>
-            <div className="container">
+
+            <div className="container flex flex-col gap-4">
                 <EditTripForm tripId={tripId!} onSubmit={onSubmit} />
+
+                <DrawerClose render={<Button variant="outline" />}>
+                    Cancel
+                </DrawerClose>
             </div>
         </DrawerContent>
     </Drawer>

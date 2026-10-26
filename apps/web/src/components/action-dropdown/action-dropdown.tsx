@@ -6,16 +6,12 @@ import {
 
 import { Button } from '@repo/ui/components/ui/button';
 import {
-    type DrawerPrimitive,
+    Drawer,
+    DrawerClose,
+    DrawerContent,
+    DrawerPrimitive,
     DrawerTrigger,
 } from '@repo/ui/components/ui/drawer';
-import {
-    DropdownMenu,
-    DropdownMenuContent,
-    DropdownMenuGroup,
-    DropdownMenuItem,
-    DropdownMenuTrigger,
-} from '@repo/ui/components/ui/dropdown-menu';
 
 import { ConfirmationDrawerHandler } from '../confirmation-drawer/confirmation-drawer';
 
@@ -30,40 +26,37 @@ export const ActionDropdown = ({
     onDelete,
     editDrawerHandle,
 }: ActionDropdownProps) => (
-    <DropdownMenu>
-        <DropdownMenuTrigger render={<Button variant="outline" size="icon" />}>
+    <Drawer>
+        <DrawerTrigger render={<Button variant="outline" size="icon" />}>
             <DotsThreeIcon weight="bold" />
             <span className="sr-only">Options</span>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-            <DropdownMenuGroup>
-                <DropdownMenuItem
-                    onSelect={onEdit}
-                    nativeButton
-                    render={
-                        <DrawerTrigger
-                            handle={editDrawerHandle}
-                            className="w-full"
-                        />
-                    }
+        </DrawerTrigger>
+        <DrawerContent>
+            <div className="container flex flex-col gap-4">
+                <Button
+                    onClick={onEdit}
+                    variant="secondary"
+                    className="w-full"
+                    render={<DrawerTrigger handle={editDrawerHandle} />}
                 >
                     <PencilSimpleIcon /> Edit
-                </DropdownMenuItem>
+                </Button>
 
-                <DropdownMenuItem
-                    className="text-destructive"
-                    onSelect={onDelete}
-                    nativeButton
+                <Button
+                    onClick={onDelete}
+                    variant="destructive"
+                    className="w-full"
                     render={
-                        <DrawerTrigger
-                            handle={ConfirmationDrawerHandler}
-                            className="w-full"
-                        />
+                        <DrawerTrigger handle={ConfirmationDrawerHandler} />
                     }
                 >
                     <TrashIcon /> Delete
-                </DropdownMenuItem>
-            </DropdownMenuGroup>
-        </DropdownMenuContent>
-    </DropdownMenu>
+                </Button>
+
+                <DrawerClose render={<Button variant="outline" />}>
+                    Cancel
+                </DrawerClose>
+            </div>
+        </DrawerContent>
+    </Drawer>
 );

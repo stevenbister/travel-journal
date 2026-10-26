@@ -147,7 +147,7 @@ const EditEntryFormFields = ({ entry, onSubmit }: EditEntryFormFieldsProps) => {
                 e.preventDefault();
                 form.handleSubmit();
             }}
-            className="flex flex-col gap-4 h-full pb-12"
+            className="flex flex-col gap-4 h-full"
         >
             <FieldGroup>
                 <form.Field name="title">

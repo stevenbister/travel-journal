@@ -143,7 +143,7 @@ const EditTripFormFields = ({ trip, onSubmit }: EditTripFormFieldsProps) => {
                 e.preventDefault();
                 form.handleSubmit();
             }}
-            className="flex flex-col gap-4 h-full pb-4"
+            className="flex flex-col gap-4 h-full"
         >
             <FieldGroup>
                 <form.Field name="tripName">

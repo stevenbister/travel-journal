@@ -1,5 +1,7 @@
+import { Button } from '@repo/ui/components/ui/button';
 import {
     Drawer,
+    DrawerClose,
     DrawerContent,
     DrawerDescription,
     DrawerHeader,
@@ -38,8 +40,16 @@ export const EditEntryDrawer = ({
                 <DrawerTitle className="text-balance">{title}</DrawerTitle>
                 <DrawerDescription>{description}</DrawerDescription>
             </DrawerHeader>
-            <div className="container">
+
+            <div className="container overflow-auto flex flex-col gap-4">
                 <EditEntryForm entryId={entryId} onSubmit={onSubmit} />
+
+                <DrawerClose
+                    className="w-full"
+                    render={<Button variant="outline" />}
+                >
+                    Cancel
+                </DrawerClose>
             </div>
         </DrawerContent>
     </Drawer>
