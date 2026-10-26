@@ -66,7 +66,7 @@ function RouteComponent() {
         <>
             <div className="flex flex-col gap-4 h-full">
                 <div className="container flex justify-between items-center">
-                    <BackButton />
+                    <BackButton to={`/trip/${tripId}`} />
 
                     <ActionDropdown
                         editDrawerHandle={EditEntryDrawerHandler}

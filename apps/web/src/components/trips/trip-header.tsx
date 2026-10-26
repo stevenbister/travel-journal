@@ -87,7 +87,7 @@ export const TripHeader = ({ initialTrip }: TripHeaderProps) => {
                 className="container sticky top-0 z-20 flex flex-col justify-end bg-linear-to-br from-primary to-[hsl(168_55%_13%)] text-primary-foreground dark:text-card-foreground"
             >
                 <div className="flex items-center gap-2">
-                    <BackButton />
+                    <BackButton to="/" />
                     <motion.span
                         animate={{
                             opacity: compact ? 1 : 0,
