@@ -34,7 +34,9 @@ vi.mock('@repo/ui/components/ui/date-range-picker-input', () => {
 });
 
 const renderComponent = () =>
-    renderWithRouter(<CreateTripForm motionVariants={{}} />);
+    renderWithRouter(<CreateTripForm />, {
+        paths: ['/trip/$tripId'],
+    });
 
 describe('CreateTripForm', () => {
     beforeEach(async () => {
@@ -189,6 +191,12 @@ describe('CreateTripForm', () => {
             isDeleted: false,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
+        });
+
+        await vi.waitFor(() => {
+            expect(page.router.state.location.pathname).toBe(
+                `/trip/${trip!.id}`
+            );
         });
     });
 });

@@ -41,7 +41,11 @@ const formSchema = z.object({
 });
 type FormInput = z.input<typeof formSchema>;
 
-export const CreateTripForm = () => {
+type CreateTripFormProps = {
+    onSubmitSuccess?: () => void;
+};
+
+export const CreateTripForm = ({ onSubmitSuccess }: CreateTripFormProps) => {
     const { data: session } = useSession();
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -93,8 +97,11 @@ export const CreateTripForm = () => {
             await wait(500);
 
             form.reset();
-            // TODO: Navigate to the newly created trip's page once implemented
-            await navigate({ to: '/' });
+            onSubmitSuccess?.();
+            await navigate({
+                to: '/trip/$tripId',
+                params: { tripId },
+            });
         } catch (error) {
             console.error('Failed to create trip:', error);
             toast.add({

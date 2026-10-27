@@ -1,4 +1,5 @@
 import { PlusIcon } from '@phosphor-icons/react';
+import * as React from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
 import {
@@ -17,11 +18,14 @@ import { CreateTripForm } from './create-trip-form';
 
 export const CreateTripDrawer = () => {
     const isMobile = useIsMobile();
+    const [isOpen, setIsOpen] = React.useState(false);
 
     return (
         <Drawer
             swipeDirection={isMobile ? 'down' : 'right'}
             showSwipeHandle={isMobile}
+            open={isOpen}
+            onOpenChange={setIsOpen}
         >
             <DrawerTrigger
                 render={
@@ -49,7 +53,7 @@ export const CreateTripDrawer = () => {
                 </DrawerHeader>
 
                 <div className="container-x flex flex-col gap-4 h-full overflow-auto pb-12">
-                    <CreateTripForm />
+                    <CreateTripForm onSubmitSuccess={() => setIsOpen(false)} />
 
                     <DrawerClose render={<Button variant="outline" />}>
                         Cancel
