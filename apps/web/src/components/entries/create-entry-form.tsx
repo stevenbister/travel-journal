@@ -28,6 +28,7 @@ import { TAGS_LIST } from './tags-list';
 
 type CreateEntryFormProps = {
     onSubmitSuccess?: () => void;
+    defaultDate?: Date;
 };
 
 const placeSchema = z.object({
@@ -57,14 +58,17 @@ const formSchema = z.object({
 });
 type FormInput = z.input<typeof formSchema>;
 
-export const CreateEntryForm = ({ onSubmitSuccess }: CreateEntryFormProps) => {
+export const CreateEntryForm = ({
+    onSubmitSuccess,
+    defaultDate,
+}: CreateEntryFormProps) => {
     const { data: session } = useSession();
     const params = useParams({ strict: false });
 
     const defaultValues: FormInput = {
         title: '',
         notes: '',
-        date: new Date(),
+        date: defaultDate ?? new Date(),
         time: '',
         location: undefined,
         tag: '',
@@ -192,6 +196,7 @@ export const CreateEntryForm = ({ onSubmitSuccess }: CreateEntryFormProps) => {
                                         return field.handleChange(date);
                                     }}
                                     ariaInvalid={isInvalid}
+                                    defaultValue={defaultDate}
                                 />
                                 {isInvalid && (
                                     <FieldError

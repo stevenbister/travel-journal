@@ -1,11 +1,20 @@
+import { PlusIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
-import { compareDesc, format, parseISO } from 'date-fns';
+import { addDays, compareDesc, format, isToday, parseISO } from 'date-fns';
 import * as React from 'react';
+
+import { Badge } from '@repo/ui/components/ui/badge';
+import { Button } from '@repo/ui/components/ui/button';
+import { DrawerTrigger } from '@repo/ui/components/ui/drawer';
+import { Item, ItemActions, ItemContent } from '@repo/ui/components/ui/item';
 
 import type { Entry } from '../../lib/dexie/types';
 import { Empty } from '../empty/empty';
 import { useGetTrip } from '../trips/hooks/use-get-trip';
-import { CreateEntryDrawer } from './create-entry-drawer';
+import {
+    CreateEntryDrawer,
+    createEntryDrawerHandle,
+} from './create-entry-drawer';
 import { EntryDetails } from './entry-details';
 import { useGetEntries } from './hooks/use-get-entries';
 import { getEntryDayNumber } from './utils/get-entry-day-number';
@@ -13,13 +22,9 @@ import { getEntryDayNumber } from './utils/get-entry-day-number';
 const groupEntriesByDay = <T extends { entryDate: string }>(
     entries: T[]
 ): Map<string, T[]> => {
-    const sorted = [...entries].sort((a, b) =>
-        compareDesc(parseISO(b.entryDate), parseISO(a.entryDate))
-    );
-
     const groups = new Map<string, T[]>();
 
-    for (const entry of sorted) {
+    for (const entry of entries) {
         const dayKey = format(parseISO(entry.entryDate), 'yyyy-MM-dd');
         const group = groups.get(dayKey);
 
@@ -65,41 +70,114 @@ export const EntriesTimeline = ({
         );
     }
 
+    const timeline = [...groupedEntries];
+    const startDate = trip?.startDate ? parseISO(trip.startDate) : undefined;
+    const endDate = trip?.endDate ? parseISO(trip.endDate) : undefined;
+
+    // Add missing days to the grouped entries to ensure a continuous timeline
+    if (startDate && endDate) {
+        let currentDate = startDate;
+        while (currentDate <= endDate) {
+            const dayKey = format(currentDate, 'yyyy-MM-dd');
+
+            if (!timeline.find(({ date }) => date === dayKey)) {
+                timeline.push({
+                    date: dayKey,
+                    items: [],
+                    dayNumber: getEntryDayNumber(dayKey, trip?.startDate),
+                });
+            }
+            currentDate = addDays(currentDate, 1);
+        }
+
+        timeline.sort((a, b) =>
+            compareDesc(parseISO(b.date), parseISO(a.date))
+        );
+    }
+
     return (
         <section className="flex flex-col gap-6 py-2">
-            {groupedEntries.map(({ date, items, dayNumber }) => (
-                <div key={date}>
-                    <h3 className="flex gap-2 items-center mb-2">
-                        {dayNumber !== undefined && (
-                            <span className="text-base">Day {dayNumber}</span>
-                        )}
-                        <span className="text-muted-foreground font-sans">
-                            {format(parseISO(date), 'PP')}
-                        </span>
-                    </h3>
+            {timeline.map(({ date, items, dayNumber }) => {
+                const hasItems = items.length > 0;
+                const today = isToday(parseISO(date));
 
-                    <ul className="relative flex flex-col gap-2">
-                        <li className="absolute inset-s-1.5 -translate-x-0.5 h-full w-px bg-muted-foreground/50" />
+                return (
+                    <div key={date}>
+                        <header className="flex gap-2 items-center mb-2">
+                            <h3 className="text-base">
+                                {dayNumber !== undefined && 'Day ' + dayNumber}
+                            </h3>
 
-                        {items.map((item) => (
-                            <li key={item.id}>
-                                <Link
-                                    to="/trip/$tripId/entry/$entryId"
-                                    params={{
-                                        tripId,
-                                        entryId: item.id,
-                                    }}
-                                    className="grid grid-cols-[auto_auto_1fr] gap-3 items-start py-2"
-                                >
-                                    <div className="block size-2.5 bg-accent rounded-full mt-1 shrink-0 z-10" />
+                            <span className="text-muted-foreground font-sans">
+                                {format(parseISO(date), 'PP')}
+                            </span>
 
-                                    <EntryDetails entry={item} />
-                                </Link>
-                            </li>
-                        ))}
-                    </ul>
-                </div>
-            ))}
+                            {today ? (
+                                <Badge variant="accent">Today</Badge>
+                            ) : null}
+                        </header>
+
+                        <ul className="relative flex flex-col gap-2">
+                            <li className="absolute inset-s-1.5 -translate-x-0.5 h-full w-px bg-muted-foreground/50" />
+
+                            {hasItems ? (
+                                items.map((item) => (
+                                    <li key={item.id}>
+                                        <Link
+                                            to="/trip/$tripId/entry/$entryId"
+                                            params={{
+                                                tripId,
+                                                entryId: item.id,
+                                            }}
+                                            className="grid grid-cols-[auto_auto_1fr] gap-3 items-start py-2"
+                                        >
+                                            <div className="block size-2.5 bg-accent rounded-full mt-1 shrink-0 z-10" />
+
+                                            <EntryDetails entry={item} />
+                                        </Link>
+                                    </li>
+                                ))
+                            ) : (
+                                <EmptyEntry
+                                    currentDate={parseISO(date)}
+                                    isToday={today}
+                                />
+                            )}
+                        </ul>
+                    </div>
+                );
+            })}
         </section>
     );
 };
+
+const EmptyEntry = ({
+    currentDate,
+    isToday,
+}: {
+    currentDate: Date;
+    isToday: boolean;
+}) => (
+    <li className="grid grid-cols-[auto_auto_1fr] gap-3 items-start py-2">
+        <div className="block size-2.5 bg-muted rounded-full mt-1 shrink-0 z-10" />
+        <Item
+            variant={isToday ? 'accent' : 'dashed'}
+            size="sm"
+            className="col-span-2"
+        >
+            <ItemContent>
+                <p>No entries for this day</p>
+            </ItemContent>
+
+            <ItemActions>
+                <DrawerTrigger
+                    handle={createEntryDrawerHandle}
+                    payload={{ defaultDate: currentDate }}
+                    render={<Button variant="link" size="sm" />}
+                >
+                    <PlusIcon /> Add
+                </DrawerTrigger>
+            </ItemActions>
+        </Item>
+    </li>
+);
