@@ -38,6 +38,8 @@ const renderComponent = () =>
 
 describe('CreateTripForm', () => {
     beforeEach(async () => {
+        await Promise.all(db.tables.map((table) => table.clear()));
+
         await db.users.bulkAdd([
             mockSession.user,
             {
@@ -184,6 +186,7 @@ describe('CreateTripForm', () => {
             endDate: expect.any(String),
             startDate: expect.any(String),
             synced: false,
+            isDeleted: false,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
         });

@@ -2,6 +2,7 @@ import type { z } from '@hono/zod-openapi';
 import { and, eq, inArray, lt } from 'drizzle-orm';
 
 import { database } from '../../../db';
+import { isFromTheFuture } from './clock';
 import { tripMembers } from '../../../db/schema';
 import type { insertTripMembersSchema } from '../../../db/schema/trip-members';
 import { type insertTripSchema, trips } from '../../../db/schema/trips';
@@ -195,6 +196,16 @@ export const queueTrips = async ({
 
     for (const trip of insertTrips) {
         if (!trip.id) throw new Error('Trip ID is missing');
+
+        // Guard the LWW clock against far-future timestamps
+        if (isFromTheFuture(trip.updatedAt)) {
+            queue.rejected.push({
+                type: 'trip',
+                id: trip.id,
+                reason: 'future_updated_at',
+            });
+            continue;
+        }
 
         // Only trip members can update existing trips
         if (existingTripIds.has(trip.id) && !memberTripIds.has(trip.id)) {

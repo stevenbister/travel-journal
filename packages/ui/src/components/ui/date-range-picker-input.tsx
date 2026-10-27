@@ -13,6 +13,7 @@ import {
 
 type DatePickerProps = {
     id: string;
+    defaultValue?: DateRange;
     onSelect: (_date: DateRange | undefined) => void;
     ariaInvalid?: boolean;
 };
@@ -21,8 +22,9 @@ export function DateRangePicker({
     id,
     onSelect,
     ariaInvalid,
+    defaultValue,
 }: DatePickerProps) {
-    const [date, setDate] = React.useState<DateRange | undefined>(undefined);
+    const [date, setDate] = React.useState<DateRange | undefined>(defaultValue);
 
     return (
         <Popover>

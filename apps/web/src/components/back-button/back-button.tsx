@@ -3,14 +3,20 @@ import { useRouter } from '@tanstack/react-router';
 
 import { Button } from '@repo/ui/components/ui/button';
 
-export const BackButton = () => {
+type BackButtonProps = {
+    to?: string;
+};
+
+export const BackButton = ({ to }: BackButtonProps) => {
     const router = useRouter();
 
     return (
         <Button
             variant="outline"
             size="icon"
-            onClick={() => router.history.back()}
+            onClick={() =>
+                to ? router.navigate({ to }) : router.history.back()
+            }
         >
             <CaretLeftIcon />
             <span className="sr-only">Back</span>

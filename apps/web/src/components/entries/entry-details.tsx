@@ -38,7 +38,12 @@ export const EntryDetails = ({
                 <h4 className="font-display text-base">{title}</h4>
 
                 <p className="flex gap-px items-center text-muted-foreground text-xs">
-                    <MapPinIcon weight="duotone" /> {location?.name ?? ''}
+                    {location ? (
+                        <>
+                            <MapPinIcon weight="duotone" />{' '}
+                            {location?.name ?? ''}
+                        </>
+                    ) : null}
                 </p>
             </div>
         </>

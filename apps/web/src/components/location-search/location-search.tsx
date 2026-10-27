@@ -32,17 +32,17 @@ import { useLocationQuery } from './hooks/use-location-query';
 export type LocationSearchProps = {
     id: string;
     onLocationSelect: (_location: Place) => void;
+    value?: Place | null;
 };
 
 export const LocationSearch = ({
     id,
     onLocationSelect,
+    value,
 }: LocationSearchProps) => {
     const [isOpen, setIsOpen] = React.useState(false);
-    const [value, setValue] = React.useState('');
     const [query, setQuery] = React.useState('');
-    const [selectedLocation, setSelectedLocation] =
-        React.useState<Place | null>(null);
+    const searchInputRef = React.useRef<HTMLInputElement>(null);
 
     const { data, error } = useLocationQuery(query);
 
@@ -72,6 +72,8 @@ export const LocationSearch = ({
 
     const hasResults = data && (data.locations ?? []).length > 0;
 
+    const searchTerm = query || value?.name || '';
+
     return (
         <Drawer open={isOpen} onOpenChange={setIsOpen} showSwipeHandle>
             <DrawerTrigger
@@ -81,7 +83,7 @@ export const LocationSearch = ({
                         variant="outline"
                         className={cn(
                             'justify-start',
-                            !selectedLocation && 'text-muted-foreground'
+                            !value && 'text-muted-foreground'
                         )}
                         motionProps={{
                             whileTap: undefined,
@@ -90,7 +92,7 @@ export const LocationSearch = ({
                 }
             >
                 <MapPinIcon className="text-accent" />
-                {selectedLocation?.name ?? 'Location'}
+                {value?.name ?? 'Location'}
             </DrawerTrigger>
 
             <DrawerContent className="container h-[50vh]">
@@ -98,8 +100,9 @@ export const LocationSearch = ({
                     <InputGroupInput
                         placeholder="Search a place"
                         type="search"
-                        value={value}
-                        onChange={(e) => setValue(e.target.value)}
+                        defaultValue={searchTerm}
+                        key={searchTerm}
+                        ref={searchInputRef}
                         onKeyUp={(e) => {
                             if (e.key === 'Enter') {
                                 setQuery(e.currentTarget.value);
@@ -112,7 +115,7 @@ export const LocationSearch = ({
                             title="Copy"
                             size="icon-sm"
                             onClick={() => {
-                                setQuery(value);
+                                setQuery(searchInputRef.current?.value ?? '');
                             }}
                         >
                             <MagnifyingGlassIcon weight="duotone" />
@@ -123,9 +126,8 @@ export const LocationSearch = ({
                 <div className="flex-1 overflow-y-auto py-4">
                     {hasResults ? (
                         <RadioGroup
-                            value={selectedLocation}
+                            value={value ?? undefined}
                             onValueChange={(location) => {
-                                setSelectedLocation(location);
                                 onLocationSelect(location);
                                 setIsOpen(false);
                             }}

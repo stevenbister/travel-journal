@@ -18,7 +18,7 @@ const groupEntriesByDay = <T extends { entryDate: string }>(
     entries: T[]
 ): Map<string, T[]> => {
     const sorted = [...entries].sort((a, b) =>
-        compareDesc(parseISO(a.entryDate), parseISO(b.entryDate))
+        compareDesc(parseISO(b.entryDate), parseISO(a.entryDate))
     );
 
     const groups = new Map<string, T[]>();

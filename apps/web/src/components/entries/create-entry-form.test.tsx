@@ -2,7 +2,8 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 import { userEvent } from 'vitest/browser';
 
 import { makeCachedSession } from '../../__fixtures__/session';
-import { makeTrip, renderWithRouter } from '../../__test__/helpers';
+import { makeTrip } from '../../__fixtures__/trips';
+import { renderWithRouter } from '../../__test__/helpers';
 import { db } from '../../lib/dexie/db';
 import { useLocationQuery } from '../location-search/hooks/use-location-query';
 import { CreateEntryForm } from './create-entry-form';
@@ -242,6 +243,7 @@ describe('CreateEntryForm', () => {
             entryDate: new Date(now.setHours(10, 30)).toISOString(),
             tag: 'food',
             synced: false,
+            isDeleted: false,
             createdAt: expect.any(String),
             updatedAt: expect.any(String),
         });

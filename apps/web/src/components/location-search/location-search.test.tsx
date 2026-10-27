@@ -50,6 +50,17 @@ beforeEach(() => {
 });
 
 describe('LocationSearch', () => {
+    it('shows the pre-selected location name on the trigger', async () => {
+        const page = await renderComponent({ value: paris ?? null });
+
+        await expect
+            .element(page.getByRole('button', { name: 'Paris' }))
+            .toBeInTheDocument();
+        await expect
+            .element(page.getByRole('button', { name: 'Location' }))
+            .not.toBeInTheDocument();
+    });
+
     it('renders a trigger with a location placeholder', async () => {
         const page = await renderComponent();
 

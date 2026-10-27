@@ -32,13 +32,19 @@ export const EntryHeader = ({ entry, trip }: EntryHeaderProps) => {
                     </span>
 
                     <span className="flex items-center gap-0.5">
-                        <MapPinIcon /> <p>{entry?.location?.name}</p>
+                        {entry?.location ? (
+                            <>
+                                <MapPinIcon /> <p>{entry?.location?.name}</p>
+                            </>
+                        ) : null}
                     </span>
                 </div>
             </div>
 
             <div className="container-x">
-                <Badge variant="accent">{entry?.tag}</Badge>
+                {entry?.tag ? (
+                    <Badge variant="accent">{entry?.tag}</Badge>
+                ) : null}
             </div>
         </header>
     );

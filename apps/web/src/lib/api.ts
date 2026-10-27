@@ -64,7 +64,11 @@ type PushResult =
     | {
           id: string;
           status: 'rejected';
-          reason: 'trip_not_found' | 'trip_mismatch' | 'forbidden';
+          reason:
+            | 'trip_not_found'
+            | 'trip_mismatch'
+            | 'forbidden'
+            | 'future_updated_at';
       };
 
 export type PushResponse = {

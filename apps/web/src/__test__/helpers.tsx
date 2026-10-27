@@ -11,8 +11,6 @@ import {
 import * as React from 'react';
 import { render } from 'vitest-browser-react';
 
-import { tripsFixture } from '../__fixtures__/trips';
-
 type Options = {
     paths?: string[];
     initialPath?: string;
@@ -57,28 +55,4 @@ export const renderWithRouter = async (
     );
 
     return { ...screen, router };
-};
-
-const {
-    entryCount: _entryCount,
-    members: _members,
-    ...baseTrip
-} = tripsFixture.current[0]!;
-
-export const makeTrip = (
-    id: string,
-    startDay: number,
-    endDay: number,
-    overrides: Record<string, unknown> = {}
-) => {
-    const at = (day: number) => new Date(2026, 9, day).toISOString();
-
-    return {
-        ...baseTrip,
-        id,
-        title: id,
-        startDate: at(startDay),
-        endDate: at(endDay),
-        ...overrides,
-    };
 };

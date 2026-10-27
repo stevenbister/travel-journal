@@ -11,6 +11,8 @@ const reasonDescription: Record<RejectedResult['reason'], string> = {
     forbidden: "You don't have access to this trip anymore.",
     trip_mismatch: "An entry conflicts with what's already on the server.",
     trip_not_found: "An entry's trip hasn't synced to the server yet.",
+    future_updated_at:
+        'This change is dated in the future — check that your device clock is correct.',
 };
 
 // Rejected rows retry on every sync run, so only toast the first time each

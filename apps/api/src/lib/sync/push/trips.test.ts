@@ -121,6 +121,40 @@ describe('queueTrips', () => {
         ]);
     });
 
+    it('rejects a trip dated too far in the future', async () => {
+        const queue = await runWithAppContext(() =>
+            queueTrips({
+                queue: makeQueue(),
+                insertTrips: [
+                    buildTrip({ updatedAt: new Date(Date.now() + 10 * 60_000) }),
+                ],
+                insertTripMembers: [],
+                userId: sessionUserId,
+            })
+        );
+
+        expect(queue.applied).toEqual([]);
+        expect(queue.rejected).toEqual([
+            { type: 'trip', id: 'new-trip', reason: 'future_updated_at' },
+        ]);
+    });
+
+    it('allows a trip within the clock skew tolerance', async () => {
+        const queue = await runWithAppContext(() =>
+            queueTrips({
+                queue: makeQueue(),
+                insertTrips: [
+                    buildTrip({ updatedAt: new Date(Date.now() + 60_000) }),
+                ],
+                insertTripMembers: [],
+                userId: sessionUserId,
+            })
+        );
+
+        expect(queue.rejected).toEqual([]);
+        expect(queue.applied.map(({ id }) => id)).toEqual(['new-trip']);
+    });
+
     it('throws when a trip is missing an ID', async () => {
         await expect(
             runWithAppContext(() =>

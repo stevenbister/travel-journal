@@ -1,4 +1,6 @@
-export const locations = [
+import type { Place } from '../lib/dexie/types';
+
+export const locations: Place[] = [
     {
         osmType: 'node',
         osmId: 1,

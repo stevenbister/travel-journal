@@ -63,7 +63,9 @@ SELECT
     v.tag,
     v.notes,
     0,
-    unixepoch(v.entry_date) * 1000,
-    unixepoch(v.entry_date) * 1000,
+    -- LWW clock must be edit time, not the (possibly future-dated) entry date,
+    -- so seeded rows never win last-write-wins against a live client edit
+    cast(unixepoch('subsecond') * 1000 as integer),
+    cast(unixepoch('subsecond') * 1000 as integer),
     cast(unixepoch('subsecond') * 1000 as integer)
 FROM v;

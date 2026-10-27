@@ -2,7 +2,11 @@ import type { BatchItem } from 'drizzle-orm/batch';
 
 export type EntityType = 'trip' | 'tripMember' | 'entry';
 
-export type RejectReason = 'trip_not_found' | 'trip_mismatch' | 'forbidden';
+export type RejectReason =
+    | 'trip_not_found'
+    | 'trip_mismatch'
+    | 'forbidden'
+    | 'future_updated_at';
 
 export type AppliedItem = {
     type: EntityType;
