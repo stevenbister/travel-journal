@@ -94,7 +94,7 @@ describe('TripsList', () => {
             .toBeInTheDocument();
 
         await expect
-            .element(page.getByRole('link', { name: 'Create your first trip' }))
+            .element(page.getByRole('button', { name: 'Create a new trip' }))
             .toBeInTheDocument();
     });
 

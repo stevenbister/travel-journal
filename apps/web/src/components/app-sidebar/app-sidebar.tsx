@@ -1,7 +1,5 @@
-import { PlusIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
 
-import { buttonVariants } from '@repo/ui/components/ui/button';
 import {
     Sidebar,
     SidebarContent,
@@ -10,10 +8,9 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
 } from '@repo/ui/components/ui/sidebar';
-import { cn } from '@repo/ui/lib/utils';
 
-import { MotionLink } from '../motion-link/motion-link';
 import { NAV_ITEMS } from '../navbar/navbar';
+import { CreateTripDrawer } from '../trips/create-trip-drawer';
 
 export function AppSidebar() {
     return (
@@ -35,16 +32,7 @@ export function AppSidebar() {
                 ))}
             </SidebarContent>
             <SidebarFooter>
-                <MotionLink
-                    to={'/trip/new'}
-                    className={cn(
-                        buttonVariants({ size: 'lg' }),
-                        'bg-accent text-foreground hover:bg-accent/80'
-                    )}
-                >
-                    <PlusIcon weight="bold" className="size-5" />
-                    New trip
-                </MotionLink>
+                <CreateTripDrawer />
             </SidebarFooter>
         </Sidebar>
     );
