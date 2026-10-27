@@ -34,7 +34,6 @@ export const Route = createFileRoute('/_auth')({
 });
 
 const navigationHiddenRouteIds = new Set([
-    '/_auth/trip/new',
     '/_auth/trip/$tripId',
     '/_auth/trip/$tripId_/entry/$entryId',
     '/_auth/trip/$tripId_/entry/new',

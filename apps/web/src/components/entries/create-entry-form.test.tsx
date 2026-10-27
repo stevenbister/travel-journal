@@ -69,8 +69,7 @@ vi.mocked(useLocationQuery).mockReturnValue({
     error: null,
 } as unknown as ReturnType<typeof useLocationQuery>);
 
-const renderComponent = () =>
-    renderWithRouter(<CreateEntryForm motionVariants={{}} />);
+const renderComponent = () => renderWithRouter(<CreateEntryForm />);
 
 describe('CreateEntryForm', () => {
     beforeEach(async () => {

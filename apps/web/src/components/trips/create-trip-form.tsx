@@ -1,7 +1,6 @@
 import { MapPinIcon } from '@phosphor-icons/react';
 import { useForm } from '@tanstack/react-form';
 import { useNavigate } from '@tanstack/react-router';
-import { type Variants, motion } from 'motion/react';
 import React from 'react';
 import z from 'zod';
 
@@ -42,13 +41,11 @@ const formSchema = z.object({
 });
 type FormInput = z.input<typeof formSchema>;
 
-const MotionField = motion.create(Field);
-
 type CreateTripFormProps = {
-    motionVariants: Variants;
+    onSubmitSuccess?: () => void;
 };
 
-export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
+export const CreateTripForm = ({ onSubmitSuccess }: CreateTripFormProps) => {
     const { data: session } = useSession();
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = React.useState(false);
@@ -100,8 +97,11 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
             await wait(500);
 
             form.reset();
-            // TODO: Navigate to the newly created trip's page once implemented
-            await navigate({ to: '/' });
+            onSubmitSuccess?.();
+            await navigate({
+                to: '/trip/$tripId',
+                params: { tripId },
+            });
         } catch (error) {
             console.error('Failed to create trip:', error);
             toast.add({
@@ -128,14 +128,11 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                 e.preventDefault();
                 form.handleSubmit();
             }}
-            className="flex flex-col gap-4 h-full pb-12"
+            className="flex flex-col gap-4 h-full"
         >
-            <motion.div
-                className="grid place-content-center bg-secondary text-secondary-foreground w-full h-32 rounded-2xl"
-                variants={motionVariants}
-            >
+            <div className="grid place-content-center bg-secondary text-secondary-foreground w-full h-32 rounded-2xl">
                 <MapPinIcon size={32} />
-            </motion.div>
+            </div>
 
             <FieldGroup>
                 <form.Field name="tripName">
@@ -145,10 +142,7 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -172,7 +166,7 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -184,10 +178,7 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -209,7 +200,7 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -221,10 +212,7 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     id={field.name + '-label'}
                                     className="text-muted-foreground"
@@ -243,7 +231,7 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -264,19 +252,6 @@ export const CreateTripForm = ({ motionVariants }: CreateTripFormProps) => {
                             type="submit"
                             className="mt-auto md:mt-0"
                             disabled={isDisabled}
-                            motionProps={{
-                                variants: {
-                                    ...(isDisabled
-                                        ? {
-                                              ...motionVariants,
-                                              show: {
-                                                  ...motionVariants.show,
-                                                  opacity: 0.5,
-                                              },
-                                          }
-                                        : motionVariants),
-                                },
-                            }}
                         >
                             {isSubmitting ? <Spinner /> : null}
                             {!isSubmitting && isSubmitted

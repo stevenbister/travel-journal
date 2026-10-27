@@ -1,12 +1,7 @@
-import { PlusIcon } from '@phosphor-icons/react';
-
-import { buttonVariants } from '@repo/ui/components/ui/button';
-import { HIDE_SHOW_ITEM } from '@repo/ui/constants/animation';
-
 import type { TripType, TripWithDetails } from '../../lib/dexie/types';
 import { Empty } from '../empty/empty';
-import { MotionLink } from '../motion-link/motion-link';
 import { Section } from '../section/section';
+import { CreateTripDrawer } from './create-trip-drawer';
 import { useGetTrips } from './hooks/use-get-trips';
 import { HeroTripCard } from './trip-cards/hero-trip-card';
 import { TripCard } from './trip-cards/trip-card';
@@ -32,17 +27,7 @@ export const TripsList = ({ initialTrips }: TripsListProps) => {
                 className="pb-16"
                 heading="No trips yet"
                 description="Start a trip and every place you visit will show up here, day by day."
-                CTA={
-                    <MotionLink
-                        to="/trip/new"
-                        className={buttonVariants({
-                            size: 'lg',
-                        })}
-                        variants={HIDE_SHOW_ITEM}
-                    >
-                        <PlusIcon /> Create your first trip
-                    </MotionLink>
-                }
+                CTA={<CreateTripDrawer />}
             />
         );
     }

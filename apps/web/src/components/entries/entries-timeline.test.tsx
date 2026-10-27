@@ -110,8 +110,8 @@ describe('EntriesTimeline', () => {
 
         await expect
             .element(
-                page.getByRole('link', {
-                    name: 'Create your first entry',
+                page.getByRole('button', {
+                    name: 'Create a new entry',
                 })
             )
             .toBeInTheDocument();

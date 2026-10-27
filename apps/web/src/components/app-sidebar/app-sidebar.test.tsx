@@ -44,11 +44,11 @@ describe('AppSidebar', () => {
             .toBeInTheDocument();
     });
 
-    it('renders the add button', async () => {
+    it('renders the create trip drawer trigger', async () => {
         const page = await renderComponent();
 
         await expect
-            .element(page.getByRole('link', { name: 'New trip' }))
+            .element(page.getByRole('button', { name: 'Create a new trip' }))
             .toBeInTheDocument();
     });
 });

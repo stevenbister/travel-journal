@@ -1,8 +1,6 @@
 import { ClockIcon } from '@phosphor-icons/react';
 import { useForm } from '@tanstack/react-form';
-import { useNavigate, useParams } from '@tanstack/react-router';
-import type { Variants } from 'motion';
-import { motion } from 'motion/react';
+import { useParams } from '@tanstack/react-router';
 import z from 'zod';
 
 import { Button } from '@repo/ui/components/ui/button';
@@ -27,6 +25,10 @@ import { db } from '../../lib/dexie/db';
 import { BadgeSelector } from '../badge-selector/badge-selector';
 import { LocationSearch } from '../location-search/location-search';
 import { TAGS_LIST } from './tags-list';
+
+type CreateEntryFormProps = {
+    onSubmitSuccess?: () => void;
+};
 
 const placeSchema = z.object({
     osmType: z.string().nullable(),
@@ -55,15 +57,8 @@ const formSchema = z.object({
 });
 type FormInput = z.input<typeof formSchema>;
 
-const MotionField = motion.create(Field);
-
-type CreateEntryFormProps = {
-    motionVariants: Variants;
-};
-
-export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
+export const CreateEntryForm = ({ onSubmitSuccess }: CreateEntryFormProps) => {
     const { data: session } = useSession();
-    const navigate = useNavigate();
     const params = useParams({ strict: false });
 
     const defaultValues: FormInput = {
@@ -110,13 +105,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
             });
 
             form.reset();
-            await navigate({
-                to: '/trip/$tripId/entry/$entryId',
-                params: {
-                    tripId: params.tripId,
-                    entryId,
-                },
-            });
+            onSubmitSuccess?.();
         } catch (error) {
             console.error('Failed to create entry:', error);
             toast.add({
@@ -141,7 +130,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                 e.preventDefault();
                 form.handleSubmit();
             }}
-            className="flex flex-col gap-4 h-full pb-12"
+            className="flex flex-col gap-4 h-full"
         >
             <FieldGroup>
                 <form.Field name="title">
@@ -151,10 +140,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -178,7 +164,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -192,10 +178,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -215,7 +198,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -227,10 +210,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -260,7 +240,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -274,10 +254,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -297,7 +274,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -311,10 +288,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -335,7 +309,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -349,10 +323,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                             !field.state.meta.isValid;
 
                         return (
-                            <MotionField
-                                data-invalid={isInvalid}
-                                variants={motionVariants}
-                            >
+                            <Field data-invalid={isInvalid}>
                                 <FieldLabel
                                     htmlFor={field.name}
                                     className="text-muted-foreground"
@@ -376,7 +347,7 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                                         errors={field.state.meta.errors}
                                     />
                                 )}
-                            </MotionField>
+                            </Field>
                         );
                     }}
                 </form.Field>
@@ -397,19 +368,6 @@ export const CreateEntryForm = ({ motionVariants }: CreateEntryFormProps) => {
                             type="submit"
                             className="mt-auto md:mt-0"
                             disabled={isDisabled}
-                            motionProps={{
-                                variants: {
-                                    ...(isDisabled
-                                        ? {
-                                              ...motionVariants,
-                                              show: {
-                                                  ...motionVariants.show,
-                                                  opacity: 0.5,
-                                              },
-                                          }
-                                        : motionVariants),
-                                },
-                            }}
                         >
                             Save entry
                         </Button>
