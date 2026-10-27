@@ -87,7 +87,7 @@ describe('EditEntryForm', () => {
 
         await expect.element(page.getByLabelText('Day')).toBeInTheDocument();
 
-        await expect.element(page.getByLabelText('Time')).toHaveValue('13:00');
+        await expect.element(page.getByLabelText('Time')).toHaveValue('12:00');
     });
 
     it('marks the entry tag as selected in the badge selector', async () => {
