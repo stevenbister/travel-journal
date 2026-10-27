@@ -3,6 +3,7 @@ import {
     PencilSimpleIcon,
     TrashIcon,
 } from '@phosphor-icons/react';
+import * as React from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
 import {
@@ -25,38 +26,51 @@ export const ActionDropdown = ({
     onEdit,
     onDelete,
     editDrawerHandle,
-}: ActionDropdownProps) => (
-    <Drawer>
-        <DrawerTrigger render={<Button variant="outline" size="icon" />}>
-            <DotsThreeIcon weight="bold" />
-            <span className="sr-only">Options</span>
-        </DrawerTrigger>
-        <DrawerContent>
-            <div className="container flex flex-col gap-4">
-                <Button
-                    onClick={onEdit}
-                    variant="secondary"
-                    className="w-full"
-                    render={<DrawerTrigger handle={editDrawerHandle} />}
-                >
-                    <PencilSimpleIcon /> Edit
-                </Button>
+}: ActionDropdownProps) => {
+    const actionDrawerHandle = React.useMemo(
+        () => DrawerPrimitive.createHandle(),
+        []
+    );
 
-                <Button
-                    onClick={onDelete}
-                    variant="destructive"
-                    className="w-full"
-                    render={
-                        <DrawerTrigger handle={ConfirmationDrawerHandler} />
-                    }
-                >
-                    <TrashIcon /> Delete
-                </Button>
+    return (
+        <Drawer handle={actionDrawerHandle}>
+            <DrawerTrigger render={<Button variant="outline" size="icon" />}>
+                <DotsThreeIcon weight="bold" />
+                <span className="sr-only">Options</span>
+            </DrawerTrigger>
+            <DrawerContent>
+                <div className="container flex flex-col gap-4">
+                    <Button
+                        onClick={() => {
+                            actionDrawerHandle.close();
+                            onEdit();
+                        }}
+                        variant="secondary"
+                        className="w-full"
+                        render={<DrawerTrigger handle={editDrawerHandle} />}
+                    >
+                        <PencilSimpleIcon /> Edit
+                    </Button>
 
-                <DrawerClose render={<Button variant="outline" />}>
-                    Cancel
-                </DrawerClose>
-            </div>
-        </DrawerContent>
-    </Drawer>
-);
+                    <Button
+                        onClick={() => {
+                            actionDrawerHandle.close();
+                            onDelete();
+                        }}
+                        variant="destructive"
+                        className="w-full"
+                        render={
+                            <DrawerTrigger handle={ConfirmationDrawerHandler} />
+                        }
+                    >
+                        <TrashIcon /> Delete
+                    </Button>
+
+                    <DrawerClose render={<Button variant="outline" />}>
+                        Cancel
+                    </DrawerClose>
+                </div>
+            </DrawerContent>
+        </Drawer>
+    );
+};
