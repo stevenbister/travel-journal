@@ -15,7 +15,6 @@ import { Route as AuthIndexRouteImport } from './routes/_auth.index'
 import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
 import { Route as AuthTripTripIdRouteImport } from './routes/_auth.trip.$tripId'
 import { Route as AuthTripTripIdEntryEntryIdRouteImport } from './routes/_auth.trip.$tripId_.entry.$entryId'
-import { Route as AuthTripTripIdEntryNewRouteImport } from './routes/_auth.trip.$tripId_.entry.new'
 
 const AuthRoute = AuthRouteImport.update({
   id: '/_auth',
@@ -47,11 +46,6 @@ const AuthTripTripIdEntryEntryIdRoute =
     path: '/trip/$tripId/entry/$entryId',
     getParentRoute: () => AuthRoute,
   } as any)
-const AuthTripTripIdEntryNewRoute = AuthTripTripIdEntryNewRouteImport.update({
-  id: '/trip/$tripId_/entry/new',
-  path: '/trip/$tripId/entry/new',
-  getParentRoute: () => AuthRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
@@ -59,7 +53,6 @@ export interface FileRoutesByFullPath {
   '/profile': typeof AuthProfileRoute
   '/trip/$tripId': typeof AuthTripTripIdRoute
   '/trip/$tripId/entry/$entryId': typeof AuthTripTripIdEntryEntryIdRoute
-  '/trip/$tripId/entry/new': typeof AuthTripTripIdEntryNewRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
@@ -67,7 +60,6 @@ export interface FileRoutesByTo {
   '/': typeof AuthIndexRoute
   '/trip/$tripId': typeof AuthTripTripIdRoute
   '/trip/$tripId/entry/$entryId': typeof AuthTripTripIdEntryEntryIdRoute
-  '/trip/$tripId/entry/new': typeof AuthTripTripIdEntryNewRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
@@ -77,7 +69,6 @@ export interface FileRoutesById {
   '/_auth/': typeof AuthIndexRoute
   '/_auth/trip/$tripId': typeof AuthTripTripIdRoute
   '/_auth/trip/$tripId_/entry/$entryId': typeof AuthTripTripIdEntryEntryIdRoute
-  '/_auth/trip/$tripId_/entry/new': typeof AuthTripTripIdEntryNewRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -87,7 +78,6 @@ export interface FileRouteTypes {
     | '/profile'
     | '/trip/$tripId'
     | '/trip/$tripId/entry/$entryId'
-    | '/trip/$tripId/entry/new'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
@@ -95,7 +85,6 @@ export interface FileRouteTypes {
     | '/'
     | '/trip/$tripId'
     | '/trip/$tripId/entry/$entryId'
-    | '/trip/$tripId/entry/new'
   id:
     | '__root__'
     | '/_auth'
@@ -104,7 +93,6 @@ export interface FileRouteTypes {
     | '/_auth/'
     | '/_auth/trip/$tripId'
     | '/_auth/trip/$tripId_/entry/$entryId'
-    | '/_auth/trip/$tripId_/entry/new'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
@@ -156,13 +144,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthTripTripIdEntryEntryIdRouteImport
       parentRoute: typeof AuthRoute
     }
-    '/_auth/trip/$tripId_/entry/new': {
-      id: '/_auth/trip/$tripId_/entry/new'
-      path: '/trip/$tripId/entry/new'
-      fullPath: '/trip/$tripId/entry/new'
-      preLoaderRoute: typeof AuthTripTripIdEntryNewRouteImport
-      parentRoute: typeof AuthRoute
-    }
   }
 }
 
@@ -171,7 +152,6 @@ interface AuthRouteChildren {
   AuthIndexRoute: typeof AuthIndexRoute
   AuthTripTripIdRoute: typeof AuthTripTripIdRoute
   AuthTripTripIdEntryEntryIdRoute: typeof AuthTripTripIdEntryEntryIdRoute
-  AuthTripTripIdEntryNewRoute: typeof AuthTripTripIdEntryNewRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
@@ -179,7 +159,6 @@ const AuthRouteChildren: AuthRouteChildren = {
   AuthIndexRoute: AuthIndexRoute,
   AuthTripTripIdRoute: AuthTripTripIdRoute,
   AuthTripTripIdEntryEntryIdRoute: AuthTripTripIdEntryEntryIdRoute,
-  AuthTripTripIdEntryNewRoute: AuthTripTripIdEntryNewRoute,
 }
 
 const AuthRouteWithChildren = AuthRoute._addFileChildren(AuthRouteChildren)
