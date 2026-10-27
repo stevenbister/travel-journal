@@ -1,15 +1,11 @@
-import { PlusIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
 import { compareDesc, format, parseISO } from 'date-fns';
 import * as React from 'react';
 
-import { buttonVariants } from '@repo/ui/components/ui/button';
-import { HIDE_SHOW_ITEM } from '@repo/ui/constants/animation';
-
 import type { Entry } from '../../lib/dexie/types';
 import { Empty } from '../empty/empty';
-import { MotionLink } from '../motion-link/motion-link';
 import { useGetTrip } from '../trips/hooks/use-get-trip';
+import { CreateEntryDrawer } from './create-entry-drawer';
 import { EntryDetails } from './entry-details';
 import { useGetEntries } from './hooks/use-get-entries';
 import { getEntryDayNumber } from './utils/get-entry-day-number';
@@ -64,20 +60,7 @@ export const EntriesTimeline = ({
                 size="sm"
                 heading="No entries"
                 description="Add your plans for this trip"
-                CTA={
-                    <MotionLink
-                        to="/trip/$tripId/entry/new"
-                        params={{
-                            tripId,
-                        }}
-                        className={buttonVariants({
-                            size: 'lg',
-                        })}
-                        variants={HIDE_SHOW_ITEM}
-                    >
-                        <PlusIcon /> Create your first entry
-                    </MotionLink>
-                }
+                CTA={<CreateEntryDrawer />}
             />
         );
     }
