@@ -35,6 +35,8 @@ vi.mock('@repo/ui/components/ui/date-range-picker-input', () => {
 });
 
 const seedTrip = async () => {
+    await Promise.all(db.tables.map((table) => table.clear()));
+
     await db.trips.bulkAdd([makeTrip('t1', 8, 12)]);
     await db.users.bulkAdd([
         { id: 'u1', name: 'Steven', image: null },
