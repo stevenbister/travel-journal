@@ -1,4 +1,5 @@
 import { PlusIcon } from '@phosphor-icons/react';
+import * as React from 'react';
 
 import { Button } from '@repo/ui/components/ui/button';
 import {
@@ -17,11 +18,14 @@ import { CreateEntryForm } from './create-entry-form';
 
 export const CreateEntryDrawer = () => {
     const isMobile = useIsMobile();
+    const [isOpen, setIsOpen] = React.useState(false);
 
     return (
         <Drawer
             swipeDirection={isMobile ? 'down' : 'right'}
             showSwipeHandle={isMobile}
+            open={isOpen}
+            onOpenChange={setIsOpen}
         >
             <DrawerTrigger
                 render={
@@ -45,7 +49,7 @@ export const CreateEntryDrawer = () => {
                 </DrawerHeader>
 
                 <div className="container-x flex flex-col gap-4 h-full overflow-auto pb-12">
-                    <CreateEntryForm />
+                    <CreateEntryForm onSubmitSuccess={() => setIsOpen(false)} />
 
                     <DrawerClose render={<Button variant="outline" />}>
                         Cancel

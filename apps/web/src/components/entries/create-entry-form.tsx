@@ -1,6 +1,6 @@
 import { ClockIcon } from '@phosphor-icons/react';
 import { useForm } from '@tanstack/react-form';
-import { useNavigate, useParams } from '@tanstack/react-router';
+import { useParams } from '@tanstack/react-router';
 import z from 'zod';
 
 import { Button } from '@repo/ui/components/ui/button';
@@ -25,6 +25,10 @@ import { db } from '../../lib/dexie/db';
 import { BadgeSelector } from '../badge-selector/badge-selector';
 import { LocationSearch } from '../location-search/location-search';
 import { TAGS_LIST } from './tags-list';
+
+type CreateEntryFormProps = {
+    onSubmitSuccess?: () => void;
+};
 
 const placeSchema = z.object({
     osmType: z.string().nullable(),
@@ -53,9 +57,8 @@ const formSchema = z.object({
 });
 type FormInput = z.input<typeof formSchema>;
 
-export const CreateEntryForm = () => {
+export const CreateEntryForm = ({ onSubmitSuccess }: CreateEntryFormProps) => {
     const { data: session } = useSession();
-    const navigate = useNavigate();
     const params = useParams({ strict: false });
 
     const defaultValues: FormInput = {
@@ -102,13 +105,7 @@ export const CreateEntryForm = () => {
             });
 
             form.reset();
-            await navigate({
-                to: '/trip/$tripId/entry/$entryId',
-                params: {
-                    tripId: params.tripId,
-                    entryId,
-                },
-            });
+            onSubmitSuccess?.();
         } catch (error) {
             console.error('Failed to create entry:', error);
             toast.add({
