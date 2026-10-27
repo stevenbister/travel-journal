@@ -66,6 +66,7 @@ const dayFor = (entryDate: string) => getEntryDayNumber(entryDate, TRIP_START);
 describe('EntriesTimeline', () => {
     afterEach(() => {
         vi.clearAllMocks();
+        vi.useRealTimers();
     });
 
     it('groups entries by day, oldest first with trip-relative day numbers', async () => {
@@ -159,10 +160,18 @@ describe('EntriesTimeline', () => {
                 .element(
                     page.getByRole('heading', {
                         level: 3,
-                        name: format(parseISO(day), 'PP'),
+                        name: `Day ${dayFor(day)}`,
                     })
                 )
-                .toHaveTextContent(`Day ${dayFor(day)}`);
+                .toBeInTheDocument();
+
+            await expect
+                .element(
+                    page.getByText(format(parseISO(day), 'PP'), {
+                        exact: true,
+                    })
+                )
+                .toBeInTheDocument();
         }
 
         await expect
@@ -189,10 +198,13 @@ describe('EntriesTimeline', () => {
         );
 
         await expect
+            .element(page.getByRole('heading', { level: 3, name: 'Day 1' }))
+            .toBeInTheDocument();
+
+        await expect
             .element(
-                page.getByRole('heading', {
-                    level: 3,
-                    name: format(parseISO('2026-10-07'), 'PP'),
+                page.getByText(format(parseISO('2026-10-07'), 'PP'), {
+                    exact: true,
                 })
             )
             .toBeInTheDocument();
@@ -222,5 +234,31 @@ describe('EntriesTimeline', () => {
             .toBeInTheDocument();
 
         await expect.element(page.getByText('Pick a date')).toBeInTheDocument();
+    });
+
+    it('shows the today badge on the current trip day', async () => {
+        vi.useFakeTimers({ toFake: ['Date'] });
+        // Faked to noon on the third day of the mocked trip (Oct 7 to Oct 10)
+        vi.setSystemTime(parseISO('2026-10-09T12:00:00.000Z'));
+
+        const page = await renderComponent(
+            [
+                makeEntry('old', 'trip-1', {
+                    entryDate: '2026-10-08T09:00:00.000Z',
+                }),
+                makeEntry('new', 'trip-1', {
+                    entryDate: '2026-10-10T09:00:00.000Z',
+                }),
+            ],
+            { endDate: TRIP_END }
+        );
+
+        const todayBadges = page.getByText('Today', { exact: true }).elements();
+
+        expect(todayBadges).toHaveLength(1);
+
+        const badgeHeader = todayBadges[0]!.closest('header')?.textContent;
+        expect(badgeHeader).toContain(`Day ${dayFor('2026-10-09')}`);
+        expect(badgeHeader).toContain(format(parseISO('2026-10-09'), 'PP'));
     });
 });

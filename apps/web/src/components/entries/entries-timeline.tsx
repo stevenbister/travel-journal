@@ -1,16 +1,12 @@
 import { PlusIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
-import { addDays, compareDesc, format, parseISO } from 'date-fns';
+import { addDays, compareDesc, format, isToday, parseISO } from 'date-fns';
 import * as React from 'react';
 
+import { Badge } from '@repo/ui/components/ui/badge';
 import { Button } from '@repo/ui/components/ui/button';
 import { DrawerTrigger } from '@repo/ui/components/ui/drawer';
-import {
-    Item,
-    ItemActions,
-    ItemContent,
-    ItemTitle,
-} from '@repo/ui/components/ui/item';
+import { Item, ItemActions, ItemContent } from '@repo/ui/components/ui/item';
 
 import type { Entry } from '../../lib/dexie/types';
 import { Empty } from '../empty/empty';
@@ -103,19 +99,23 @@ export const EntriesTimeline = ({
         <section className="flex flex-col gap-6 py-2">
             {timeline.map(({ date, items, dayNumber }) => {
                 const hasItems = items.length > 0;
+                const today = isToday(parseISO(date));
 
                 return (
                     <div key={date}>
-                        <h3 className="flex gap-2 items-center mb-2">
-                            {dayNumber !== undefined && (
-                                <span className="text-base">
-                                    Day {dayNumber}
-                                </span>
-                            )}
+                        <header className="flex gap-2 items-center mb-2">
+                            <h3 className="text-base">
+                                {dayNumber !== undefined && 'Day ' + dayNumber}
+                            </h3>
+
                             <span className="text-muted-foreground font-sans">
                                 {format(parseISO(date), 'PP')}
                             </span>
-                        </h3>
+
+                            {today ? (
+                                <Badge variant="accent">Today</Badge>
+                            ) : null}
+                        </header>
 
                         <ul className="relative flex flex-col gap-2">
                             <li className="absolute inset-s-1.5 -translate-x-0.5 h-full w-px bg-muted-foreground/50" />
@@ -138,7 +138,10 @@ export const EntriesTimeline = ({
                                     </li>
                                 ))
                             ) : (
-                                <EmptyEntry currentDate={parseISO(date)} />
+                                <EmptyEntry
+                                    currentDate={parseISO(date)}
+                                    isToday={today}
+                                />
                             )}
                         </ul>
                     </div>
@@ -148,12 +151,22 @@ export const EntriesTimeline = ({
     );
 };
 
-const EmptyEntry = ({ currentDate }: { currentDate: Date }) => (
+const EmptyEntry = ({
+    currentDate,
+    isToday,
+}: {
+    currentDate: Date;
+    isToday: boolean;
+}) => (
     <li className="grid grid-cols-[auto_auto_1fr] gap-3 items-start py-2">
         <div className="block size-2.5 bg-muted rounded-full mt-1 shrink-0 z-10" />
-        <Item variant="dashed" size="sm" className="col-span-2">
+        <Item
+            variant={isToday ? 'accent' : 'dashed'}
+            size="sm"
+            className="col-span-2"
+        >
             <ItemContent>
-                <ItemTitle>No entries for this day</ItemTitle>
+                <p>No entries for this day</p>
             </ItemContent>
 
             <ItemActions>

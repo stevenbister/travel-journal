@@ -43,6 +43,7 @@ const itemVariants = cva(
                 outline: 'border-border',
                 muted: 'border-transparent bg-muted/50',
                 dashed: 'border-dashed border-border',
+                accent: 'border-accent bg-accent/20 text-foreground',
             },
             size: {
                 default: 'gap-3.5 px-4 py-3.5',
