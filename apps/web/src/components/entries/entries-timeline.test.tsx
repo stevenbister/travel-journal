@@ -93,6 +93,21 @@ describe('EntriesTimeline', () => {
             .toBeInTheDocument();
     });
 
+    it('orders entries within a day by ascending time', async () => {
+        const breakfast = makeEntry('breakfast', 'trip-1', {
+            entryDate: '2026-10-09T09:00:00.000Z',
+        });
+        const dinner = makeEntry('dinner', 'trip-1', {
+            entryDate: '2026-10-09T19:00:00.000Z',
+        });
+
+        const page = await renderComponent([dinner, breakfast]);
+
+        expect(await page.container.querySelector('ul')?.textContent).toMatch(
+            /breakfast[\s\S]*dinner/
+        );
+    });
+
     it('renders the title, time, and location for each entry', async () => {
         const entry = makeEntry('a1', 'trip-1', {
             entryDate: '2026-10-10T09:30:00.000Z',

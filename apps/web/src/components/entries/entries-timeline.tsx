@@ -1,6 +1,13 @@
 import { PlusIcon } from '@phosphor-icons/react';
 import { Link } from '@tanstack/react-router';
-import { addDays, compareDesc, format, isToday, parseISO } from 'date-fns';
+import {
+    addDays,
+    compareAsc,
+    compareDesc,
+    format,
+    isToday,
+    parseISO,
+} from 'date-fns';
 import * as React from 'react';
 
 import { Badge } from '@repo/ui/components/ui/badge';
@@ -49,14 +56,23 @@ export const EntriesTimeline = ({
 }: EntriesTimelineProps) => {
     const { entries } = useGetEntries(tripId, initialEntries);
     const { trip } = useGetTrip(tripId);
+    const sortedEntries = React.useMemo(
+        () =>
+            (entries ?? []).toSorted((a, b) =>
+                compareAsc(parseISO(a.entryDate), parseISO(b.entryDate))
+            ),
+        [entries]
+    );
     const groupedEntries = React.useMemo(
         () =>
-            [...groupEntriesByDay(entries ?? [])].map(([date, items]) => ({
-                date,
-                items,
-                dayNumber: getEntryDayNumber(date, trip?.startDate),
-            })),
-        [entries, trip?.startDate]
+            [...groupEntriesByDay(sortedEntries).entries()].map(
+                ([date, items]) => ({
+                    date,
+                    items,
+                    dayNumber: getEntryDayNumber(date, trip?.startDate),
+                })
+            ),
+        [sortedEntries, trip?.startDate]
     );
 
     if (groupedEntries.length === 0) {
