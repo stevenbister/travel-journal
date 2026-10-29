@@ -6,9 +6,11 @@ import {
     AvatarFallback,
     AvatarImage,
 } from '@repo/ui/components/ui/avatar';
-import { Card, CardContent } from '@repo/ui/components/ui/card';
+import { buttonVariants } from '@repo/ui/components/ui/button';
+import { cn } from '@repo/ui/lib/utils';
 
 import { LogoutButton } from '../components/auth/logout-button';
+import { MotionAnchor } from '../components/motion-link/motion-link';
 import { Section } from '../components/section/section';
 import { ThemePicker } from '../components/theme-picker/theme-picker';
 import { useSession } from '../lib/auth/use-session';
@@ -45,23 +47,22 @@ function RouteComponent() {
                 <Section heading="Settings">
                     <ThemePicker />
                 </Section>
+
                 <Section heading="Account">
-                    <Card size="sm">
-                        <CardContent>
-                            <a
-                                href="https://myaccount.google.com/"
-                                target="_blank"
-                                rel="noopener noreferrer"
-                                className="w-full flex justify-between"
-                            >
-                                <span className="flex items-center gap-2">
-                                    <UserIcon className="text-primary" /> Google
-                                    Account
-                                </span>
-                                <ArrowSquareOutIcon />
-                            </a>
-                        </CardContent>
-                    </Card>
+                    <MotionAnchor
+                        href="https://myaccount.google.com/"
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className={cn(
+                            buttonVariants({
+                                size: 'lg',
+                                variant: 'outline',
+                            })
+                        )}
+                    >
+                        <UserIcon className="text-primary" /> Google Account
+                        <ArrowSquareOutIcon className="ms-auto" />
+                    </MotionAnchor>
                 </Section>
                 <LogoutButton className="col-span-full" />
             </div>
