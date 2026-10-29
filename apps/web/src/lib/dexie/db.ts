@@ -12,7 +12,7 @@ import type {
     User,
 } from './types';
 
-const VERSION = 5;
+const VERSION = 6;
 
 export const db = new Dexie('travel-journal') as Dexie & {
     authSession: EntityTable<CachedSession, 'id'>;
@@ -31,7 +31,7 @@ db.version(VERSION).stores({
     authMeta: 'key',
     users: 'id',
     trips: 'id, startDate, endDate, updatedAt',
-    entries: 'id, tripId, [tripId+updatedAt], [tripId+entryDate]',
+    entries: 'id, tripId, [tripId+updatedAt], [tripId+entryDate], authorId',
     syncMeta: 'key',
     tripMembers: '[tripId+userId], userId, tripId',
     entryHistory: 'id, entryId, editedAt',

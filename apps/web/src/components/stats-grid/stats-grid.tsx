@@ -49,7 +49,7 @@ export const StatsGridItem = ({
     return (
         <div
             className={cn(
-                'flex flex-col items-center justify-center gap-1.5 p-4',
+                'flex flex-col items-center justify-center gap-1.5 p-4 text-center',
                 className
             )}
         >
