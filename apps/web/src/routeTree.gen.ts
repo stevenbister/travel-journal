@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as AuthRouteImport } from './routes/_auth'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AuthIndexRouteImport } from './routes/_auth.index'
+import { Route as AuthMapRouteImport } from './routes/_auth.map'
 import { Route as AuthProfileRouteImport } from './routes/_auth.profile'
+import { Route as AuthSearchRouteImport } from './routes/_auth.search'
 import { Route as AuthTripTripIdRouteImport } from './routes/_auth.trip.$tripId'
 import { Route as AuthTripTripIdEntryEntryIdRouteImport } from './routes/_auth.trip.$tripId_.entry.$entryId'
 
@@ -30,9 +32,19 @@ const AuthIndexRoute = AuthIndexRouteImport.update({
   path: '/',
   getParentRoute: () => AuthRoute,
 } as any)
+const AuthMapRoute = AuthMapRouteImport.update({
+  id: '/map',
+  path: '/map',
+  getParentRoute: () => AuthRoute,
+} as any)
 const AuthProfileRoute = AuthProfileRouteImport.update({
   id: '/profile',
   path: '/profile',
+  getParentRoute: () => AuthRoute,
+} as any)
+const AuthSearchRoute = AuthSearchRouteImport.update({
+  id: '/search',
+  path: '/search',
   getParentRoute: () => AuthRoute,
 } as any)
 const AuthTripTripIdRoute = AuthTripTripIdRouteImport.update({
@@ -50,13 +62,17 @@ const AuthTripTripIdEntryEntryIdRoute =
 export interface FileRoutesByFullPath {
   '/': typeof AuthIndexRoute
   '/login': typeof LoginRoute
+  '/map': typeof AuthMapRoute
   '/profile': typeof AuthProfileRoute
+  '/search': typeof AuthSearchRoute
   '/trip/$tripId': typeof AuthTripTripIdRoute
   '/trip/$tripId/entry/$entryId': typeof AuthTripTripIdEntryEntryIdRoute
 }
 export interface FileRoutesByTo {
   '/login': typeof LoginRoute
+  '/map': typeof AuthMapRoute
   '/profile': typeof AuthProfileRoute
+  '/search': typeof AuthSearchRoute
   '/': typeof AuthIndexRoute
   '/trip/$tripId': typeof AuthTripTripIdRoute
   '/trip/$tripId/entry/$entryId': typeof AuthTripTripIdEntryEntryIdRoute
@@ -65,7 +81,9 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/_auth': typeof AuthRouteWithChildren
   '/login': typeof LoginRoute
+  '/_auth/map': typeof AuthMapRoute
   '/_auth/profile': typeof AuthProfileRoute
+  '/_auth/search': typeof AuthSearchRoute
   '/_auth/': typeof AuthIndexRoute
   '/_auth/trip/$tripId': typeof AuthTripTripIdRoute
   '/_auth/trip/$tripId_/entry/$entryId': typeof AuthTripTripIdEntryEntryIdRoute
@@ -75,13 +93,17 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/login'
+    | '/map'
     | '/profile'
+    | '/search'
     | '/trip/$tripId'
     | '/trip/$tripId/entry/$entryId'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/login'
+    | '/map'
     | '/profile'
+    | '/search'
     | '/'
     | '/trip/$tripId'
     | '/trip/$tripId/entry/$entryId'
@@ -89,7 +111,9 @@ export interface FileRouteTypes {
     | '__root__'
     | '/_auth'
     | '/login'
+    | '/_auth/map'
     | '/_auth/profile'
+    | '/_auth/search'
     | '/_auth/'
     | '/_auth/trip/$tripId'
     | '/_auth/trip/$tripId_/entry/$entryId'
@@ -123,11 +147,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthIndexRouteImport
       parentRoute: typeof AuthRoute
     }
+    '/_auth/map': {
+      id: '/_auth/map'
+      path: '/map'
+      fullPath: '/map'
+      preLoaderRoute: typeof AuthMapRouteImport
+      parentRoute: typeof AuthRoute
+    }
     '/_auth/profile': {
       id: '/_auth/profile'
       path: '/profile'
       fullPath: '/profile'
       preLoaderRoute: typeof AuthProfileRouteImport
+      parentRoute: typeof AuthRoute
+    }
+    '/_auth/search': {
+      id: '/_auth/search'
+      path: '/search'
+      fullPath: '/search'
+      preLoaderRoute: typeof AuthSearchRouteImport
       parentRoute: typeof AuthRoute
     }
     '/_auth/trip/$tripId': {
@@ -148,14 +186,18 @@ declare module '@tanstack/react-router' {
 }
 
 interface AuthRouteChildren {
+  AuthMapRoute: typeof AuthMapRoute
   AuthProfileRoute: typeof AuthProfileRoute
+  AuthSearchRoute: typeof AuthSearchRoute
   AuthIndexRoute: typeof AuthIndexRoute
   AuthTripTripIdRoute: typeof AuthTripTripIdRoute
   AuthTripTripIdEntryEntryIdRoute: typeof AuthTripTripIdEntryEntryIdRoute
 }
 
 const AuthRouteChildren: AuthRouteChildren = {
+  AuthMapRoute: AuthMapRoute,
   AuthProfileRoute: AuthProfileRoute,
+  AuthSearchRoute: AuthSearchRoute,
   AuthIndexRoute: AuthIndexRoute,
   AuthTripTripIdRoute: AuthTripTripIdRoute,
   AuthTripTripIdEntryEntryIdRoute: AuthTripTripIdEntryEntryIdRoute,
