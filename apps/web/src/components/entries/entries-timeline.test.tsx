@@ -86,10 +86,10 @@ describe('EntriesTimeline', () => {
             .toHaveTextContent(`Day ${dayFor(newDate)}`);
 
         await expect
-            .element(page.getByText(format(parseISO('2026-10-10'), 'PP')))
+            .element(page.getByText(format(parseISO('2026-10-10'), 'PPPP')))
             .toBeInTheDocument();
         await expect
-            .element(page.getByText(format(parseISO('2026-10-08'), 'PP')))
+            .element(page.getByText(format(parseISO('2026-10-08'), 'PPPP')))
             .toBeInTheDocument();
     });
 
@@ -182,7 +182,7 @@ describe('EntriesTimeline', () => {
 
             await expect
                 .element(
-                    page.getByText(format(parseISO(day), 'PP'), {
+                    page.getByText(format(parseISO(day), 'PPPP'), {
                         exact: true,
                     })
                 )
@@ -218,7 +218,7 @@ describe('EntriesTimeline', () => {
 
         await expect
             .element(
-                page.getByText(format(parseISO('2026-10-07'), 'PP'), {
+                page.getByText(format(parseISO('2026-10-07'), 'PPPP'), {
                     exact: true,
                 })
             )
@@ -274,6 +274,6 @@ describe('EntriesTimeline', () => {
 
         const badgeHeader = todayBadges[0]!.closest('header')?.textContent;
         expect(badgeHeader).toContain(`Day ${dayFor('2026-10-09')}`);
-        expect(badgeHeader).toContain(format(parseISO('2026-10-09'), 'PP'));
+        expect(badgeHeader).toContain(format(parseISO('2026-10-09'), 'PPPP'));
     });
 });

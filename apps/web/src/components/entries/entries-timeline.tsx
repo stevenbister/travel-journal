@@ -125,7 +125,7 @@ export const EntriesTimeline = ({
                             </h3>
 
                             <span className="text-muted-foreground font-sans">
-                                {format(parseISO(date), 'PP')}
+                                {format(parseISO(date), 'PPPP')}
                             </span>
 
                             {today ? (
