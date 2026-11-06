@@ -1,22 +1,22 @@
 import { MapPinIcon } from '@phosphor-icons/react';
+import { Link } from '@tanstack/react-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { type MapRef, Marker } from 'react-map-gl/maplibre';
 
 import { Spinner } from '@repo/ui/components/ui/spinner';
+import { cn } from '@repo/ui/lib/utils';
 
+import type { Entry } from '../../lib/dexie/types';
 import { MapComponent } from '../map/map';
-import { EntryDrawer } from './entry-drawer';
-import { useGetEntries } from './hooks/use-get-entries';
 
 type EntryMapProps = {
-    tripId: string;
+    entries: Entry[];
 };
 
-export const EntryMap = ({ tripId }: EntryMapProps) => {
-    const { entries, isPending } = useGetEntries(tripId);
+export const EntryMap = ({ entries }: EntryMapProps) => {
     const mapRef = useRef<MapRef>(null);
+    const isMapLoadedRef = useRef(false);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
-    const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
 
     const sortedEntries = useMemo(() => {
         if (!entries) return [];
@@ -77,12 +77,9 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
     );
 
     useEffect(() => {
-        fitMapToBounds(false);
+        // Animate once the map is loaded, so navigation-triggered bounds changes
+        fitMapToBounds(isMapLoadedRef.current);
     }, [fitMapToBounds]);
-
-    if (isPending) {
-        return <div>Loading...</div>;
-    }
 
     if (!entries || entries.length === 0) {
         return <div>No entries found.</div>;
@@ -95,9 +92,12 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
     const [minLng, minLat, maxLng, maxLat] = bounds;
 
     return (
-        <div className="relative h-full w-full">
+        <>
             <div
-                className={`h-full w-full transition-opacity duration-300 ${isMapLoaded ? 'opacity-100' : 'opacity-0'}`}
+                className={cn(
+                    'h-full w-full transition-opacity duration-300',
+                    isMapLoaded ? 'opacity-100' : 'opacity-0'
+                )}
             >
                 <MapComponent
                     ref={mapRef}
@@ -107,6 +107,7 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
                         zoom: locatedEntries.length === 1 ? 10 : 2,
                     }}
                     onLoad={() => {
+                        isMapLoadedRef.current = true;
                         fitMapToBounds(true);
                         setIsMapLoaded(true);
                     }}
@@ -115,7 +116,6 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
                     {sortedEntries.map((entry) => {
                         if (!entry.location?.lat || !entry.location?.lng)
                             return null;
-                        const isSelected = entry.id === selectedEntryId;
 
                         return (
                             <Marker
@@ -124,23 +124,13 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
                                 latitude={entry.location!.lat}
                                 className="text-accent"
                             >
-                                <EntryDrawer
-                                    entryId={entry.id}
-                                    trigger={
-                                        <button>
-                                            <MapPinIcon
-                                                weight="fill"
-                                                size={40}
-                                            />
-                                        </button>
-                                    }
-                                    isOpen={isSelected}
-                                    setIsOpen={(isOpen) =>
-                                        setSelectedEntryId(
-                                            isOpen ? entry.id : null
-                                        )
-                                    }
-                                />
+                                {/* // TODO: If there is no tripId in the url params, then show link, otherwise lets open the drawer */}
+                                <Link
+                                    to="/map/{-$tripId}"
+                                    params={{ tripId: entry.tripId }}
+                                >
+                                    <MapPinIcon weight="fill" size={40} />
+                                </Link>
                             </Marker>
                         );
                     })}
@@ -152,6 +142,6 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
                     <Spinner className="size-8" />
                 </div>
             ) : null}
-        </div>
+        </>
     );
 };
