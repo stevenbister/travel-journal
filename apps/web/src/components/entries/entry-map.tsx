@@ -1,22 +1,38 @@
 import { MapPinIcon } from '@phosphor-icons/react';
-import { Link } from '@tanstack/react-router';
+import { Link, useParams } from '@tanstack/react-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type MapRef, Marker } from 'react-map-gl/maplibre';
+import { Layer, type MapRef, Marker, Source } from 'react-map-gl/maplibre';
 
 import { Spinner } from '@repo/ui/components/ui/spinner';
 import { cn } from '@repo/ui/lib/utils';
 
 import type { Entry } from '../../lib/dexie/types';
 import { MapComponent } from '../map/map';
+import { buildGreatCircleRoute } from './utils/great-circle';
 
 type EntryMapProps = {
     entries: Entry[];
+};
+
+type EntryRouteGeoJSON = {
+    type: 'FeatureCollection';
+    features: Array<{
+        type: 'Feature';
+        properties: Record<string, string>;
+        geometry: {
+            type: 'LineString';
+            coordinates: [number, number][];
+        };
+    }>;
 };
 
 export const EntryMap = ({ entries }: EntryMapProps) => {
     const mapRef = useRef<MapRef>(null);
     const isMapLoadedRef = useRef(false);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
+    const { tripId } = useParams({
+        from: '/_auth/map/{-$tripId}',
+    });
 
     const sortedEntries = useMemo(() => {
         if (!entries) return [];
@@ -34,6 +50,30 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
             ),
         [sortedEntries]
     );
+
+    const routeGeoJSON = useMemo<EntryRouteGeoJSON | null>(() => {
+        if (!tripId || locatedEntries.length < 2) return null;
+
+        return {
+            type: 'FeatureCollection',
+            features: [
+                {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                        type: 'LineString',
+                        // Great-circle arcs between stops, like flight paths
+                        coordinates: buildGreatCircleRoute(
+                            locatedEntries.map((entry) => [
+                                entry.location!.lng,
+                                entry.location!.lat,
+                            ])
+                        ),
+                    },
+                },
+            ],
+        };
+    }, [tripId, locatedEntries]);
 
     const bounds = useMemo<[number, number, number, number] | null>(() => {
         if (locatedEntries.length === 0) return null;
@@ -113,6 +153,26 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
                     }}
                     onError={() => setIsMapLoaded(true)}
                 >
+                    {routeGeoJSON ? (
+                        <Source
+                            id="entry-route"
+                            type="geojson"
+                            data={routeGeoJSON}
+                        >
+                            <Layer
+                                id="entry-route-line"
+                                type="line"
+                                paint={{
+                                    'line-color': '#e2734d',
+                                    'line-width': 2,
+                                    'line-opacity': 0.8,
+                                    // Purely decorative route line, so dash it to
+                                    // distinguish it from real roads/paths
+                                    'line-dasharray': [2, 2],
+                                }}
+                            />
+                        </Source>
+                    ) : null}
                     {sortedEntries.map((entry) => {
                         if (!entry.location?.lat || !entry.location?.lng)
                             return null;
