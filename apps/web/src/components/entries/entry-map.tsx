@@ -93,6 +93,16 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
         }
     }, []);
 
+    const handleActiveEntryChange = useCallback(
+        (entryId: string) => {
+            const entry = locatedEntries.find(
+                (locatedEntry) => locatedEntry.id === entryId
+            );
+            if (entry) openEntry(entry);
+        },
+        [locatedEntries, openEntry]
+    );
+
     const bounds = useMemo<[number, number, number, number] | null>(() => {
         if (locatedEntries.length === 0) return null;
         let minLng = Infinity;
@@ -236,7 +246,9 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
 
             {isTripView && selectedEntryId ? (
                 <EntryDrawer
+                    entries={locatedEntries}
                     entryId={selectedEntryId}
+                    onActiveEntryChange={handleActiveEntryChange}
                     isOpen={Boolean(selectedEntryId)}
                     setIsOpen={(isOpen) => {
                         if (!isOpen) setSelectedEntryId(null);
