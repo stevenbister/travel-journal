@@ -13,7 +13,7 @@ import { useGetEntry } from './hooks/use-get-entry';
 
 type EntryDrawerProps = {
     entryId: string;
-    trigger: React.ReactElement;
+    trigger?: React.ReactElement;
     isOpen: boolean;
     setIsOpen: (_isOpen: boolean) => void;
 };
@@ -37,10 +37,12 @@ export const EntryDrawer = ({
             open={isOpen}
             onOpenChange={setIsOpen}
         >
-            <DrawerTrigger
-                className="aria-expanded:text-primary transition-colors"
-                render={trigger}
-            />
+            {trigger ? (
+                <DrawerTrigger
+                    className="aria-expanded:text-primary transition-colors"
+                    render={trigger}
+                />
+            ) : null}
 
             <DrawerContent>
                 <Card>

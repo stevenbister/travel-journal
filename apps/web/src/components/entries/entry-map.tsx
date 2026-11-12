@@ -8,6 +8,7 @@ import { cn } from '@repo/ui/lib/utils';
 
 import type { Entry } from '../../lib/dexie/types';
 import { MapComponent } from '../map/map';
+import { EntryDrawer } from './entry-drawer';
 import { buildGreatCircleRoute } from './utils/great-circle';
 
 type EntryMapProps = {
@@ -74,6 +75,23 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
             ],
         };
     }, [tripId, locatedEntries]);
+
+    const isTripView = Boolean(tripId);
+    const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
+
+    const openEntry = useCallback((entry: Entry) => {
+        setSelectedEntryId(entry.id);
+
+        // Zoom into the pin for the selected entry
+        const map = mapRef.current;
+        if (map && entry.location) {
+            map.flyTo({
+                center: [entry.location.lng, entry.location.lat],
+                zoom: Math.max(map.getZoom(), 12),
+                duration: 1000,
+            });
+        }
+    }, []);
 
     const bounds = useMemo<[number, number, number, number] | null>(() => {
         if (locatedEntries.length === 0) return null;
@@ -177,6 +195,26 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
                         if (!entry.location?.lat || !entry.location?.lng)
                             return null;
 
+                        if (isTripView) {
+                            return (
+                                <Marker
+                                    key={entry.id}
+                                    longitude={entry.location!.lng}
+                                    latitude={entry.location!.lat}
+                                    className="text-accent"
+                                >
+                                    <button
+                                        type="button"
+                                        onClick={() => openEntry(entry)}
+                                        aria-label={`Open ${entry.title}`}
+                                        className="cursor-pointer"
+                                    >
+                                        <MapPinIcon weight="fill" size={40} />
+                                    </button>
+                                </Marker>
+                            );
+                        }
+
                         return (
                             <Marker
                                 key={entry.id}
@@ -184,7 +222,6 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
                                 latitude={entry.location!.lat}
                                 className="text-accent"
                             >
-                                {/* // TODO: If there is no tripId in the url params, then show link, otherwise lets open the drawer */}
                                 <Link
                                     to="/map/{-$tripId}"
                                     params={{ tripId: entry.tripId }}
@@ -196,6 +233,16 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
                     })}
                 </MapComponent>
             </div>
+
+            {isTripView && selectedEntryId ? (
+                <EntryDrawer
+                    entryId={selectedEntryId}
+                    isOpen={Boolean(selectedEntryId)}
+                    setIsOpen={(isOpen) => {
+                        if (!isOpen) setSelectedEntryId(null);
+                    }}
+                />
+            ) : null}
 
             {!isMapLoaded ? (
                 <div className="absolute inset-0 flex items-center justify-center bg-background">
