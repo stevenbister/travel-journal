@@ -37,18 +37,24 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
 
     const sortedEntries = useMemo(() => {
         if (!entries) return [];
-        return entries.toSorted((a, b) =>
-            a.entryDate.localeCompare(b.entryDate)
+        return (
+            entries
+                .toSorted((a, b) => a.entryDate.localeCompare(b.entryDate))
+                // Reverse so that the first items in the array get rendered last and stack on top of later items in the map
+                .reverse()
         );
     }, [entries]);
 
     const locatedEntries = useMemo(
         () =>
-            sortedEntries.filter(
-                (entry) =>
-                    typeof entry.location?.lat === 'number' &&
-                    typeof entry.location?.lng === 'number'
-            ),
+            sortedEntries
+                .filter(
+                    (entry) =>
+                        typeof entry.location?.lat === 'number' &&
+                        typeof entry.location?.lng === 'number'
+                )
+                // Reverse the sorted entries back so the entry drawer renders them in chronological order
+                .reverse(),
         [sortedEntries]
     );
 
@@ -202,8 +208,9 @@ export const EntryMap = ({ entries }: EntryMapProps) => {
                         </Source>
                     ) : null}
                     {sortedEntries.map((entry) => {
-                        if (!entry.location?.lat || !entry.location?.lng)
+                        if (!entry.location?.lat || !entry.location?.lng) {
                             return null;
+                        }
 
                         if (isTripView) {
                             return (
