@@ -1,38 +1,112 @@
 import { MapPinIcon } from '@phosphor-icons/react';
+import { Link, useParams } from '@tanstack/react-router';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
-import { type MapRef, Marker } from 'react-map-gl/maplibre';
+import { Layer, type MapRef, Marker, Source } from 'react-map-gl/maplibre';
 
 import { Spinner } from '@repo/ui/components/ui/spinner';
+import { cn } from '@repo/ui/lib/utils';
 
+import type { Entry } from '../../lib/dexie/types';
 import { MapComponent } from '../map/map';
 import { EntryDrawer } from './entry-drawer';
-import { useGetEntries } from './hooks/use-get-entries';
+import { buildGreatCircleRoute } from './utils/great-circle';
 
 type EntryMapProps = {
-    tripId: string;
+    entries: Entry[];
 };
 
-export const EntryMap = ({ tripId }: EntryMapProps) => {
-    const { entries, isPending } = useGetEntries(tripId);
+type EntryRouteGeoJSON = {
+    type: 'FeatureCollection';
+    features: Array<{
+        type: 'Feature';
+        properties: Record<string, string>;
+        geometry: {
+            type: 'LineString';
+            coordinates: [number, number][];
+        };
+    }>;
+};
+
+export const EntryMap = ({ entries }: EntryMapProps) => {
     const mapRef = useRef<MapRef>(null);
+    const isMapLoadedRef = useRef(false);
     const [isMapLoaded, setIsMapLoaded] = useState(false);
-    const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
+    const { tripId } = useParams({
+        from: '/_auth/map/{-$tripId}',
+    });
 
     const sortedEntries = useMemo(() => {
         if (!entries) return [];
-        return entries.toSorted((a, b) =>
-            a.entryDate.localeCompare(b.entryDate)
+        return (
+            entries
+                .toSorted((a, b) => a.entryDate.localeCompare(b.entryDate))
+                // Reverse so that the first items in the array get rendered last and stack on top of later items in the map
+                .reverse()
         );
     }, [entries]);
 
     const locatedEntries = useMemo(
         () =>
-            sortedEntries.filter(
-                (entry) =>
-                    typeof entry.location?.lat === 'number' &&
-                    typeof entry.location?.lng === 'number'
-            ),
+            sortedEntries
+                .filter(
+                    (entry) =>
+                        typeof entry.location?.lat === 'number' &&
+                        typeof entry.location?.lng === 'number'
+                )
+                // Reverse the sorted entries back so the entry drawer renders them in chronological order
+                .reverse(),
         [sortedEntries]
+    );
+
+    const routeGeoJSON = useMemo<EntryRouteGeoJSON | null>(() => {
+        if (!tripId || locatedEntries.length < 2) return null;
+
+        return {
+            type: 'FeatureCollection',
+            features: [
+                {
+                    type: 'Feature',
+                    properties: {},
+                    geometry: {
+                        type: 'LineString',
+                        // Great-circle arcs between stops, like flight paths
+                        coordinates: buildGreatCircleRoute(
+                            locatedEntries.map((entry) => [
+                                entry.location!.lng,
+                                entry.location!.lat,
+                            ])
+                        ),
+                    },
+                },
+            ],
+        };
+    }, [tripId, locatedEntries]);
+
+    const isTripView = Boolean(tripId);
+    const [selectedEntryId, setSelectedEntryId] = useState<string | null>(null);
+
+    const openEntry = useCallback((entry: Entry) => {
+        setSelectedEntryId(entry.id);
+
+        // Zoom into the pin for the selected entry
+        const map = mapRef.current;
+        if (map && entry.location) {
+            map.flyTo({
+                center: [entry.location.lng, entry.location.lat],
+                zoom: Math.max(map.getZoom(), 12),
+                duration: 1000,
+            });
+        }
+    }, []);
+
+    const handleActiveEntryChange = useCallback(
+        (entryId: string) => {
+            const entry = locatedEntries.find(
+                (locatedEntry) => locatedEntry.id === entryId
+            );
+            if (entry) openEntry(entry);
+        },
+        [locatedEntries, openEntry]
     );
 
     const bounds = useMemo<[number, number, number, number] | null>(() => {
@@ -77,12 +151,9 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
     );
 
     useEffect(() => {
-        fitMapToBounds(false);
+        // Animate once the map is loaded, so navigation-triggered bounds changes
+        fitMapToBounds(isMapLoadedRef.current);
     }, [fitMapToBounds]);
-
-    if (isPending) {
-        return <div>Loading...</div>;
-    }
 
     if (!entries || entries.length === 0) {
         return <div>No entries found.</div>;
@@ -95,9 +166,12 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
     const [minLng, minLat, maxLng, maxLat] = bounds;
 
     return (
-        <div className="relative h-full w-full">
+        <>
             <div
-                className={`h-full w-full transition-opacity duration-300 ${isMapLoaded ? 'opacity-100' : 'opacity-0'}`}
+                className={cn(
+                    'h-full w-full transition-opacity duration-300',
+                    isMapLoaded ? 'opacity-100' : 'opacity-0'
+                )}
             >
                 <MapComponent
                     ref={mapRef}
@@ -107,15 +181,56 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
                         zoom: locatedEntries.length === 1 ? 10 : 2,
                     }}
                     onLoad={() => {
+                        isMapLoadedRef.current = true;
                         fitMapToBounds(true);
                         setIsMapLoaded(true);
                     }}
                     onError={() => setIsMapLoaded(true)}
                 >
+                    {routeGeoJSON ? (
+                        <Source
+                            id="entry-route"
+                            type="geojson"
+                            data={routeGeoJSON}
+                        >
+                            <Layer
+                                id="entry-route-line"
+                                type="line"
+                                paint={{
+                                    'line-color': '#e2734d',
+                                    'line-width': 2,
+                                    'line-opacity': 0.8,
+                                    // Purely decorative route line, so dash it to
+                                    // distinguish it from real roads/paths
+                                    'line-dasharray': [2, 2],
+                                }}
+                            />
+                        </Source>
+                    ) : null}
                     {sortedEntries.map((entry) => {
-                        if (!entry.location?.lat || !entry.location?.lng)
+                        if (!entry.location?.lat || !entry.location?.lng) {
                             return null;
-                        const isSelected = entry.id === selectedEntryId;
+                        }
+
+                        if (isTripView) {
+                            return (
+                                <Marker
+                                    key={entry.id}
+                                    longitude={entry.location!.lng}
+                                    latitude={entry.location!.lat}
+                                    className="text-accent"
+                                >
+                                    <button
+                                        type="button"
+                                        onClick={() => openEntry(entry)}
+                                        aria-label={`Open ${entry.title}`}
+                                        className="cursor-pointer"
+                                    >
+                                        <MapPinIcon weight="fill" size={40} />
+                                    </button>
+                                </Marker>
+                            );
+                        }
 
                         return (
                             <Marker
@@ -124,34 +239,35 @@ export const EntryMap = ({ tripId }: EntryMapProps) => {
                                 latitude={entry.location!.lat}
                                 className="text-accent"
                             >
-                                <EntryDrawer
-                                    entryId={entry.id}
-                                    trigger={
-                                        <button>
-                                            <MapPinIcon
-                                                weight="fill"
-                                                size={40}
-                                            />
-                                        </button>
-                                    }
-                                    isOpen={isSelected}
-                                    setIsOpen={(isOpen) =>
-                                        setSelectedEntryId(
-                                            isOpen ? entry.id : null
-                                        )
-                                    }
-                                />
+                                <Link
+                                    to="/map/{-$tripId}"
+                                    params={{ tripId: entry.tripId }}
+                                >
+                                    <MapPinIcon weight="fill" size={40} />
+                                </Link>
                             </Marker>
                         );
                     })}
                 </MapComponent>
             </div>
 
+            {isTripView && selectedEntryId ? (
+                <EntryDrawer
+                    entries={locatedEntries}
+                    entryId={selectedEntryId}
+                    onActiveEntryChange={handleActiveEntryChange}
+                    isOpen={Boolean(selectedEntryId)}
+                    setIsOpen={(isOpen) => {
+                        if (!isOpen) setSelectedEntryId(null);
+                    }}
+                />
+            ) : null}
+
             {!isMapLoaded ? (
                 <div className="absolute inset-0 flex items-center justify-center bg-background">
                     <Spinner className="size-8" />
                 </div>
             ) : null}
-        </div>
+        </>
     );
 };

@@ -5,15 +5,17 @@ import { Button } from '@repo/ui/components/ui/button';
 
 type BackButtonProps = {
     to?: string;
+    className?: string;
 };
 
-export const BackButton = ({ to }: BackButtonProps) => {
+export const BackButton = ({ to, className }: BackButtonProps) => {
     const router = useRouter();
 
     return (
         <Button
             variant="outline"
             size="icon"
+            className={className}
             onClick={() =>
                 to ? router.navigate({ to }) : router.history.back()
             }
